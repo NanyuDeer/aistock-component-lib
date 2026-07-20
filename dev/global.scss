@@ -1,0 +1,19 @@
+/* 模拟 uni-app 标签基础行为（仅本地预览用） */
+
+view {
+  display: block;
+  box-sizing: border-box;
+}
+
+text {
+  display: inline;
+}
+
+image {
+  display: inline-block;
+}
+
+scroll-view {
+  display: block;
+  overflow: auto;
+}

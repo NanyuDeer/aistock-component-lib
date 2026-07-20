@@ -1,0 +1,22 @@
+{
+  "name": "aistock-component-lib",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AiStock 组件库 - Vue 3 + TypeScript + SCSS（rpx 单位，uni-app 组件规范）",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "type-check": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "sass": "^1.83.0",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11",
+    "vue-tsc": "^2.1.10"
+  },
+  "packageManager": "pnpm@11.9.0"
+}
