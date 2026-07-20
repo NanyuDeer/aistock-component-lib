@@ -25,11 +25,14 @@
 
 ## 组件规范
 
-- 标签：用 `view`/`text`/`image`，不用 `div`/`span`/`img`（uni-app 跨端要求）
+- 标签：用 `view`/`text`/`image`/`scroll-view`，不用 `div`/`span`/`img`（uni-app 跨端要求）
 - 单位：用 `rpx`，不用 `px`
+- 事件：用 `@tap`，不用 `@click`（uni-app 跨端要求）
 - 类名：统一 `as-` 前缀
+- Props：用 `withDefaults(defineProps<{}>(), {})` 写法
 - 图标：用 SvgIcon 组件加载 SVG，禁用 emoji
 - 样式：`<style lang="scss" scoped>`，首行 `@import '@/styles/variables.scss';`
+- A 股涨跌色：红涨绿跌，`$stock-up-color`（红）/ `$stock-down-color`（绿），不要搞反
 
 ## 禁止事项
 

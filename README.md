@@ -20,7 +20,7 @@ pnpm type-check # 类型检查
 | `src/index.ts` | 统一导出入口 |
 | `dev/` | 本地预览环境（不入组件库导出） |
 | `design/` | HTML 设计稿 |
-| `docs/组件库开发指南.md` | 组件开发规范与协作流程 |
+| `docs/组件库搭建教程.md` | 搭建与使用教程 |
 
 ## 协作流程
 
@@ -31,7 +31,7 @@ pnpm type-check # 类型检查
 3. 发起 Pull Request 合并到 main
 4. 尹辰 review 后合并
 
-具体操作见 `docs/组件库开发指南.md`。
+具体操作见 `docs/组件库搭建教程.md`。
 
 ## 相关项目
 
