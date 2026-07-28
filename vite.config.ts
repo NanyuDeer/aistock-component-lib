@@ -15,31 +15,52 @@ const rpxToVw = () => ({
   }
 })
 
-export default defineConfig({
-  plugins: [
-    vue({
-      template: {
-        compilerOptions: {
-          // uni-app 的 view/text/image 等标签在纯 vue 预览环境里识别为自定义元素
-          isCustomElement: tag =>
-            ['view', 'text', 'image', 'scroll-view', 'input', 'button', 'icon', 'progress', 'slider', 'switch', 'textarea'].includes(tag)
+export default defineConfig(({ mode }) => {
+  // lib 模式：作为 npm 包构建产物，不做 rpx→vw 转换（由消费方按各自平台处理）
+  const isLib = mode === 'lib'
+
+  return {
+    plugins: [
+      vue({
+        template: {
+          compilerOptions: {
+            // uni-app 的 view/text/image 等标签在纯 vue 预览环境里识别为自定义元素
+            isCustomElement: tag =>
+              ['view', 'text', 'image', 'scroll-view', 'input', 'button', 'icon', 'progress', 'slider', 'switch', 'textarea'].includes(tag)
+          }
         }
-      }
-    })
-  ],
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@import "@/styles/variables.scss";`
+      })
+    ],
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@import "@/styles/variables.scss";`
+        }
+      },
+      postcss: {
+        plugins: isLib ? [] : [rpxToVw() as never]  // lib 构建不做 rpx→vw 转换
       }
     },
-    postcss: {
-      plugins: [rpxToVw() as never]
-    }
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src')
-    }
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src')
+      }
+    },
+    build: isLib ? {
+      lib: {
+        entry: path.resolve(__dirname, 'src/index.ts'),
+        name: 'AistockComponentLib',
+        formats: ['es'],
+        fileName: () => 'index.js'
+      },
+      rollupOptions: {
+        external: ['vue'],
+        output: {
+          globals: { vue: 'Vue' },
+          assetFileNames: 'aistock-component-lib.[ext]'
+        }
+      },
+      cssCodeSplit: false
+    } : undefined
   }
 })

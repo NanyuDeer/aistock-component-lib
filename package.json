@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
+    "build:lib": "vite build --mode lib",
     "type-check": "vue-tsc --noEmit",
     "gen-tokens": "tsx scripts/generate-tokens.ts",
     "sync": "tsx scripts/sync-components.ts",

@@ -21,7 +21,7 @@
 | `scripts/generate-tokens.ts` | 令牌生成脚本（`pnpm gen-tokens`） |
 | `scripts/sync-components.ts` | 组件同步脚本（`pnpm sync` / `pnpm sync:dry-run`） |
 | `scripts/sync.config.json` | 同步配置（重命名映射、路径改写、排除列表） |
-| `vite.config.ts` | 本地预览 Vite 配置 |
+| `vite.config.ts` | 本地预览 Vite 配置；`--mode lib` 切换库模式构建（ES 产物 + vue external，写入 `dist/`） |
 | `vitest.config.ts` | 测试配置（happy-dom、自定义元素、SCSS 变量注入） |
 | `src/index.ts` | 统一导出入口 |
 | `dev/` | 本地预览环境 |

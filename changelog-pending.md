@@ -218,3 +218,23 @@
 - **与 brief 的适配**：brief 中部分组件 prop 假设与实际 API 不符，按实际组件定义调整（Input 的 searchIcon/clearable 为 camelCase prop、Badge type='primary' 等）
 - **验证**：`vue-tsc --noEmit` 类型检查通过（exit 0）；`npx vitest run` 全部 59 测试 PASS（12 文件，含新增 5 个 catalog 冒烟用例）；dev server 正常启动，CatalogPage.vue/main.ts/index 页面均 HTTP 200
 
+## 2026-07-29 林晓研（Task 5：前端架构改进）
+
+### feat: 新增 Vite lib 构建配置（ES 模式 + vue external + SCSS 合并）
+- **用途**：为组件库新增「库模式」构建能力，将 `src/index.ts` 入口的 41 个组件构建为单一 ES 模块 JS + 单一 CSS 文件，作为未来 npm 发布的产物形态（当前 `private: true` 仅用于本地验证，App 前端仍走 sync 复制方式不依赖此构建）
+- **修改文件**：
+  - `vite.config.ts`：从 `defineConfig({...})` 改为 `defineConfig(({ mode }) => ({...}))`，按 `mode === 'lib'` 分支：lib 模式跳过 rpx→vw PostCSS 插件（保留 rpx 交消费方处理），并新增 `build.lib` 配置（entry=`src/index.ts`、formats=['es']、fileName=固定 `index.js`）；`rollupOptions.external=['vue']` + `output.globals={vue:'Vue'}` + `assetFileNames='aistock-component-lib.[ext]'`；`cssCodeSplit:false` 输出单 CSS
+  - `package.json`：新增 script `"build:lib": "vite build --mode lib"`
+  - `README.md`：快速开始补 `build:lib` 命令；新增「库模式构建」章节（产物表 + 5 条构建规则）；目录表 vite.config.ts 条目补注 lib 模式
+  - `AGENTS.md`：仓库结构表 vite.config.ts 条目补注 lib 模式分支
+- **产物**（`dist/`，已在 `.gitignore` 忽略）：
+  - `dist/index.js` 81.81 kB（ES 模块，126 个模块编译，gzip 17.83 kB）
+  - `dist/aistock-component-lib.css` 60.58 kB（全部组件 SCSS 编译合并，gzip 9.08 kB）
+- **验证**：
+  - `npx vite build --mode lib` 构建成功（exit 0，2.38s）
+  - `dist/index.js` 首行 `import { defineComponent as k, ... } from "vue"`，`from "vue"` 出现 1 次（外部 import），`createApp` 出现 0 次 → Vue 已正确外置，未打包运行时
+  - `dist/aistock-component-lib.css` 首尾抽样确认含 `.as-global-chat-bar__*` / `.as-audio-player__*` 等组件样式，SCSS 已编译合并为单文件
+  - `vue-tsc --noEmit` 类型检查通过（exit 0）
+- **YAGNI 取舍**：未引入 `vite-plugin-dts` 生成 `.d.ts`（当前 `private: true`，类型由 `vue-tsc` 校验足够；待真正发布到 npm 时再加）；未配 UMD/CJS 多格式（仅 ES，按 brief 要求）；未改 `package.json` 的 `main`/`module`/`exports` 字段（无消费方，避免提前耦合）
+- **已知环境问题**：`pnpm run build:lib` 因长驻进程占用项目目录句柄触发 EBUSY（与 Task 1/3 同样的已知环境问题），改用 `npx vite build --mode lib` 旁路 pnpm store 的项目符号链接完成验证；干净会话下 `pnpm build:lib` 可正常工作
+

@@ -9,6 +9,7 @@
 pnpm install        # 安装依赖
 pnpm dev            # 启动本地预览（浏览器打开看组件效果）
 pnpm type-check     # 类型检查
+pnpm build:lib      # 库模式构建（产出 dist/index.js + dist/aistock-component-lib.css）
 pnpm test           # 运行全部组件测试（Vitest）
 pnpm test:watch     # 监听模式运行测试
 pnpm test:coverage  # 生成测试覆盖率报告
@@ -87,6 +88,29 @@ pnpm test:update    # 组件结构变化后更新快照
 
 > 修改组件 props/结构后，若快照失效请先确认改动符合预期再运行 `pnpm test:update`，不要盲目更新快照。
 
+## 库模式构建
+
+通过 Vite 库模式（`vite build --mode lib`）将组件库构建为 ES 模块包，作为未来 npm 发布的产物形态（当前 `private: true`，仅用于本地验证）：
+
+```bash
+pnpm build:lib    # 等价于 vite build --mode lib
+```
+
+产物（写入 `dist/`，已在 `.gitignore` 中忽略）：
+
+| 文件 | 内容 |
+|------|------|
+| `dist/index.js` | ES 模块格式（`format: 'es'`），以 `src/index.ts` 为入口，导出全部 41 个组件 |
+| `dist/aistock-component-lib.css` | 全部组件 SCSS 编译合并后的 CSS（`cssCodeSplit: false` 单文件） |
+
+构建规则：
+
+- **入口**：`src/index.ts`（41 个组件的 barrel 导出）
+- **Vue 外置**：`rollupOptions.external: ['vue']`，产物首行为 `import { ... } from "vue"`，不打包 Vue 运行时（peerDependency 形态）
+- **SCSS 注入**：构建期 `additionalData` 全局注入 `@/styles/variables.scss`，组件内 `$` 变量在产物中已展开为字面量
+- **不做 rpx→vw 转换**：lib 模式跳过 `rpxToVw` PostCSS 插件，保留 `rpx` 单位交给消费方（uni-app 项目 / Web 项目）按各自平台编译处理
+- **不生成类型声明**：当前仅产 JS+CSS，类型由 `vue-tsc --noEmit` 单独校验；未来发布到 npm 时再启用 `vite-plugin-dts` 等 `.d.ts` 产物
+
 ## 目录说明
 
 | 目录 | 作用 |
@@ -100,7 +124,7 @@ pnpm test:update    # 组件结构变化后更新快照
 | `scripts/generate-tokens.ts` | 令牌生成脚本（`pnpm gen-tokens`） |
 | `scripts/sync-components.ts` | 组件同步脚本（`pnpm sync` / `pnpm sync:dry-run`） |
 | `scripts/sync.config.json` | 同步配置（重命名映射、路径改写、排除列表） |
-| `vite.config.ts` | 本地预览 Vite 配置（rpx→vw、自定义元素） |
+| `vite.config.ts` | 本地预览 Vite 配置（rpx→vw、自定义元素）；含 `--mode lib` 库模式构建（ES 产物 + vue external） |
 | `vitest.config.ts` | 测试配置（happy-dom、自定义元素、SCSS 变量注入） |
 | `src/index.ts` | 统一导出入口 |
 | `dev/` | 本地预览环境（不入组件库导出） |
