@@ -23,6 +23,22 @@
 
 所有颜色、字号、间距、圆角必须用 `src/styles/variables.scss` 中的变量，禁止硬编码。
 
+设计系统参考：`design/FinDesign System · 蓝白金融设计系统.html`
+
+## 组件清单
+
+共 41 个组件，分 8 类（基础/反馈/交互/导航布局/金融业务/数据可视化/金融数据展示/AI对话与媒体）。完整清单见 `README.md`。
+
+新增组件（从 app 前端提取并按设计系统重新设计）：
+- 数据可视化：RadarChart、RelationGraph、Sparkline、Gauge、Timeline（纯 SVG 实现）
+- 导航布局：NavBar、Footer、TabBar、GlobalChatBar、SubPageCard2、Steps
+- 交互金融：Segmented、BottomSheet、ActionSheet、QuoteHeader
+- 金融数据展示：Rate、DataTable、IndexCard
+- 交互反馈：Modal、Toast、Collapse
+- AI 对话与媒体：ChatBubble、StreamingText、AudioPlayer
+
+> **注意**：SubPageCard 已弃用（@deprecated），新功能请使用 SubPageCard2。组件选用指南见 `README.md`。
+
 ## 组件规范
 
 - 标签：用 `view`/`text`/`image`/`scroll-view`，不用 `div`/`span`/`img`（uni-app 跨端要求）

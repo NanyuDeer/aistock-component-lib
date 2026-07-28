@@ -1,5 +1,5 @@
 <template>
-  <view class="as-page-card" :style="{ paddingBottom: `calc(${bottomPadding} + ${safeBottom})` }">
+  <view class="as-page-card" :style="rootStyle">
     <view v-if="title || $slots.header" class="as-page-card__header">
       <view class="as-page-card__header-left">
         <view v-if="showBack" class="as-page-card__back" @click="handleBack">
@@ -25,6 +25,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { rpxToVw } from '@/utils/rpx'
 
 const props = withDefaults(defineProps<{
   title?: string
@@ -44,8 +45,13 @@ const emit = defineEmits<{
   back: []
 }>()
 
+/** rpx → vw 转换：内联样式中的 rpx 需手动转换，PostCSS 不处理内联 :style */
+const rootStyle = computed(() => ({
+  paddingBottom: `calc(${rpxToVw(props.bottomPadding)} + ${props.safeBottom})`
+}))
+
 const bodyStyle = computed(() => ({
-  paddingBottom: `calc(${props.bottomPadding} + ${props.safeBottom})`
+  paddingBottom: `calc(${rpxToVw(props.bottomPadding)} + ${props.safeBottom})`
 }))
 
 const handleBack = () => {
