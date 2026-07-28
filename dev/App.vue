@@ -1,5 +1,11 @@
 <template>
   <view class="dev-container">
+    <!-- 页面切换：组件预览 ↔ 组件目录 -->
+    <view class="dev-nav-switch">
+      <text class="dev-nav-link active">组件预览</text>
+      <text class="dev-nav-link" @click="goCatalog">组件目录</text>
+    </view>
+
     <view class="dev-header">
       <text class="dev-title">AiStock 组件库预览</text>
       <text class="dev-desc">蓝白金融设计系统 · Vue 3 组件库</text>
@@ -683,6 +689,11 @@ import Toast from '@/components/Toast.vue'
 import Collapse from '@/components/Collapse.vue'
 import Steps from '@/components/Steps.vue'
 
+/** 跳转到组件目录页（hash 路由由 dev/main.ts 处理） */
+function goCatalog() {
+  window.location.hash = '#/catalog'
+}
+
 const stockCode = ref('600740.SH')
 const searchText = ref('')
 const switch1 = ref(true)
@@ -820,6 +831,31 @@ const stepList = [
 <style lang="scss" scoped>
 .dev-container {
   padding: $s-6;
+}
+
+/* 页面切换导航 */
+.dev-nav-switch {
+  display: flex;
+  gap: $s-2;
+  margin-bottom: $s-6;
+  padding: $s-2;
+  background: $bg-soft;
+  border-radius: $r-md;
+}
+
+.dev-nav-link {
+  padding: $s-1 $s-4;
+  border-radius: $r-sm;
+  font-size: $font-size-sm;
+  color: $ink-mute;
+  cursor: pointer;
+  transition: all $t-base;
+}
+
+.dev-nav-link.active {
+  background: $primary;
+  color: $white;
+  font-weight: 600;
 }
 
 .dev-header {

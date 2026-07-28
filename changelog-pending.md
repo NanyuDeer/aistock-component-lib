@@ -198,3 +198,23 @@
 - **环境问题**：pnpm install 因项目目录被长驻进程占用报 EBUSY（与 Task 1 同样的已知环境问题），改用 `npm install` 旁路 pnpm store 的项目符号链接；`pnpm-lock.yaml` 暂未更新（保持 package-lock.json 为准），干净会话下 `pnpm install` 可正常工作
 - **验证**：`npx vitest run` 全部 54 测试 PASS（11 文件）；`npx vitest run -u` 生成 11 份快照后 CI 模式复跑稳定通过；`vue-tsc --noEmit` 类型检查通过（exit 0）
 
+## 2026-07-29 林晓研（Task 4：前端架构改进）
+
+### feat: 组件预览目录页（CatalogPage.vue）— 搜索/分类/预览 41 个组件
+- **用途**：为组件库创建轻量级 Storybook 替代方案，支持搜索、分类筛选、点击预览全部 41 个组件
+- **新增文件**：
+  - `dev/CatalogPage.vue` 组件目录预览页（41 组件卡片网格 + 搜索 + 分类筛选 + 预览面板 + SvgIcon 图标集展示）
+  - `__catalog-smoke.spec.ts` 冒烟测试（5 个用例：卡片数量/搜索过滤/分类过滤/预览面板/空状态）
+- **修改文件**：
+  - `dev/main.ts` 轻量 hash 路由（#/ → App.vue 预览首页，#/catalog → CatalogPage 目录页），无 vue-router 依赖
+  - `dev/App.vue` 新增页面切换导航栏（组件预览 ↔ 组件目录）
+  - `changelog-pending.md` 追加 Task 4 记录
+- **设计要点**：
+  - 6 大分类（基础/反馈/业务/布局/图表/AI），每类配 SvgIcon 图标 + 颜色 + 标签样式
+  - 覆盖层组件（Modal/Toast/ActionSheet/BottomSheet/TabBar/GlobalChatBar/SubPageCard2）标记 frame:true，在固定高度 frame 内用 `:deep()` 将 position:fixed 改为 absolute 约束在预览区域内
+  - SvgIcon 特殊处理：点击后展示 12 个可用图标的网格预览
+  - selectedComponent 使用 shallowRef 避免 Vue 组件对象被 reactive 包裹（消除 Vue warn）
+  - 搜索支持组件名/描述/分类三字段匹配
+- **与 brief 的适配**：brief 中部分组件 prop 假设与实际 API 不符，按实际组件定义调整（Input 的 searchIcon/clearable 为 camelCase prop、Badge type='primary' 等）
+- **验证**：`vue-tsc --noEmit` 类型检查通过（exit 0）；`npx vitest run` 全部 59 测试 PASS（12 文件，含新增 5 个 catalog 冒烟用例）；dev server 正常启动，CatalogPage.vue/main.ts/index 页面均 HTTP 200
+
