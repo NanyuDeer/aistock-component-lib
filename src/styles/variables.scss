@@ -1,8 +1,8 @@
 /**
  * Design Token - 蓝白金融设计系统
- * 参照：FinDesign System HTML 设计稿
- * 规范：所有组件必须使用这些变量，禁止硬编码颜色值
- * 单位：统一使用 rpx（uni-app 规范）
+ * 自动生成自 src/tokens/tokens.json (v1.0.0)
+ * 生成时间：2026-07-28T17:03:16.792Z
+ * 禁止手动编辑此文件！修改请编辑 tokens.json 后运行 npm run gen-tokens
  */
 
 /* ===== Brand - Primary Blue ===== */
@@ -196,10 +196,10 @@ $op-readonly: 0.7;
 /* ===== Transitions ===== */
 $ease-out: cubic-bezier(0.4, 0, 0.2, 1);
 $ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-$t-fast: 0.15s $ease-out;
-$t-base: 0.25s $ease-out;
-$t-slow: 0.4s $ease-out;
-$t-spring: 0.4s $ease-spring;
+$t-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+$t-base: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+$t-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+$t-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
 /* ===== Grid & Breakpoints (参考，不强制使用) ===== */
 $grid-cols: 12;

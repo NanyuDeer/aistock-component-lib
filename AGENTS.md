@@ -14,7 +14,10 @@
 | 目录 | 作用 |
 |------|------|
 | `src/components/` | 组件库本体，每个 .vue 文件是一个组件 |
-| `src/styles/variables.scss` | Design Token，所有颜色/字号/间距/圆角变量 |
+| `src/tokens/tokens.json` | Design Token 单一真相源（手动维护） |
+| `src/tokens/types.ts` | Tokens 接口类型定义 |
+| `src/styles/variables.scss` | Design Token SCSS 变量（脚本生成，勿手编） |
+| `scripts/generate-tokens.ts` | 令牌生成脚本（`pnpm gen-tokens`） |
 | `src/index.ts` | 统一导出入口 |
 | `dev/` | 本地预览环境（不入组件库导出） |
 | `design/` | HTML 设计稿 |
@@ -22,6 +25,8 @@
 ## Design Token
 
 所有颜色、字号、间距、圆角必须用 `src/styles/variables.scss` 中的变量，禁止硬编码。
+
+设计令牌采用「单一真相源 + 自动生成」：`src/tokens/tokens.json` 是唯一手动维护的真相源，`scripts/generate-tokens.ts`（`pnpm gen-tokens`）读取它生成 `src/styles/variables.scss`、`src/tokens/tokens.css`、`src/tokens/tokens.ts` 三份产物。**禁止手动编辑这三份产物**，修改令牌请编辑 `tokens.json` 后运行 `pnpm gen-tokens`。`src/tokens/types.ts` 为 `Tokens` 接口定义。
 
 设计系统参考：`design/FinDesign System · 蓝白金融设计系统.html`
 

@@ -9,14 +9,37 @@
 pnpm install    # 安装依赖
 pnpm dev        # 启动本地预览（浏览器打开看组件效果）
 pnpm type-check # 类型检查
+pnpm gen-tokens # 重新生成设计令牌产物（修改 src/tokens/tokens.json 后运行）
 ```
+
+## Design Token 管线
+
+设计令牌采用「单一真相源 + 自动生成」模式，禁止手动编辑 `src/styles/variables.scss`：
+
+```
+src/tokens/tokens.json  ──┐  （单一真相源，所有颜色/字号/间距/圆角等令牌）
+                          │
+   scripts/generate-tokens.ts  （tsx 运行，读取 tokens.json）
+                          │
+        ┌─────────────────┼─────────────────┐
+        ▼                 ▼                 ▼
+src/styles/variables.scss  src/tokens/tokens.css  src/tokens/tokens.ts
+（SCSS 变量，向后兼容）     （CSS 自定义属性）      （TS 常量）
+```
+
+- 修改令牌：编辑 `src/tokens/tokens.json` → 运行 `pnpm gen-tokens` → 三份产物自动更新
+- `src/tokens/types.ts` 为 `Tokens` 接口定义，供生成脚本强类型读取
 
 ## 目录说明
 
 | 目录 | 作用 |
 |------|------|
 | `src/components/` | 组件库本体，每个 `.vue` 文件是一个组件 |
-| `src/styles/variables.scss` | Design Token 设计变量 |
+| `src/tokens/tokens.json` | Design Token 单一真相源（手动维护） |
+| `src/tokens/types.ts` | Tokens 接口类型定义 |
+| `src/tokens/tokens.css` `tokens.ts` | 令牌产物（脚本生成，勿手编） |
+| `src/styles/variables.scss` | Design Token SCSS 变量（脚本生成，勿手编） |
+| `scripts/generate-tokens.ts` | 令牌生成脚本（`pnpm gen-tokens`） |
 | `src/index.ts` | 统一导出入口 |
 | `dev/` | 本地预览环境（不入组件库导出） |
 | `design/` | HTML 设计稿 |

@@ -136,3 +136,21 @@
   - JavaScript 验证所有图标元素有正确尺寸（43-66px）且 background-image 已设置
   - 网络请求确认所有组件 .vue 文件和 SVG data URI 均加载成功（无 ERR_ABORTED）
   - 37+ 个组件全部渲染（含 Button/Card/Tag/Input/Switch/StockItem/Progress/Empty/Skeleton/Avatar/SvgIcon/LoadingState/StatCard/ListCell/PageCard/SubPageCard/RadarChart/Gauge/Sparkline/RelationGraph/Segmented/QuoteHeader/NavBar/Footer/TabBar/GlobalChatBar/BottomSheet/ActionSheet/SubPageCard2/Rate/Timeline/DataTable/IndexCard/ChatBubble/StreamingText/AudioPlayer/Modal/Toast/Collapse/Steps）
+
+## 2026-07-29 林晓研（Task 1：前端架构改进）
+
+### feat: 建立设计令牌单一真相源（tokens.json → SCSS/CSS/TS）
+- **用途**：将手动维护的 `src/styles/variables.scss` 升级为自动化令牌管线，`tokens.json` 作为单一真相源，脚本一键生成 SCSS/CSS/TS 三份产物
+- **新增文件**：
+  - `src/tokens/tokens.json` 设计令牌单一真相源（color/radius/spacing/fontSize/lineHeight/fontFamily/letterSpacing/shadow/activeBackground/zIndex/grid/breakpoint/transition/opacity/focusRing）
+  - `src/tokens/types.ts` Tokens 接口类型定义（供 generate-tokens.ts 强类型读取）
+  - `scripts/generate-tokens.ts` 生成脚本（tsx 运行，读取 tokens.json 输出三份产物）
+  - `src/tokens/tokens.css` CSS 自定义属性产物（:root 变量，未来 Web 端可用）
+  - `src/tokens/tokens.ts` TS 常量产物（组件内联样式可用）
+- **修改文件**：
+  - `package.json` 新增 devDep `tsx@^4.19.0`、script `gen-tokens: tsx scripts/generate-tokens.ts`
+  - `src/styles/variables.scss` 改为脚本生成（覆盖原手动文件，向后兼容）
+- **向后兼容**：生成产物与原 variables.scss 完全兼容——变量名、变量值、"兼容旧变量"别名全部保留；`git diff` 仅头部注释 + 过渡变量写法变化（`$t-fast: 0.15s $ease-out` → `0.15s cubic-bezier(...)`，SCSS 解析后值完全等价）。原文件中 brief 脚本未覆盖的 3 段（Letter Spacing / Grid & Breakpoints / Active-Hover Backgrounds，其中 `$primary-active-bg` 被 StockItem.vue 使用）已补充进 tokens.json + 脚本，确保零回归
+- **验证**：`npx tsx scripts/generate-tokens.ts` 生成三产物成功；`vue-tsc --noEmit` 类型检查通过（exit 0）
+- **已知环境问题**：当前会话因长驻进程占用 `aistock-component-lib` 目录句柄，导致 `pnpm install`（注册项目到 store 时创建目录链接）报 EBUSY；非项目代码问题，干净会话下 `pnpm install && pnpm run gen-tokens` 可正常工作。本次验证以 `npx tsx` 旁路 store 完成
+- **文档**：README.md / AGENTS.md 同步说明令牌管线与"禁止手编 variables.scss"规则
