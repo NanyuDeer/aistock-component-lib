@@ -6,10 +6,12 @@
 ## 快速开始
 
 ```bash
-pnpm install    # 安装依赖
-pnpm dev        # 启动本地预览（浏览器打开看组件效果）
-pnpm type-check # 类型检查
-pnpm gen-tokens # 重新生成设计令牌产物（修改 src/tokens/tokens.json 后运行）
+pnpm install        # 安装依赖
+pnpm dev            # 启动本地预览（浏览器打开看组件效果）
+pnpm type-check     # 类型检查
+pnpm gen-tokens     # 重新生成设计令牌产物（修改 src/tokens/tokens.json 后运行）
+pnpm sync           # 将组件同步到 aistock-app-frontend（复制方式，非引用）
+pnpm sync:dry-run   # 仅预览同步结果，不实际写入文件
 ```
 
 ## Design Token 管线
@@ -30,6 +32,37 @@ src/styles/variables.scss  src/tokens/tokens.css  src/tokens/tokens.ts
 - 修改令牌：编辑 `src/tokens/tokens.json` → 运行 `pnpm gen-tokens` → 三份产物自动更新
 - `src/tokens/types.ts` 为 `Tokens` 接口定义，供生成脚本强类型读取
 
+## 组件同步
+
+组件库的组件通过「复制」方式同步到 `aistock-app-frontend`（非 npm 引用），同步后 App 前端可脱离组件库独立编译部署。
+
+```
+src/components/*.vue  ──┐  （组件库本体，41 个组件）
+                        │
+   scripts/sync-components.ts  （tsx 运行，读取 sync.config.json）
+                        │
+        ┌───────────────┼───────────────┐
+        ▼               ▼               ▼
+  复制/重命名组件    改写 import 路径   附加同步 rpx.ts/variables.scss
+        │
+        ▼
+aistock-app-frontend/src/shared/components/
+```
+
+- `pnpm sync`：实际同步（覆盖目标文件）
+- `pnpm sync:dry-run`：仅预览，不写入任何文件
+- App 前端也可直接运行 `pnpm sync` / `pnpm sync:dry-run`（内部 cd 到组件库执行）
+
+### 同步规则（`scripts/sync.config.json`）
+
+| 规则 | 说明 |
+|------|------|
+| 文件重命名 | Empty→EmptyState、Footer→TheFooter、NavBar→TheNavbar、TabBar→MainTabs |
+| import 路径改写 | `@/utils/rpx` → `@/shared/utils/rpx`；`@/styles/variables` → 删除整行 |
+| 排除组件 | SvgIcon（App 独立实现）、GlobalChatBar/PageCard/SubPageCard/SubPageCard2/TabBar（App 端 Wrapper 组件，含业务逻辑） |
+| 附加同步 | `src/utils/rpx.ts`、`src/styles/variables.scss`（带同步注释头） |
+| 孤儿检测 | 检测目标目录中存在但源目录无对应文件的组件，仅报告不自动删除 |
+
 ## 目录说明
 
 | 目录 | 作用 |
@@ -40,6 +73,8 @@ src/styles/variables.scss  src/tokens/tokens.css  src/tokens/tokens.ts
 | `src/tokens/tokens.css` `tokens.ts` | 令牌产物（脚本生成，勿手编） |
 | `src/styles/variables.scss` | Design Token SCSS 变量（脚本生成，勿手编） |
 | `scripts/generate-tokens.ts` | 令牌生成脚本（`pnpm gen-tokens`） |
+| `scripts/sync-components.ts` | 组件同步脚本（`pnpm sync` / `pnpm sync:dry-run`） |
+| `scripts/sync.config.json` | 同步配置（重命名映射、路径改写、排除列表） |
 | `src/index.ts` | 统一导出入口 |
 | `dev/` | 本地预览环境（不入组件库导出） |
 | `design/` | HTML 设计稿 |

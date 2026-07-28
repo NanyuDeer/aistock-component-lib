@@ -154,3 +154,24 @@
 - **验证**：`npx tsx scripts/generate-tokens.ts` 生成三产物成功；`vue-tsc --noEmit` 类型检查通过（exit 0）
 - **已知环境问题**：当前会话因长驻进程占用 `aistock-component-lib` 目录句柄，导致 `pnpm install`（注册项目到 store 时创建目录链接）报 EBUSY；非项目代码问题，干净会话下 `pnpm install && pnpm run gen-tokens` 可正常工作。本次验证以 `npx tsx` 旁路 store 完成
 - **文档**：README.md / AGENTS.md 同步说明令牌管线与"禁止手编 variables.scss"规则
+
+## 2026-07-29 林晓研（Task 2：前端架构改进）
+
+### feat: 组件同步脚本（支持重命名/路径改写/dry-run/孤儿检测）
+- **用途**：将组件库组件自动同步（复制）到 aistock-app-frontend，同步后 App 前端可脱离组件库独立编译部署
+- **新增文件**：
+  - `scripts/sync-components.ts` 同步脚本（tsx 运行，读取 sync.config.json）
+  - `scripts/sync.config.json` 同步配置（重命名映射、import 路径改写、排除列表、附加同步）
+- **修改文件**：
+  - `package.json` 新增 scripts `sync` 和 `sync:dry-run`
+  - `aistock-app-frontend/package.json` 新增 scripts `sync` 和 `sync:dry-run`（内部 cd 到组件库执行）
+  - `README.md` 新增「组件同步」章节、快速开始补充 sync 命令、目录表补充脚本条目
+  - `AGENTS.md` 目录表补充脚本条目、新增「组件同步」章节
+- **同步规则**：
+  - 文件重命名：Empty→EmptyState、Footer→TheFooter、NavBar→TheNavbar（TabBar→MainTabs 映射但排除，因 MainTabs 是 App 端 Wrapper）
+  - import 路径改写：`@/utils/rpx` → `@/shared/utils/rpx`；`@/styles/variables` → 删除整行（变量由 vite additionalData 全局注入）
+  - 排除组件：SvgIcon（App 独立实现）、GlobalChatBar/PageCard/SubPageCard/SubPageCard2/TabBar（App 端 Wrapper 组件）
+  - 附加同步：rpx.ts、variables.scss（带同步注释头，自动替换已有注释块）
+  - 孤儿检测：检测目标目录中无对应源文件的组件，仅报告不自动删除
+  - dry-run 模式：仅预览不写入文件，通过 MD5 哈希对比跳过未变化文件
+- **验证**：`npx tsx scripts/sync-components.ts --dry-run` 输出正确（7 copy + 3 rename + 25 skip + 6 exclude + 2 also-sync + 0 orphan = 41 源文件）；dry-run 前后文件哈希一致（确认不写入）；`tsc --noEmit` 脚本类型检查通过（exit 0）

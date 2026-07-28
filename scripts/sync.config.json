@@ -1,0 +1,40 @@
+{
+  "source": "src/components",
+  "dest": "../aistock-app-frontend/src/shared/components",
+  "mappings": {
+    "Empty.vue": "EmptyState.vue",
+    "Footer.vue": "TheFooter.vue",
+    "NavBar.vue": "TheNavbar.vue",
+    "TabBar.vue": "MainTabs.vue"
+  },
+  "importRewrites": [
+    {
+      "from": "@/utils/rpx",
+      "to": "@/shared/utils/rpx"
+    },
+    {
+      "from": "@/styles/variables",
+      "to": "",
+      "action": "delete-line"
+    }
+  ],
+  "exclude": [
+    "SvgIcon.vue",
+    "GlobalChatBar.vue",
+    "PageCard.vue",
+    "SubPageCard.vue",
+    "SubPageCard2.vue",
+    "TabBar.vue"
+  ],
+  "alsoSync": [
+    {
+      "source": "src/utils/rpx.ts",
+      "dest": "../aistock-app-frontend/src/shared/utils/rpx.ts"
+    },
+    {
+      "source": "src/styles/variables.scss",
+      "dest": "../aistock-app-frontend/src/shared/styles/variables.scss",
+      "headerComment": "同步自 aistock-component-lib/src/styles/variables.scss（自动生成产物）"
+    }
+  ]
+}

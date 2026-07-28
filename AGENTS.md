@@ -18,6 +18,8 @@
 | `src/tokens/types.ts` | Tokens 接口类型定义 |
 | `src/styles/variables.scss` | Design Token SCSS 变量（脚本生成，勿手编） |
 | `scripts/generate-tokens.ts` | 令牌生成脚本（`pnpm gen-tokens`） |
+| `scripts/sync-components.ts` | 组件同步脚本（`pnpm sync` / `pnpm sync:dry-run`） |
+| `scripts/sync.config.json` | 同步配置（重命名映射、路径改写、排除列表） |
 | `src/index.ts` | 统一导出入口 |
 | `dev/` | 本地预览环境（不入组件库导出） |
 | `design/` | HTML 设计稿 |
@@ -29,6 +31,16 @@
 设计令牌采用「单一真相源 + 自动生成」：`src/tokens/tokens.json` 是唯一手动维护的真相源，`scripts/generate-tokens.ts`（`pnpm gen-tokens`）读取它生成 `src/styles/variables.scss`、`src/tokens/tokens.css`、`src/tokens/tokens.ts` 三份产物。**禁止手动编辑这三份产物**，修改令牌请编辑 `tokens.json` 后运行 `pnpm gen-tokens`。`src/tokens/types.ts` 为 `Tokens` 接口定义。
 
 设计系统参考：`design/FinDesign System · 蓝白金融设计系统.html`
+
+## 组件同步
+
+组件库组件通过「复制」方式同步到 `aistock-app-frontend/src/shared/components/`，同步后 App 前端可独立编译，不依赖组件库目录。
+
+- 修改组件后运行 `pnpm sync`（或先 `pnpm sync:dry-run` 预览）
+- App 前端也可直接运行 `pnpm sync` / `pnpm sync:dry-run`（内部 cd 到组件库执行）
+- 同步配置在 `scripts/sync.config.json`：重命名映射、import 路径改写、排除列表（Wrapper 组件不同步）
+- App 前端 Wrapper 组件（AppBottomBar/MainTabs/PageCard/SubPageCard/SubPageCard2/GlobalChatBar）含业务逻辑，不参与自动同步
+- App 前端 SvgIcon 独立实现，不从组件库同步
 
 ## 组件清单
 

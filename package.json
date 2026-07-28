@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "type-check": "vue-tsc --noEmit",
-    "gen-tokens": "tsx scripts/generate-tokens.ts"
+    "gen-tokens": "tsx scripts/generate-tokens.ts",
+    "sync": "tsx scripts/sync-components.ts",
+    "sync:dry-run": "tsx scripts/sync-components.ts --dry-run"
   },
   "dependencies": {
     "vue": "^3.4.21"
