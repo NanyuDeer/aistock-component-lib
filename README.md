@@ -7,7 +7,7 @@
 
 ```bash
 pnpm install        # 安装依赖
-pnpm dev            # 启动本地预览（浏览器打开看组件效果）
+pnpm dev            # 启动本地预览（首页看组件效果，#/catalog 进组件目录页）
 pnpm type-check     # 类型检查
 pnpm build:lib      # 库模式构建（产出 dist/index.js + dist/aistock-component-lib.css）
 pnpm test           # 运行全部组件测试（Vitest）
@@ -110,6 +110,25 @@ pnpm build:lib    # 等价于 vite build --mode lib
 - **SCSS 注入**：构建期 `additionalData` 全局注入 `@/styles/variables.scss`，组件内 `$` 变量在产物中已展开为字面量
 - **不做 rpx→vw 转换**：lib 模式跳过 `rpxToVw` PostCSS 插件，保留 `rpx` 单位交给消费方（uni-app 项目 / Web 项目）按各自平台编译处理
 - **不生成类型声明**：当前仅产 JS+CSS，类型由 `vue-tsc --noEmit` 单独校验；未来发布到 npm 时再启用 `vite-plugin-dts` 等 `.d.ts` 产物
+
+## 组件预览
+
+组件库内置轻量级预览环境（无需 Storybook），通过 hash 路由切换两种视图：
+
+- `#/` — 组件预览首页（`dev/App.vue`），所有组件的实际渲染效果展示
+- `#/catalog` — 组件目录页（`dev/CatalogPage.vue`），支持搜索、分类筛选、点击预览全部 41 个组件
+
+```bash
+pnpm dev            # 启动预览服务
+# 浏览器打开后点击顶部导航"组件目录"进入 CatalogPage
+```
+
+CatalogPage 功能：
+- 6 大分类卡片网格（基础/反馈/业务/布局/图表/AI）
+- 实时搜索（组件名/描述/分类三字段匹配）
+- 点击组件卡片在右侧预览面板渲染实际组件
+- 覆盖层组件（Modal/Toast/ActionSheet 等）在固定高度 frame 内预览
+- SvgIcon 点击后展示 12 个可用图标网格
 
 ## 目录说明
 

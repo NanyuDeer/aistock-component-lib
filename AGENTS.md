@@ -9,6 +9,24 @@
 - 有现成组件 → 直接使用
 - 没有 → 找林晓研补充，不要在业务代码里手写
 
+## 开发工作流程（重要）
+
+### 设计令牌工作流程
+
+1. 需要修改颜色/间距/圆角等设计令牌时：
+   - 编辑 `src/tokens/tokens.json`（唯一真相源）
+   - 运行 `pnpm gen-tokens` 生成 SCSS/CSS/TS 三份产物
+   - **禁止**直接编辑 `src/styles/variables.scss`（该文件由脚本自动生成）
+
+### 新增/修改组件工作流程
+
+1. 在 `src/components/` 下创建或修改 `.vue` 组件
+2. 在 `src/index.ts` 中导出（如新增组件）
+3. 运行 `pnpm test` 确保测试通过（新增组件需同时编写 `__tests__/<组件>.spec.ts`）
+4. 运行 `pnpm sync` 同步到 App 前端（或先 `pnpm sync:dry-run` 预览变更）
+5. 在 App 前端运行 `npx tsc --noEmit` 验证类型
+6. 设计令牌变更时，`sync` 会自动同步 `variables.scss` 到 App 前端
+
 ## 仓库结构
 
 | 目录 | 作用 |
