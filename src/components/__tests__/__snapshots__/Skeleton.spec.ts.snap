@@ -1,0 +1,3 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Skeleton > matches snapshot 1`] = `"<view data-v-38271e4e="" class="as-skeleton as-skeleton--title"></view>"`;

@@ -1,0 +1,12 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Card > matches snapshot 1`] = `
+"<view data-v-c6c3362a="" class="as-card">
+  <view data-v-c6c3362a="" class="as-card__header">
+    <view data-v-c6c3362a="" class="as-card__header-content"><text data-v-c6c3362a="" class="as-card__title">标题</text><text data-v-c6c3362a="" class="as-card__subtitle">副标题</text></view>
+    <view data-v-c6c3362a="" class="as-card__header-extra"></view>
+  </view>
+  <view data-v-c6c3362a="" class="as-card__body">内容</view>
+  <!--v-if-->
+</view>"
+`;

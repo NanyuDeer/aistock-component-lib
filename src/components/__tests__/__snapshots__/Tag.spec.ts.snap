@@ -1,0 +1,3 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Tag > matches snapshot 1`] = `"<view data-v-1b13cba6="" class="as-tag as-tag--up as-tag--md"><text data-v-1b13cba6="" class="as-tag__text">+3.2%</text></view>"`;

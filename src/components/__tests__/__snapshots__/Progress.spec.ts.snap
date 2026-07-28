@@ -1,0 +1,10 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Progress > matches snapshot 1`] = `
+"<view data-v-ca22be87="" class="as-progress">
+  <view data-v-ca22be87="" class="as-progress__label"><text data-v-ca22be87="" class="as-progress__label-text">同步进度</text><text data-v-ca22be87="" class="as-progress__label-value is-primary">68%</text></view>
+  <view data-v-ca22be87="" class="as-progress__track">
+    <view data-v-ca22be87="" class="as-progress__bar is-primary" style="width: 68%;"></view>
+  </view>
+</view>"
+`;

@@ -9,6 +9,10 @@
 pnpm install        # 安装依赖
 pnpm dev            # 启动本地预览（浏览器打开看组件效果）
 pnpm type-check     # 类型检查
+pnpm test           # 运行全部组件测试（Vitest）
+pnpm test:watch     # 监听模式运行测试
+pnpm test:coverage  # 生成测试覆盖率报告
+pnpm test:update    # 更新快照
 pnpm gen-tokens     # 重新生成设计令牌产物（修改 src/tokens/tokens.json 后运行）
 pnpm sync           # 将组件同步到 aistock-app-frontend（复制方式，非引用）
 pnpm sync:dry-run   # 仅预览同步结果，不实际写入文件
@@ -63,11 +67,32 @@ aistock-app-frontend/src/shared/components/
 | 附加同步 | `src/utils/rpx.ts`、`src/styles/variables.scss`（带同步注释头） |
 | 孤儿检测 | 检测目标目录中存在但源目录无对应文件的组件，仅报告不自动删除 |
 
+## 组件测试
+
+组件库使用 [Vitest](https://vitest.dev/) + [@vue/test-utils](https://test-utils.vuejs.org/) + happy-dom 运行单元测试，配置在 `vitest.config.ts`：
+
+- `happy-dom` 模拟 DOM 环境
+- `@vitejs/plugin-vue` 编译 `.vue`，`isCustomElement` 把 uni-app 的 `view`/`text`/`image` 等标签识别为自定义元素
+- SCSS `additionalData` 全局注入 `@/styles/variables.scss`，组件样式中的 `$` 变量可在测试环境解析
+- 覆盖率统计仅覆盖 `src/components/**/*.vue`
+
+测试文件位于 `src/components/__tests__/`，每个组件包含 props 行为测试 + 快照测试（快照存于 `__tests__/__snapshots__/`）。已覆盖 11 个基础/反馈组件：Button、Card、Tag、Badge、Avatar、Switch、Empty、LoadingState、Rate、Progress、Skeleton。
+
+```bash
+pnpm test           # 运行全部测试
+pnpm test:watch     # 监听模式
+pnpm test:coverage  # 覆盖率报告（输出到 coverage/）
+pnpm test:update    # 组件结构变化后更新快照
+```
+
+> 修改组件 props/结构后，若快照失效请先确认改动符合预期再运行 `pnpm test:update`，不要盲目更新快照。
+
 ## 目录说明
 
 | 目录 | 作用 |
 |------|------|
 | `src/components/` | 组件库本体，每个 `.vue` 文件是一个组件 |
+| `src/components/__tests__/` | 组件单元测试（Vitest，props + 快照测试） |
 | `src/tokens/tokens.json` | Design Token 单一真相源（手动维护） |
 | `src/tokens/types.ts` | Tokens 接口类型定义 |
 | `src/tokens/tokens.css` `tokens.ts` | 令牌产物（脚本生成，勿手编） |
@@ -75,6 +100,8 @@ aistock-app-frontend/src/shared/components/
 | `scripts/generate-tokens.ts` | 令牌生成脚本（`pnpm gen-tokens`） |
 | `scripts/sync-components.ts` | 组件同步脚本（`pnpm sync` / `pnpm sync:dry-run`） |
 | `scripts/sync.config.json` | 同步配置（重命名映射、路径改写、排除列表） |
+| `vite.config.ts` | 本地预览 Vite 配置（rpx→vw、自定义元素） |
+| `vitest.config.ts` | 测试配置（happy-dom、自定义元素、SCSS 变量注入） |
 | `src/index.ts` | 统一导出入口 |
 | `dev/` | 本地预览环境（不入组件库导出） |
 | `design/` | HTML 设计稿 |

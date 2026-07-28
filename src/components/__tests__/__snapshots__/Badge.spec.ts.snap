@@ -1,0 +1,3 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Badge > matches snapshot 1`] = `"<view data-v-0d3d5e64="" class="as-badge as-badge--warning as-badge--md"><text data-v-0d3d5e64="" class="as-badge__text">待审核</text></view>"`;

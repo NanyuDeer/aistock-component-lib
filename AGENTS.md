@@ -14,14 +14,17 @@
 | 目录 | 作用 |
 |------|------|
 | `src/components/` | 组件库本体，每个 .vue 文件是一个组件 |
+| `src/components/__tests__/` | 组件单元测试（Vitest，props + 快照） |
 | `src/tokens/tokens.json` | Design Token 单一真相源（手动维护） |
 | `src/tokens/types.ts` | Tokens 接口类型定义 |
 | `src/styles/variables.scss` | Design Token SCSS 变量（脚本生成，勿手编） |
 | `scripts/generate-tokens.ts` | 令牌生成脚本（`pnpm gen-tokens`） |
 | `scripts/sync-components.ts` | 组件同步脚本（`pnpm sync` / `pnpm sync:dry-run`） |
 | `scripts/sync.config.json` | 同步配置（重命名映射、路径改写、排除列表） |
+| `vite.config.ts` | 本地预览 Vite 配置 |
+| `vitest.config.ts` | 测试配置（happy-dom、自定义元素、SCSS 变量注入） |
 | `src/index.ts` | 统一导出入口 |
-| `dev/` | 本地预览环境（不入组件库导出） |
+| `dev/` | 本地预览环境 |
 | `design/` | HTML 设计稿 |
 
 ## Design Token
@@ -55,6 +58,15 @@
 - AI 对话与媒体：ChatBubble、StreamingText、AudioPlayer
 
 > **注意**：SubPageCard 已弃用（@deprecated），新功能请使用 SubPageCard2。组件选用指南见 `README.md`。
+
+## 组件测试
+
+组件测试基于 Vitest + @vue/test-utils + happy-dom，配置在 `vitest.config.ts`。
+
+- 测试文件放 `src/components/__tests__/<组件>.spec.ts`，每个组件含 props 行为测试 + 快照测试
+- `vitest.config.ts` 已把 uni-app 的 `view`/`text`/`image` 等配为自定义元素，并全局注入 SCSS 变量
+- 改组件 props/结构后跑 `pnpm test`；快照失效先确认改动合理再 `pnpm test:update`，不要盲目更新
+- 常用命令：`pnpm test` / `pnpm test:watch` / `pnpm test:coverage` / `pnpm test:update`
 
 ## 组件规范
 

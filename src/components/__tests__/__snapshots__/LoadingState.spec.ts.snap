@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`LoadingState > matches snapshot 1`] = `
+"<view data-v-fb0fe922="" class="as-loading as-loading--horizontal">
+  <view data-v-fb0fe922="" class="as-loading__spinner as-loading__spinner--md"></view><text data-v-fb0fe922="" class="as-loading__text">加载中</text>
+</view>"
+`;

@@ -175,3 +175,26 @@
   - 孤儿检测：检测目标目录中无对应源文件的组件，仅报告不自动删除
   - dry-run 模式：仅预览不写入文件，通过 MD5 哈希对比跳过未变化文件
 - **验证**：`npx tsx scripts/sync-components.ts --dry-run` 输出正确（7 copy + 3 rename + 25 skip + 6 exclude + 2 also-sync + 0 orphan = 41 源文件）；dry-run 前后文件哈希一致（确认不写入）；`tsc --noEmit` 脚本类型检查通过（exit 0）
+
+## 2026-07-29 林晓研（Task 3：前端架构改进）
+
+### test: 新增 11 个基础组件的 Vitest 快照+props 测试
+- **用途**：为组件库建立可回归的单元测试基础设施，覆盖 props 行为与渲染快照
+- **新增文件**：
+  - `vitest.config.ts` 测试配置（happy-dom 环境、@vitejs/plugin-vue 自定义元素、SCSS `@use` 变量注入、v8 覆盖率）
+  - `src/components/__tests__/` 下 11 个测试文件：Button/Card/Tag/Badge/Avatar/Switch/Empty/LoadingState/Rate/Progress/Skeleton（共 54 个测试用例）
+  - `src/components/__tests__/__snapshots__/` 11 份快照产物
+- **修改文件**：
+  - `package.json` 新增 devDeps（vitest@^2.1.9、@vue/test-utils@^2.4.11、happy-dom@^15.11.7、@vitest/coverage-v8@^2.1.9）+ 4 个 test 脚本（test/test:watch/test:coverage/test:update）
+  - `package-lock.json` npm 安装产物
+  - `README.md` 快速开始补 test 命令、新增「组件测试」章节、目录表补 __tests__ 与 vitest.config.ts
+  - `AGENTS.md` 新增「组件测试」章节、仓库结构表补条目
+- **与 brief 的适配**（brief 测试代码引用了实际组件不存在的 API，按"测试必须验证真实行为"原则调整并加注释）：
+  - Card：无 `paddingRm` prop → 改测真实 `clickable` → `is-clickable` class
+  - Badge：`dot` 是 boolean prop 而非 `type:'dot'` → 改测 `dot:true` → `as-badge--dot`
+  - Empty：无具名 `action` slot（操作区用默认 slot）→ 改用默认 slot
+  - LoadingState：size class 挂在 spinner 子元素（`as-loading__spinner--${size}`）→ 改用 `find` 断言子元素
+  - Progress：status class（`is-${status}`）挂在 `as-progress__bar` 子元素，且 value 文本仅在 `label` 存在时渲染 → 改测 bar 的 `is-danger` class 与 bar 宽度内联样式
+- **环境问题**：pnpm install 因项目目录被长驻进程占用报 EBUSY（与 Task 1 同样的已知环境问题），改用 `npm install` 旁路 pnpm store 的项目符号链接；`pnpm-lock.yaml` 暂未更新（保持 package-lock.json 为准），干净会话下 `pnpm install` 可正常工作
+- **验证**：`npx vitest run` 全部 54 测试 PASS（11 文件）；`npx vitest run -u` 生成 11 份快照后 CI 模式复跑稳定通过；`vue-tsc --noEmit` 类型检查通过（exit 0）
+

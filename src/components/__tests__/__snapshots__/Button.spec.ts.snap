@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Button > matches snapshot 1`] = `
+"<button data-v-3c9d0845="" class="as-btn as-btn--primary as-btn--md">
+  <!--v-if--><text data-v-3c9d0845="" class="as-btn__text">Snapshot</text>
+</button>"
+`;

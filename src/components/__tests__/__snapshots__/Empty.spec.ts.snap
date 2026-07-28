@@ -1,0 +1,10 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Empty > matches snapshot 1`] = `
+"<view data-v-1490f9ea="" class="as-empty">
+  <view data-v-1490f9ea="" class="as-empty__icon">
+    <view data-v-1490f9ea="" class="as-empty__icon-default"></view>
+  </view><text data-v-1490f9ea="" class="as-empty__title">暂无搜索结果</text><text data-v-1490f9ea="" class="as-empty__desc">尝试更换关键词</text>
+  <!--v-if-->
+</view>"
+`;

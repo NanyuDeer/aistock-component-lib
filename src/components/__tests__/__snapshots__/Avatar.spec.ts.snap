@@ -1,0 +1,3 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Avatar > matches snapshot 1`] = `"<view data-v-69299821="" class="as-avatar as-avatar--md as-avatar--primary"><text data-v-69299821="" class="as-avatar__text">晋研</text></view>"`;

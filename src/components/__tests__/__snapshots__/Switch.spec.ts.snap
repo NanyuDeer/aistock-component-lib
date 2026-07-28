@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Switch > matches snapshot 1`] = `
+"<view data-v-54a6d679="" class="as-switch is-on">
+  <view data-v-54a6d679="" class="as-switch__thumb"></view>
+</view>"
+`;
