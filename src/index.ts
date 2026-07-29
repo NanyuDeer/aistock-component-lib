@@ -38,6 +38,8 @@ export { default as SubPageCard } from './components/SubPageCard.vue'
 export { default as QuoteHeader } from './components/QuoteHeader.vue'
 export { default as DataTable } from './components/DataTable.vue'
 export { default as IndexCard } from './components/IndexCard.vue'
+export { default as InsightPreviewCard } from './components/InsightPreviewCard.vue'
+export { default as InvestmentSummaryCard } from './components/InvestmentSummaryCard.vue'
 
 // 导航和布局组件
 export { default as NavBar } from './components/NavBar.vue'

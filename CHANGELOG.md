@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## [feat/architecture-improvement] 2026-07-29 — 新增 2 个金融业务共享组件
+**开发者**: 林晓研
+
+### 新增
+- **InsightPreviewCard** — 洞察预览卡片：主题色头部（brand/gold/accent 三色）+ SvgIcon 图标 + 标题 + 描述；排名预览列表前 3 名奖牌徽标（金/银/铜）高亮，可配 tag 标签（5 色）+ trend 趋势（3 色）；maxItems 截断默认 5 条
+- **InvestmentSummaryCard** — 投资总结卡片：顶部主题色装饰条（gold/brand 双色）+ 标题 + readonly Rate 星级评分；结论段落背景区块；关键要点列表带主题色圆点 bullet 标记
+
+### 改进
+- `src/index.ts` 金融业务组件分组新增 2 个导出（组件数 41→43）
+- `dev/CatalogPage.vue` 业务分类新增 2 个组件卡片（含示例数据），组件数注释同步 43
+- `__catalog-smoke.spec.ts` 组件数断言 41→43
+
+### 文档
+- `README.md` 组件清单 41→43（5 处）+ 金融业务组件表新增 2 行
+- `AGENTS.md` 组件数同步 43
+
+---
+
 ## 2026-07-28 — 组件库补充：13 个新组件 + 预览页完善
 
 ### 新增组件（13 个）

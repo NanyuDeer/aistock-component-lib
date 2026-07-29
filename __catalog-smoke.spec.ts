@@ -3,18 +3,18 @@ import { mount, flushPromises } from '@vue/test-utils'
 import CatalogPage from './dev/CatalogPage.vue'
 
 describe('CatalogPage smoke (Task 4)', () => {
-  it('renders all 41 component cards', () => {
+  it('renders all 43 component cards', () => {
     const wrapper = mount(CatalogPage)
     const cards = wrapper.findAll('.catalog-card')
-    expect(cards.length).toBe(41)
+    expect(cards.length).toBe(43)
     // 标题与计数
     expect(wrapper.text()).toContain('组件目录')
-    expect(wrapper.text()).toContain('共 41 个组件')
+    expect(wrapper.text()).toContain('共 43 个组件')
   })
 
   it('search filters cards by name', async () => {
     const wrapper = mount(CatalogPage)
-    expect(wrapper.findAll('.catalog-card').length).toBe(41)
+    expect(wrapper.findAll('.catalog-card').length).toBe(43)
     const input = wrapper.find('.as-input__inner')
     await input.setValue('Modal')
     await flushPromises()

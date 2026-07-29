@@ -42,7 +42,7 @@ src/styles/variables.scss  src/tokens/tokens.css  src/tokens/tokens.ts
 组件库的组件通过「复制」方式同步到 `aistock-app-frontend`（非 npm 引用），同步后 App 前端可脱离组件库独立编译部署。
 
 ```
-src/components/*.vue  ──┐  （组件库本体，41 个组件）
+src/components/*.vue  ──┐  （组件库本体，43 个组件）
                         │
    scripts/sync-components.ts  （tsx 运行，读取 sync.config.json）
                         │
@@ -100,12 +100,12 @@ pnpm build:lib    # 等价于 vite build --mode lib
 
 | 文件 | 内容 |
 |------|------|
-| `dist/index.js` | ES 模块格式（`format: 'es'`），以 `src/index.ts` 为入口，导出全部 41 个组件 |
+| `dist/index.js` | ES 模块格式（`format: 'es'`），以 `src/index.ts` 为入口，导出全部 43 个组件 |
 | `dist/aistock-component-lib.css` | 全部组件 SCSS 编译合并后的 CSS（`cssCodeSplit: false` 单文件） |
 
 构建规则：
 
-- **入口**：`src/index.ts`（41 个组件的 barrel 导出）
+- **入口**：`src/index.ts`（43 个组件的 barrel 导出）
 - **Vue 外置**：`rollupOptions.external: ['vue']`，产物首行为 `import { ... } from "vue"`，不打包 Vue 运行时（peerDependency 形态）
 - **SCSS 注入**：构建期 `additionalData` 全局注入 `@/styles/variables.scss`，组件内 `$` 变量在产物中已展开为字面量
 - **不做 rpx→vw 转换**：lib 模式跳过 `rpxToVw` PostCSS 插件，保留 `rpx` 单位交给消费方（uni-app 项目 / Web 项目）按各自平台编译处理
@@ -116,7 +116,7 @@ pnpm build:lib    # 等价于 vite build --mode lib
 组件库内置轻量级预览环境（无需 Storybook），通过 hash 路由切换两种视图：
 
 - `#/` — 组件预览首页（`dev/App.vue`），所有组件的实际渲染效果展示
-- `#/catalog` — 组件目录页（`dev/CatalogPage.vue`），支持搜索、分类筛选、点击预览全部 41 个组件
+- `#/catalog` — 组件目录页（`dev/CatalogPage.vue`），支持搜索、分类筛选、点击预览全部 43 个组件
 
 ```bash
 pnpm dev            # 启动预览服务
@@ -170,7 +170,7 @@ CatalogPage 功能：
 
 组件使用 uni-app 组件规范（`view`/`text`/`image` 标签、`rpx` 单位），可被 `aistock-app-frontend`（uni-app 项目）直接引用。本地预览环境通过 Vite + 自定义元素配置 + rpx→vw 转换模拟 uni-app 行为，不依赖完整 uni-app 工具链。
 
-## 组件清单（41 个）
+## 组件清单（43 个）
 
 ### 基础组件
 | 组件 | 说明 |
@@ -222,6 +222,8 @@ CatalogPage 功能：
 | StatCard | 统计卡片（标签 + 数值 + 趋势 + 4 种值配色） |
 | ListCell | 列表单元格（标题 + 值 + 箭头 + 禁用态） |
 | QuoteHeader | 行情头部（头像 + 名称 + 价格 + 涨跌 + 指标行） |
+| InsightPreviewCard | 洞察预览卡片（主题色头部 + 图标 + 排名预览列表，前 3 名奖牌徽标，可配 tag/trend） |
+| InvestmentSummaryCard | 投资总结卡片（星级评分 + 投资结论 + 关键要点列表，gold/brand 双主题） |
 
 ### 数据可视化组件（纯 SVG 实现）
 | 组件 | 说明 |

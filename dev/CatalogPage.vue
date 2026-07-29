@@ -1,6 +1,6 @@
 <!--
   CatalogPage.vue — 组件目录预览页（dev 环境）
-  轻量替代 Storybook：搜索 + 分类筛选 + 点击预览全部 41 个组件。
+  轻量替代 Storybook：搜索 + 分类筛选 + 点击预览全部 43 个组件。
   通过 dev/main.ts 的 hash 路由访问：#/catalog
 -->
 <template>
@@ -98,7 +98,7 @@
 <script setup lang="ts">
 import { ref, computed, shallowRef, type Component } from 'vue'
 
-// 组件库本体（41 个）
+// 组件库本体（43 个）
 import Button from '@/components/Button.vue'
 import Card from '@/components/Card.vue'
 import Tag from '@/components/Tag.vue'
@@ -126,6 +126,8 @@ import SubPageCard from '@/components/SubPageCard.vue'
 import QuoteHeader from '@/components/QuoteHeader.vue'
 import DataTable from '@/components/DataTable.vue'
 import IndexCard from '@/components/IndexCard.vue'
+import InsightPreviewCard from '@/components/InsightPreviewCard.vue'
+import InvestmentSummaryCard from '@/components/InvestmentSummaryCard.vue'
 import NavBar from '@/components/NavBar.vue'
 import Footer from '@/components/Footer.vue'
 import TabBar from '@/components/TabBar.vue'
@@ -198,6 +200,8 @@ const componentList: CatalogItem[] = [
   { name: 'QuoteHeader', description: '行情头部', category: '业务', component: QuoteHeader, props: { name: '贵州茅台', code: '600519.SH', market: 'SH', price: 1689.5, change: 12.3, changePercent: 0.73, status: '交易中', metrics: [{ label: '成交量', value: '2.3万手', trend: 'up' }, { label: '成交额', value: '4.56亿', trend: 'up' }, { label: '换手率', value: '0.89%' }, { label: '市盈率', value: '32.5' }] } },
   { name: 'DataTable', description: '数据表格', category: '业务', component: DataTable, props: { title: '贵州茅台 600519.SH', columns: 3, data: [{ label: '总市值', value: 21210, unit: '亿', formatter: 'raw' }, { label: '市盈率', value: 32.5, formatter: 'price' }, { label: '市净率', value: 8.7, formatter: 'price' }, { label: '成交量', value: 23000, formatter: 'volume' }, { label: '成交额', value: 456000000, formatter: 'amount' }, { label: '换手率', value: 0.89, formatter: 'percent', trend: true }] } },
   { name: 'IndexCard', description: '大盘指数', category: '业务', component: IndexCard, props: { title: '大盘概览', status: '交易中', indices: [{ name: '上证指数', code: '000001', price: 3128.42, changePercent: 0.73 }, { name: '深证成指', code: '399001', price: 9847.15, changePercent: -0.32 }, { name: '创业板指', code: '399006', price: 1923.67, changePercent: 1.25 }] } },
+  { name: 'InsightPreviewCard', description: '洞察预览卡片', category: '业务', component: InsightPreviewCard, props: { title: '趋势评分', desc: '主力资金净流入排名', iconName: 'trending-up-line', themeColor: 'brand', items: [{ rank: 1, name: '贵州茅台', tag: '龙头', tagType: 'gold', trend: '+12.3%', trendType: 'up' }, { rank: 2, name: '宁德时代', tag: '热门', tagType: 'up', trend: '+8.6%', trendType: 'up' }, { rank: 3, name: '比亚迪', tag: '机构调研', tagType: 'neutral', trend: '+5.2%', trendType: 'up' }, { rank: 4, name: '隆基绿能', tag: '回调', tagType: 'warning', trend: '-2.1%', trendType: 'down' }, { rank: 5, name: '恒瑞医药', trend: '+0.8%', trendType: 'flat' }] } },
+  { name: 'InvestmentSummaryCard', description: '投资总结卡片', category: '业务', component: InvestmentSummaryCard, props: { rating: 4, title: '投资总结', ratingType: 'gold', conclusion: '贵州茅台基本面稳健，品牌护城河深厚，现金流充沛，长期投资价值突出。短期估值处于合理区间，建议逢低布局。', keyPoints: ['品牌护城河深厚，高端白酒市场份额稳固', '现金流充沛，分红率持续提升', '当前估值处于近五年中枢下沿', '关注旺季动销及批价变化'] } },
 
   // ===== 布局 =====
   { name: 'PageCard', description: '页面卡片', category: '布局', component: PageCard, props: { title: '主页面卡片', subtitle: '带标题栏的页面容器' }, slotContent: 'PageCard 内容区域' },
