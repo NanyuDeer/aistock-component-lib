@@ -40,6 +40,34 @@ export { default as DataTable } from './components/DataTable.vue'
 export { default as IndexCard } from './components/IndexCard.vue'
 export { default as InsightPreviewCard } from './components/InsightPreviewCard.vue'
 export { default as InvestmentSummaryCard } from './components/InvestmentSummaryCard.vue'
+export { default as InsightListCard } from './components/InsightListCard.vue'
+export { default as GuideCard } from './components/GuideCard.vue'
+export { default as StatGrid } from './components/StatGrid.vue'
+
+/**
+ * InsightListItem 类型定义
+ * 注意：不能从 .vue 文件 re-export type（TypeScript 的 *.vue shim 不支持命名导出），
+ * 因此在此处直接定义，与 InsightListCard.vue 内部的 interface 保持结构一致。
+ */
+export interface InsightListItem {
+  name: string
+  tag?: string
+  score?: string
+  trend?: string
+  trendType?: 'up' | 'down'
+}
+
+/**
+ * StatGridItem 类型定义
+ * 注意：不能从 .vue 文件 re-export type（TypeScript 的 *.vue shim 不支持命名导出），
+ * 因此在此处直接定义，与 StatGrid.vue 内部的 interface 保持结构一致。
+ */
+export interface StatGridItem {
+  label: string
+  value: string | number
+  unit?: string
+  color?: 'brand' | 'up' | 'down' | 'warning'
+}
 
 // 导航和布局组件
 export { default as NavBar } from './components/NavBar.vue'
