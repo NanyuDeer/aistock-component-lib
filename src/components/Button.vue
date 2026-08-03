@@ -112,7 +112,7 @@ const handleClick = (event: MouseEvent) => {
 .as-btn--accent {
   background: linear-gradient(135deg, $accent 0%, $primary 100%);
   color: $white;
-  box-shadow: 0 8rpx 28rpx -4rpx rgba(0, 184, 255, 0.4);
+  box-shadow: 0 8rpx 28rpx -4rpx rgba(11, 95, 255, 0.4);
 
   &:active {
     transform: scale(0.98);
@@ -122,7 +122,7 @@ const handleClick = (event: MouseEvent) => {
 .as-btn--gold {
   background: linear-gradient(135deg, $gold 0%, $gold-deep 100%);
   color: $white;
-  box-shadow: 0 8rpx 28rpx -4rpx rgba(212, 168, 67, 0.4);
+  box-shadow: 0 8rpx 28rpx -4rpx rgba(200, 144, 32, 0.4);
 
   &:active {
     transform: scale(0.98);
