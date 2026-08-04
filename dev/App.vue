@@ -280,10 +280,10 @@
       <text class="dev-section-title">Gauge 仪表盘</text>
       <view class="dev-section-body">
         <view class="dev-row">
-          <Gauge :value="86" label="综合评分" size="md" />
-          <Gauge :value="65" label="技术面" size="md" />
-          <Gauge :value="45" label="资金面" size="md" />
-          <Gauge :value="28" label="风险度" size="md" />
+          <Gauge :value="86" label="综合评分" :size="160" />
+          <Gauge :value="65" label="技术面" :size="160" />
+          <Gauge :value="45" label="资金面" :size="160" />
+          <Gauge :value="28" label="风险度" :size="160" />
         </view>
       </view>
     </view>
@@ -313,7 +313,7 @@
     <view class="dev-section">
       <text class="dev-section-title">RelationGraph 关系图谱</text>
       <view class="dev-section-body">
-        <RelationGraph title="产业链关联" :nodes="relationNodes" @node-click="onNodeClick" />
+        <RelationGraph :nodes="relationNodes" :links="relationLinks" @node-click="onNodeClick" />
         <text v-if="clickedNode" class="dev-spark-tip">已点击节点：{{ clickedNode }}</text>
       </view>
     </view>
@@ -342,8 +342,8 @@
           market="SH"
           :price="1689.50"
           :change="12.30"
-          :change-percent="0.73"
-          status="交易中"
+          :change-pct="0.73"
+          status="normal"
           :metrics="quoteMetrics"
         />
       </view>
@@ -377,9 +377,9 @@
       <text class="dev-section-title">TabBar 底部标签栏</text>
       <view class="dev-section-body">
         <view class="dev-device-frame tab-frame">
-          <TabBar :tabs="tabItems" :active-tab="activeTab" @change="activeTab = $event" />
+          <TabBar :items="tabItems" v-model:value="activeTab" />
         </view>
-        <text class="dev-label">当前选中：{{ activeTab }}</text>
+        <text class="dev-label">当前选中：{{ tabItems[activeTab]?.label }}</text>
       </view>
     </view>
 
@@ -402,7 +402,7 @@
       <text class="dev-section-title">BottomSheet 底部弹窗</text>
       <view class="dev-section-body">
         <Button type="primary" @click="showBottomSheet = true">打开 BottomSheet</Button>
-        <BottomSheet v-model:visible="showBottomSheet" title="筛选条件">
+        <BottomSheet v-model:open="showBottomSheet" title="筛选条件">
           <view class="dev-sheet-content">
             <text class="dev-label">市场</text>
             <Segmented :items="[
@@ -431,8 +431,8 @@
       <view class="dev-section-body">
         <Button type="secondary" @click="showActionSheet = true">打开 ActionSheet</Button>
         <ActionSheet
-          v-model:visible="showActionSheet"
-          :items="actionItems"
+          v-model:open="showActionSheet"
+          :actions="actionItems"
           cancel-text="取消"
           @select="onActionSelect"
         />
@@ -458,8 +458,8 @@
               market="SH"
               :price="1689.50"
               :change="12.30"
-              :change-percent="0.73"
-              status="交易中"
+              :change-pct="0.73"
+              status="normal"
               :metrics="quoteMetrics"
             />
             <view class="dev-gap" />
@@ -522,7 +522,18 @@
     <view class="dev-section">
       <text class="dev-section-title">IndexCard 大盘指数</text>
       <view class="dev-section-body">
-        <IndexCard :indices="marketIndices" title="大盘概览" status="交易中" />
+        <view class="dev-row">
+          <IndexCard
+            v-for="item in marketIndices"
+            :key="item.code"
+            :name="item.name"
+            :code="item.code"
+            :value="item.value"
+            :change="item.change"
+            :change-percent="item.changePercent"
+            :trend="item.changePercent > 0 ? 'up' : item.changePercent < 0 ? 'down' : 'flat'"
+          />
+        </view>
       </view>
     </view>
 
@@ -567,7 +578,7 @@
         <view class="dev-row">
           <Button type="primary" @click="showModal = true">打开 Modal</Button>
         </view>
-        <Modal v-model:visible="showModal" title="确认操作" position="center">
+        <Modal v-model="showModal" title="确认操作">
           <text class="card-content">确定要将贵州茅台加入自选股吗？加入后将实时推送异动提醒。</text>
           <template #footer>
             <view class="dev-modal-footer">
@@ -690,29 +701,37 @@ const switch2 = ref(false)
 
 // 数据可视化组件示例数据
 const radarDims = [
-  { label: '成长性', score: 82 },
-  { label: '盈利能力', score: 75 },
-  { label: '偿债能力', score: 68 },
-  { label: '运营效率', score: 90 },
-  { label: '现金流', score: 60 }
+  { label: '成长性', value: 82 },
+  { label: '盈利能力', value: 75 },
+  { label: '偿债能力', value: 68 },
+  { label: '运营效率', value: 90 },
+  { label: '现金流', value: 60 }
 ]
 
 const relationNodes = [
-  { id: 'main', label: '宁德时代', type: 'main' as const },
-  { id: 'u1', label: '锂矿', type: 'upstream' as const },
-  { id: 'u2', label: '正极材料', type: 'upstream' as const },
-  { id: 'd1', label: '新能源车', type: 'downstream' as const },
-  { id: 'd2', label: '储能', type: 'downstream' as const },
-  { id: 'r1', label: '锂电池', type: 'related' as const },
-  { id: 'r2', label: '创业板', type: 'related' as const }
+  { key: 'main', label: '宁德时代', category: 'core' as const },
+  { key: 'u1', label: '锂矿', category: 'upstream' as const },
+  { key: 'u2', label: '正极材料', category: 'upstream' as const },
+  { key: 'd1', label: '新能源车', category: 'downstream' as const },
+  { key: 'd2', label: '储能', category: 'downstream' as const },
+  { key: 'r1', label: '锂电池', category: 'downstream' as const },
+  { key: 'r2', label: '创业板', category: 'downstream' as const }
+]
+const relationLinks = [
+  { from: 'main', to: 'u1', label: '采购' },
+  { from: 'main', to: 'u2', label: '采购' },
+  { from: 'main', to: 'd1', label: '供应' },
+  { from: 'main', to: 'd2', label: '供应' },
+  { from: 'main', to: 'r1', label: '所属' },
+  { from: 'main', to: 'r2', label: '所属' }
 ]
 const clickedNode = ref('')
 function onNodeClick(node: { id: string; label: string }) {
   clickedNode.value = node.label
 }
 
-function onActionSelect(item: { label: string; value: string | number }) {
-  clickedNode.value = `ActionSheet: ${item.label}`
+function onActionSelect(action: { key: string; label: string; danger?: boolean }) {
+  clickedNode.value = `ActionSheet: ${action.label}`
 }
 
 const sparkUp = [10, 12, 11, 14, 13, 16, 15, 18, 17, 21]
@@ -737,12 +756,12 @@ const quoteMetrics = [
 ]
 
 // ===== TabBar 底部标签栏 =====
-const activeTab = ref('home')
+const activeTab = ref(0)
 const tabItems = [
-  { id: 'home', name: '首页', icon: 'home-line' },
-  { id: 'market', name: '行情', icon: 'chart-line', badge: 'dot' },
-  { id: 'trade', name: '交易', icon: 'trade-line', badge: '3' },
-  { id: 'mine', name: '我的', icon: 'user-line' }
+  { key: 'home', label: '首页', icon: 'home-line' },
+  { key: 'market', label: '行情', icon: 'chart-line' },
+  { key: 'trade', label: '交易', icon: 'trade-line' },
+  { key: 'mine', label: '我的', icon: 'user-line' }
 ]
 
 // ===== BottomSheet 底部弹窗 =====
@@ -751,10 +770,10 @@ const showBottomSheet = ref(false)
 // ===== ActionSheet 操作菜单 =====
 const showActionSheet = ref(false)
 const actionItems = [
-  { label: '加入自选', value: 'favorite' },
-  { label: '设置提醒', value: 'alert' },
-  { label: '分享给好友', value: 'share' },
-  { label: '删除', value: 'delete', danger: true }
+  { key: 'favorite', label: '加入自选' },
+  { key: 'alert', label: '设置提醒' },
+  { key: 'share', label: '分享给好友' },
+  { key: 'delete', label: '删除', danger: true }
 ]
 
 // ===== SubPageCard2 子页面容器 =====
@@ -782,9 +801,9 @@ const stockTableData = [
 
 // ===== IndexCard 大盘指数 =====
 const marketIndices = [
-  { name: '上证指数', code: '000001', price: 3128.42, changePercent: 0.73 },
-  { name: '深证成指', code: '399001', price: 9847.15, changePercent: -0.32 },
-  { name: '创业板指', code: '399006', price: 1923.67, changePercent: 1.25 }
+  { name: '上证指数', code: '000001', value: 3128.42, change: 22.67, changePercent: 0.73 },
+  { name: '深证成指', code: '399001', value: 9847.15, change: -31.52, changePercent: -0.32 },
+  { name: '创业板指', code: '399006', value: 1923.67, change: 23.84, changePercent: 1.25 }
 ]
 
 // ===== StreamingText 流式文字 =====
