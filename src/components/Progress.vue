@@ -50,9 +50,9 @@ const props = withDefaults(defineProps<{
 const statusColorMap: Record<ProgressStatus, string> = {
   primary: '#0b5fff',
   success: '#18a058',
-  warning: '#f0a020',
+  warning: '#c89020',
   danger: '#e54d5e',
-  gold: '#d4a843'
+  gold: '#c89020'
 }
 
 const circleBackground = computed(() => {

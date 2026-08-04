@@ -23,18 +23,18 @@ $brand-color: $primary;
 $brand-color-secondary: $primary-600;
 $brand-gradient: linear-gradient(135deg, $primary 0%, $primary-600 100%);
 
-/* ===== Accent - Cyan ===== */
-$accent: #00b8ff;
-$accent-light: #5ad4ff;
-$accent-deep: #0088c4;
+/* ===== Accent - Blue (新设计系统：与 primary 同色) ===== */
+$accent: #0b5fff;
+$accent-light: #4d8bff;
+$accent-deep: #0948cc;
 $accent-50: #e6f8ff;
 $accent-100: #b3ecff;
 
 /* ===== Gold - Premium ===== */
-$gold: #d4a843;
-$gold-light: #e8c878;
-$gold-deep: #a67c1f;
-$gold-soft: rgba(212, 168, 67, 0.12);
+$gold: #c89020;
+$gold-light: #f0c75a;
+$gold-deep: #8a6411;
+$gold-soft: rgba(200, 144, 32, 0.12);
 
 /* ===== Background ===== */
 $bg-page: #eef3fb;
@@ -78,9 +78,10 @@ $down: #18a058;
 $down-soft: rgba(24, 160, 88, 0.1);
 $down-bg: rgba(24, 160, 88, 0.06);
 $flat: #909399;
-$warning: #f0a020;
-$warning-soft: rgba(240, 160, 32, 0.1);
-$warning-bg: rgba(240, 160, 32, 0.08);
+$warning: #c89020;
+$warning-soft: rgba(200, 144, 32, 0.1);
+$warning-bg: rgba(200, 144, 32, 0.08);
+$warn: $warning;
 
 /* 兼容旧变量 */
 $stock-up-color: $up;
@@ -185,7 +186,7 @@ $overlay-blur-strong: blur(32rpx);
 /* ===== Focus Ring ===== */
 $focus-ring: 0 0 0 6rpx rgba(11, 95, 255, 0.20);
 $focus-ring-error: 0 0 0 6rpx rgba(229, 77, 94, 0.20);
-$focus-ring-warn: 0 0 0 6rpx rgba(240, 160, 32, 0.20);
+$focus-ring-warn: 0 0 0 6rpx rgba(200, 144, 32, 0.20);
 
 /* ===== Opacity ===== */
 $op-disabled: 0.45;
@@ -221,6 +222,10 @@ $up-light: #f06a78;
 $down-deep: #36b37e;
 $down-light: #4dc878;
 $warning-light: #f5b840;
+
+/* ===== Brand Gradients (新设计系统) ===== */
+$gradient-brand: linear-gradient(90deg, #3ee1a3 0%, #32f08c 36%, #60f2bd 71.63%, #a0fde7 100%);
+$gradient-golden: linear-gradient(180deg, #DAB444 0%, #FFEA8E 100%);
 
 /* ===== Active / Hover Backgrounds ===== */
 $primary-active-bg: linear-gradient(135deg, #f5f9ff, #eef3ff);
