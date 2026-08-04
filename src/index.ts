@@ -77,3 +77,20 @@ export { default as FundFlow } from './components/FundFlow.vue'
 export { default as Watchlist } from './components/Watchlist.vue'
 export { default as RadarChart } from './components/RadarChart.vue'
 export { default as RelationGraph } from './components/RelationGraph.vue'
+
+// ===== 补充导出：#2 重构遗漏的组件（文件存在但未导出，保持库完整性）=====
+// 基础 UI 扩展
+export { default as Segmented } from './components/Segmented.vue'
+
+// 金融业务扩展
+export { default as DataTable } from './components/DataTable.vue'
+export { default as SubPageCard2 } from './components/SubPageCard2.vue'
+
+// 导航布局扩展
+export { default as Footer } from './components/Footer.vue'
+export { default as Steps } from './components/Steps.vue'
+
+// AI 对话与媒体
+export { default as ChatBubble } from './components/ChatBubble.vue'
+export { default as StreamingText } from './components/StreamingText.vue'
+export { default as AudioPlayer } from './components/AudioPlayer.vue'
