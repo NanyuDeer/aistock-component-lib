@@ -1,129 +1,118 @@
 <template>
-  <view class="as-index-card">
-    <view v-if="title || status" class="as-index-card__header">
-      <text class="as-index-card__title">{{ title }}</text>
-      <text v-if="status" class="as-index-card__status">{{ status }}</text>
+  <view class="as-index-card" :class="`is-${trend}`">
+    <view class="as-index-card__header">
+      <text class="as-index-card__name">{{ name }}</text>
+      <text class="as-index-card__code">{{ code }}</text>
     </view>
-    <view class="as-index-card__list">
-      <view
-        v-for="(item, idx) in indices"
-        :key="idx"
-        class="as-index-card__item"
-      >
-        <text class="as-index-card__name">{{ item.name }}</text>
-        <text class="as-index-card__price">{{ formatPrice(item.price) }}</text>
-        <text
-          class="as-index-card__change"
-          :class="item.changePercent >= 0 ? 'is-up' : 'is-down'"
-        >{{ formatPct(item.changePercent) }}</text>
-      </view>
+    <text class="as-index-card__value">{{ formattedValue }}</text>
+    <view class="as-index-card__footer">
+      <text class="as-index-card__change">{{ formattedChange }}</text>
+      <text class="as-index-card__percent">{{ formattedPercent }}</text>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
-interface IndexItem {
-  /** 指数名称，如 '上证指数' */
-  name: string
-  /** 指数代码 */
-  code?: string
-  /** 当前点位/价格 */
-  price: number
-  /** 涨跌幅（百分比数值，如 1.23 表示 +1.23%） */
-  changePercent: number
-}
+import { computed } from 'vue'
 
-withDefaults(defineProps<{
-  indices: IndexItem[]
-  /** 卡片标题，默认 '大盘概览' */
-  title?: string
-  /** 右侧状态文字 */
-  status?: string
+type IndexTrend = 'up' | 'down' | 'flat'
+
+const props = withDefaults(defineProps<{
+  name: string
+  code: string
+  value: number
+  change: number
+  changePercent: number
+  trend?: IndexTrend
 }>(), {
-  title: '大盘概览'
+  trend: 'flat'
 })
 
-/** 价格保留两位小数 */
-function formatPrice(v: number): string {
-  return v.toFixed(2)
-}
+const formattedValue = computed(() => props.value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
 
-/** 涨跌幅带正负号 + % */
-function formatPct(v: number): string {
-  const sign = v > 0 ? '+' : ''
-  return sign + v.toFixed(2) + '%'
-}
+const formattedChange = computed(() => {
+  const sign = props.change > 0 ? '+' : ''
+  return `${sign}${props.change.toFixed(2)}`
+})
+
+const formattedPercent = computed(() => {
+  const sign = props.changePercent > 0 ? '+' : ''
+  return `${sign}${props.changePercent.toFixed(2)}%`
+})
 </script>
 
 <style lang="scss" scoped>
 .as-index-card {
+  display: flex;
+  flex-direction: column;
+  gap: $s-2;
+  padding: $s-4 $s-5;
   background: $bg-card;
-  border-radius: $r-lg;
-  box-shadow: $shadow-sm;
-  padding: $s-3;
+  border-radius: $r-xl;
+  border: 2rpx solid $line;
+}
+
+.as-index-card.is-up .as-index-card__value,
+.as-index-card.is-up .as-index-card__change,
+.as-index-card.is-up .as-index-card__percent {
+  color: $up;
+}
+
+.as-index-card.is-down .as-index-card__value,
+.as-index-card.is-down .as-index-card__change,
+.as-index-card.is-down .as-index-card__percent {
+  color: $down;
+}
+
+.as-index-card.is-flat .as-index-card__value,
+.as-index-card.is-flat .as-index-card__change,
+.as-index-card.is-flat .as-index-card__percent {
+  color: $flat;
 }
 
 .as-index-card__header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 $s-1 $s-3;
-  border-bottom: 2rpx solid $line-soft;
-  margin-bottom: $s-3;
-}
-
-.as-index-card__title {
-  font-size: $font-size-md;
-  font-weight: 700;
-  color: $ink;
-}
-
-.as-index-card__status {
-  font-size: $font-size-xs;
-  color: $ink-mute;
-}
-
-.as-index-card__list {
-  display: flex;
-  align-items: stretch;
   gap: $s-2;
 }
 
-.as-index-card__item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6rpx;
-  padding: $s-2 $s-1;
-  border-radius: $r-md;
-  background: $bg-soft;
+.as-index-card__name {
+  font-size: $font-size-sm;
+  color: $ink-soft;
+  font-weight: 500;
 }
 
-.as-index-card__name {
+.as-index-card__code {
   font-size: $font-size-xs;
   color: $ink-mute;
+  font-family: $font-mono;
 }
 
-.as-index-card__price {
-  font-size: $font-size-lg;
+.as-index-card__value {
+  font-size: $font-size-2xl;
   font-weight: 800;
-  color: $ink;
   font-family: $font-mono;
   line-height: $lh-tight;
 }
 
+.as-index-card__footer {
+  display: flex;
+  align-items: center;
+  gap: $s-2;
+}
+
 .as-index-card__change {
   font-size: $font-size-sm;
-  font-weight: 700;
+  font-weight: 600;
   font-family: $font-mono;
+}
 
-  &.is-up {
-    color: $up;
-  }
-
-  &.is-down {
-    color: $down;
-  }
+.as-index-card__percent {
+  font-size: $font-size-xs;
+  font-weight: 600;
+  font-family: $font-mono;
+  padding: 2rpx 12rpx;
+  border-radius: $r-xs;
+  background: $bg-deep;
 }
 </style>

@@ -1,87 +1,53 @@
 <template>
-  <view class="as-modal" :class="{ 'is-visible': visible }">
-    <!-- 遮罩层 -->
-    <view class="as-modal__overlay" @tap="handleOverlayClick"></view>
-
-    <!-- 弹窗容器 -->
-    <view class="as-modal__wrap" :class="`as-modal__wrap--${position}`">
-      <view class="as-modal__dialog" :style="dialogStyle">
-        <!-- 标题栏 -->
-        <view
-          v-if="title || $slots.header || closeable"
-          class="as-modal__header"
-        >
-          <slot name="header">
-            <text class="as-modal__title">{{ title }}</text>
-          </slot>
-          <view v-if="closeable" class="as-modal__close" @tap="handleClose">
-            <view class="as-modal__close-icon" :style="{ backgroundImage: `url('${closeIcon}')` }" />
-          </view>
+  <view v-if="modelValue" class="as-modal" @click="handleMaskClick">
+    <view class="as-modal__mask"></view>
+    <view class="as-modal__container" :class="`as-modal__container--${size}`" @click.stop>
+      <view v-if="title || $slots.header" class="as-modal__header">
+        <text v-if="title" class="as-modal__title">{{ title }}</text>
+        <slot v-else name="header" />
+        <view class="as-modal__close" @click="handleClose">
+          <view class="as-modal__close-icon"></view>
         </view>
-
-        <!-- 内容区 -->
-        <view
-          class="as-modal__body"
-          :class="{ 'as-modal__body--no-header': !title && !$slots.header && !closeable }"
-        >
-          <slot />
-        </view>
-
-        <!-- 底部操作区 -->
-        <view v-if="$slots.footer" class="as-modal__footer">
-          <slot name="footer" />
-        </view>
+      </view>
+      <view class="as-modal__body">
+        <slot />
+      </view>
+      <view v-if="$slots.footer" class="as-modal__footer">
+        <slot name="footer" />
       </view>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+type ModalSize = 'sm' | 'md' | 'lg'
 
 const props = withDefaults(defineProps<{
-  visible: boolean
+  modelValue: boolean
   title?: string
-  width?: string
-  closeable?: boolean
+  size?: ModalSize
   maskClosable?: boolean
-  position?: 'center' | 'bottom'
 }>(), {
-  visible: false,
   title: '',
-  width: '600rpx',
-  closeable: true,
-  maskClosable: true,
-  position: 'center'
+  size: 'md',
+  maskClosable: true
 })
 
 const emit = defineEmits<{
-  'update:visible': [value: boolean]
+  'update:modelValue': [value: boolean]
   close: []
 }>()
 
-const close = () => {
-  emit('update:visible', false)
-  emit('close')
-}
-
-const handleClose = () => {
-  close()
-}
-
-const handleOverlayClick = () => {
+const handleMaskClick = () => {
   if (props.maskClosable) {
-    close()
+    handleClose()
   }
 }
 
-const dialogStyle = computed(() => ({ width: props.width }))
-
-// 关闭图标（X），颜色对应 $ink-soft
-const closeIcon = computed(() => {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#4b5a7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M18 6L6 18M6 6l12 12"/></svg>`
-  return `data:image/svg+xml,${encodeURIComponent(svg)}`
-})
+const handleClose = () => {
+  emit('update:modelValue', false)
+  emit('close')
+}
 </script>
 
 <style lang="scss" scoped>
@@ -92,92 +58,52 @@ const closeIcon = computed(() => {
   right: 0;
   bottom: 0;
   z-index: $z-modal;
-  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.as-modal.is-visible {
-  pointer-events: auto;
-}
-
-/* ===== Overlay ===== */
-.as-modal__overlay {
-  position: fixed;
+.as-modal__mask {
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background: $overlay-base;
-  backdrop-filter: $overlay-blur;
-  -webkit-backdrop-filter: $overlay-blur;
-  opacity: 0;
-  transition: opacity $t-base;
 }
 
-.as-modal.is-visible .as-modal__overlay {
-  opacity: 1;
-}
-
-/* ===== Wrap ===== */
-.as-modal__wrap {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  pointer-events: none;
-}
-
-.as-modal__wrap--center {
-  align-items: center;
-  justify-content: center;
-}
-
-.as-modal__wrap--bottom {
-  align-items: flex-end;
-  justify-content: center;
-}
-
-/* ===== Dialog ===== */
-.as-modal__dialog {
+.as-modal__container {
+  position: relative;
   background: $bg-card;
-  border-radius: $r-xl;
-  box-shadow: $shadow-card;
-  overflow: hidden;
+  border-radius: $r-2xl;
+  box-shadow: $shadow-hover;
+  max-height: 80%;
   display: flex;
   flex-direction: column;
-  max-height: 80vh;
-  opacity: 0;
-  transform: translateY(40rpx);
-  transition: opacity $t-base, transform $t-base;
-  pointer-events: auto;
+  animation: as-modal-in 0.3s $ease-out;
 }
 
-.as-modal__wrap--bottom .as-modal__dialog {
-  border-radius: $r-xl $r-xl 0 0;
-  transform: translateY(100%);
+@keyframes as-modal-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-.as-modal.is-visible .as-modal__dialog {
-  opacity: 1;
-  transform: translateY(0);
-}
+.as-modal__container--sm { width: 600rpx; }
+.as-modal__container--md { width: 800rpx; }
+.as-modal__container--lg { width: 1000rpx; }
 
-/* ===== Header ===== */
 .as-modal__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $s-4 $s-4 $s-2;
-  flex-shrink: 0;
+  padding: $s-5;
+  border-bottom: 2rpx solid $line-soft;
 }
 
 .as-modal__title {
   font-size: $font-size-lg;
   font-weight: 600;
   color: $ink;
-  line-height: $lh-tight;
-  flex: 1;
 }
 
 .as-modal__close {
@@ -187,9 +113,6 @@ const closeIcon = computed(() => {
   align-items: center;
   justify-content: center;
   border-radius: $r-full;
-  margin-left: $s-2;
-  flex-shrink: 0;
-  transition: background $t-fast;
 }
 
 .as-modal__close:active {
@@ -197,29 +120,42 @@ const closeIcon = computed(() => {
 }
 
 .as-modal__close-icon {
-  width: 36rpx;
-  height: 36rpx;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  position: relative;
+  width: 24rpx;
+  height: 24rpx;
 }
 
-/* ===== Body ===== */
+.as-modal__close-icon::before,
+.as-modal__close-icon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24rpx;
+  height: 4rpx;
+  background: $ink-soft;
+  border-radius: 2rpx;
+}
+
+.as-modal__close-icon::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.as-modal__close-icon::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
 .as-modal__body {
-  padding: $s-2 $s-4 $s-4;
+  padding: $s-5;
+  overflow-y: auto;
   flex: 1;
-  min-height: 0;
 }
 
-.as-modal__body--no-header {
-  padding-top: $s-4;
-}
-
-/* ===== Footer ===== */
 .as-modal__footer {
-  padding: $s-2 $s-4 $s-4;
-  padding-bottom: calc(#{$s-4} + #{$safe-bottom});
-  flex-shrink: 0;
+  padding: $s-4 $s-5;
   border-top: 2rpx solid $line-soft;
+  display: flex;
+  justify-content: flex-end;
+  gap: $s-3;
 }
 </style>

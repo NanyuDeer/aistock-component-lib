@@ -1,148 +1,66 @@
 <template>
-  <svg
-    :class="['as-sparkline', useCustom ? '' : 'is-' + trend]"
-    viewBox="0 0 160 40"
-    preserveAspectRatio="none"
-    :style="{ width: computedWidth, height: computedHeight }"
-  >
-    <defs>
-      <linearGradient :id="gradId" x1="0" y1="0" x2="0" y2="1">
-        <stop
-          class="as-sparkline__stop-top"
-          offset="0%"
-          :style="useCustom ? { stopColor: color } : null"
-        />
-        <stop class="as-sparkline__stop-bottom" offset="100%" />
-      </linearGradient>
-    </defs>
-    <polygon
-      v-if="type === 'area' && points.area"
-      class="as-sparkline__area"
-      :points="points.area"
-      :fill="`url(#${gradId})`"
-    />
-    <polyline
-      v-if="points.line"
-      class="as-sparkline__line"
-      :style="useCustom ? { stroke: color } : null"
-      :points="points.line"
-      vector-effect="non-scaling-stroke"
-    />
-  </svg>
+  <view class="as-sparkline" :style="{ width: width, height: height }">
+    <view class="as-sparkline__track">
+      <view
+        v-for="(item, index) in normalizedData"
+        :key="index"
+        class="as-sparkline__bar"
+        :class="`is-${trend}`"
+        :style="{ height: `${item}%`, left: `${(index / (normalizedData.length - 1)) * 100}%` }"
+      ></view>
+    </view>
+  </view>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { rpxToVw } from '@/utils/rpx'
+
+type SparklineTrend = 'up' | 'down' | 'flat'
 
 const props = withDefaults(defineProps<{
   data: number[]
-  type?: 'line' | 'area'
-  color?: string
   width?: string
   height?: string
+  trend?: SparklineTrend
 }>(), {
-  type: 'area',
-  color: '',
   width: '100%',
-  height: '80rpx'
+  height: '60rpx',
+  trend: 'flat'
 })
 
-/** rpx → vw 转换（H5 预览环境内联样式不识别 rpx） */
-const computedWidth = computed(() => rpxToVw(props.width))
-const computedHeight = computed(() => rpxToVw(props.height))
-
-// 每个实例独立的渐变 id，避免多实例共用同一 id 导致渐变引用错乱
-const gradId = 'as-spark-' + Math.random().toString(36).slice(2, 9)
-
-const useCustom = computed(() => !!props.color)
-
-// 涨跌色自动判断：末值 > 首值用 $up(红)，反之 $down(绿)，相等 $flat
-const trend = computed<'up' | 'down' | 'flat'>(() => {
-  const d = props.data
-  if (d.length < 2) return 'flat'
-  const first = d[0]
-  const last = d[d.length - 1]
-  if (last > first) return 'up'
-  if (last < first) return 'down'
-  return 'flat'
-})
-
-const points = computed<{ line: string; area: string }>(() => {
-  const d = props.data
-  const n = d.length
-  if (n < 2) return { line: '', area: '' }
-
-  const W = 160
-  const H = 40
-  const pad = 3
-  const min = Math.min(...d)
-  const max = Math.max(...d)
-  const range = max - min
-
-  const coords = d.map((v, i) => {
-    const x = (i / (n - 1)) * W
-    // 极值相等时画在中线，避免除零
-    const y = range === 0 ? H / 2 : pad + (1 - (v - min) / range) * (H - 2 * pad)
-    return { x: +x.toFixed(2), y: +y.toFixed(2) }
-  })
-
-  const line = coords.map(c => `${c.x},${c.y}`).join(' ')
-  // 区域 = 折线点 + 右下角 + 左下角，闭合到底部
-  const area = `${line} ${W},${H} 0,${H}`
-  return { line, area }
+const normalizedData = computed(() => {
+  if (props.data.length === 0) return []
+  const min = Math.min(...props.data)
+  const max = Math.max(...props.data)
+  const range = max - min || 1
+  return props.data.map(v => ((v - min) / range) * 100)
 })
 </script>
 
 <style lang="scss" scoped>
 .as-sparkline {
-  display: block;
-  overflow: visible;
+  display: inline-block;
+  position: relative;
 }
 
-.as-sparkline__line {
-  fill: none;
-  stroke-width: 1.5;
-  stroke-linejoin: round;
-  stroke-linecap: round;
+.as-sparkline__track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  gap: 4rpx;
 }
 
-.as-sparkline__area {
-  stroke: none;
-}
+.as-sparkline__bar {
+  position: absolute;
+  width: 6rpx;
+  min-height: 4rpx;
+  border-radius: 3rpx;
+  transition: height $t-base;
 
-/* 渐变上端：涨跌色 opacity 0.3；下端 opacity 0 */
-.as-sparkline__stop-top {
-  stop-opacity: 0.3;
-}
-
-.as-sparkline__stop-bottom {
-  stop-opacity: 0;
-}
-
-/* 自动涨跌色 —— 折线 */
-.as-sparkline.is-up .as-sparkline__line {
-  stroke: $up;
-}
-
-.as-sparkline.is-down .as-sparkline__line {
-  stroke: $down;
-}
-
-.as-sparkline.is-flat .as-sparkline__line {
-  stroke: $flat;
-}
-
-/* 自动涨跌色 —— 渐变上端 */
-.as-sparkline.is-up .as-sparkline__stop-top {
-  stop-color: $up;
-}
-
-.as-sparkline.is-down .as-sparkline__stop-top {
-  stop-color: $down;
-}
-
-.as-sparkline.is-flat .as-sparkline__stop-top {
-  stop-color: $flat;
+  &.is-up { background: $up; }
+  &.is-down { background: $down; }
+  &.is-flat { background: $primary; }
 }
 </style>

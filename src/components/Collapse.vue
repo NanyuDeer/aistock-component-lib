@@ -1,101 +1,87 @@
 <template>
-  <view class="as-collapse">
+  <view
+    class="as-collapse"
+    :class="{
+      'as-collapse--open': isOpen,
+      'is-disabled': disabled
+    }"
+  >
     <view
-      v-for="(item, index) in items"
-      :key="item.key"
-      class="as-collapse__item"
-      :class="{
-        'is-disabled': item.disabled,
-        'as-collapse__item--border': index > 0
-      }"
+      class="as-collapse__header"
+      :class="{ 'is-disabled': disabled }"
+      @click="handleToggle"
     >
-      <!-- 标题栏 -->
-      <view class="as-collapse__header" @tap="toggle(item)">
-        <text class="as-collapse__title" :class="{ 'is-disabled': item.disabled }">{{ item.title }}</text>
-        <image
-          class="as-collapse__arrow"
-          :class="{ 'is-active': isActive(item) }"
-          :src="chevronIcon"
-          mode="aspectFit"
-        />
-      </view>
-
-      <!-- 内容区 -->
-      <view class="as-collapse__content" :class="{ 'is-expanded': isActive(item) }">
-        <view class="as-collapse__content-inner">
-          <slot :name="item.key" />
-        </view>
+      <text class="as-collapse__title">{{ title }}</text>
+      <view
+        class="as-collapse__arrow"
+        :class="{ 'is-rotated': isOpen }"
+      />
+    </view>
+    <view
+      class="as-collapse__body"
+      :class="{ 'is-expanded': isOpen }"
+    >
+      <view class="as-collapse__content">
+        <slot />
       </view>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-
-interface CollapseItem {
-  key: string
-  title: string
-  disabled?: boolean
-}
+import { ref, watch } from 'vue'
 
 const props = withDefaults(defineProps<{
-  items: CollapseItem[]
-  modelValue?: string[]
-  accordion?: boolean
+  title?: string
+  open?: boolean
+  disabled?: boolean
 }>(), {
-  items: () => [],
-  modelValue: () => [],
-  accordion: false
+  title: '',
+  open: false,
+  disabled: false
 })
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string[]]
-  change: [value: string[]]
+  'update:open': [value: boolean]
+  'change': [value: boolean]
 }>()
 
-const isActive = (item: CollapseItem): boolean => props.modelValue.includes(item.key)
+const isOpen = ref(props.open)
 
-const toggle = (item: CollapseItem) => {
-  if (item.disabled) return
-  let next: string[]
-  if (props.accordion) {
-    // 手风琴模式：只能展开一个
-    next = isActive(item) ? [] : [item.key]
-  } else {
-    next = isActive(item)
-      ? props.modelValue.filter(k => k !== item.key)
-      : [...props.modelValue, item.key]
-  }
-  emit('update:modelValue', next)
-  emit('change', next)
-}
-
-// chevron-down 图标，颜色对应 $ink-mute
-const chevronIcon = computed(() => {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#8a96b0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M6 9l6 6 6-6"/></svg>`
-  return `data:image/svg+xml,${encodeURIComponent(svg)}`
+watch(() => props.open, (val) => {
+  isOpen.value = val
 })
+
+const handleToggle = () => {
+  if (props.disabled) return
+  isOpen.value = !isOpen.value
+  emit('update:open', isOpen.value)
+  emit('change', isOpen.value)
+}
 </script>
 
 <style lang="scss" scoped>
 .as-collapse {
+  border: 2rpx solid $line;
+  border-radius: $r-md;
   background: $bg-card;
-  border-radius: $r-lg;
-  box-shadow: $shadow-xs;
   overflow: hidden;
+  transition: all $t-base;
 }
 
-.as-collapse__item--border {
-  border-top: 2rpx solid $line-soft;
+.as-collapse--open {
+  border-color: $primary-100;
+  box-shadow: $shadow-xs;
 }
 
-/* ===== Header ===== */
 .as-collapse__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: $s-3 $s-4;
+  min-height: 88rpx;
+  cursor: pointer;
+  user-select: none;
   transition: background $t-fast;
 }
 
@@ -103,53 +89,74 @@ const chevronIcon = computed(() => {
   background: $bg-soft;
 }
 
-.as-collapse__item.is-disabled .as-collapse__header:active {
+.as-collapse__header.is-disabled {
+  cursor: not-allowed;
+  opacity: $op-disabled;
+}
+
+.as-collapse__header.is-disabled:active {
   background: transparent;
 }
 
 .as-collapse__title {
-  font-size: $font-size-md;
-  color: $ink;
-  line-height: $lh-base;
+  font-size: $font-size-base;
   font-weight: 500;
+  color: $ink;
   flex: 1;
-}
-
-.as-collapse__title.is-disabled {
-  color: $ink-faint;
+  line-height: $lh-tight;
 }
 
 .as-collapse__arrow {
-  width: 36rpx;
-  height: 36rpx;
+  width: 24rpx;
+  height: 24rpx;
+  position: relative;
   flex-shrink: 0;
-  margin-left: $s-2;
+  margin-left: $s-3;
   transition: transform $t-base;
-  transform: rotate(0deg);
 }
 
-.as-collapse__arrow.is-active {
+.as-collapse__arrow::before,
+.as-collapse__arrow::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 12rpx;
+  height: 3rpx;
+  background: $ink-soft;
+  border-radius: 2rpx;
+  transition: transform $t-base;
+}
+
+.as-collapse__arrow::before {
+  left: 1rpx;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.as-collapse__arrow::after {
+  right: 1rpx;
+  transform: translateY(-50%) rotate(-45deg);
+}
+
+.as-collapse__arrow.is-rotated {
   transform: rotate(180deg);
 }
 
-.as-collapse__item.is-disabled .as-collapse__arrow {
-  opacity: $op-disabled;
-}
-
-/* ===== Content ===== */
-.as-collapse__content {
+.as-collapse__body {
   max-height: 0;
-  opacity: 0;
   overflow: hidden;
-  transition: max-height $t-base, opacity $t-fast;
+  transition: max-height $t-slow, opacity $t-base;
+  opacity: 0;
 }
 
-.as-collapse__content.is-expanded {
+.as-collapse__body.is-expanded {
   max-height: 2000rpx;
   opacity: 1;
 }
 
-.as-collapse__content-inner {
-  padding: $s-2 $s-4 $s-4;
+.as-collapse__content {
+  padding: 0 $s-4 $s-4;
+  font-size: $font-size-base;
+  color: $ink-soft;
+  line-height: $lh-base;
 }
 </style>

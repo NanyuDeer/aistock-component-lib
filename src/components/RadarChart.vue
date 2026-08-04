@@ -1,360 +1,214 @@
 <template>
   <view class="as-radar-chart">
-    <view v-if="title" class="as-radar-chart__title">
-      <text class="as-radar-chart__title-text">{{ title }}</text>
-    </view>
-
-    <!-- 空态 -->
-    <view v-if="!dimensions.length" class="as-radar-chart__empty">
-      <view class="as-radar-chart__empty-icon"></view>
-      <text class="as-radar-chart__empty-text">暂无评分数据</text>
-    </view>
-
-    <template v-else>
-      <!-- 雷达图主体 -->
-      <view class="as-radar-chart__chart">
-        <svg class="as-radar-chart__svg" viewBox="0 0 200 200">
-          <!-- 三层网格多边形 -->
-          <polygon
-            v-for="r in gridRadii"
-            :key="'grid-' + r"
-            class="as-radar-chart__grid"
-            :class="{ 'is-outer': r === maxRadius }"
-            :points="ringPoints(r)"
-          />
-          <!-- 轴线 -->
-          <line
-            v-for="(p, i) in axisPoints"
-            :key="'axis-' + i"
-            class="as-radar-chart__axis"
-            :x1="center"
-            :y1="center"
-            :x2="p.x"
-            :y2="p.y"
-          />
-          <!-- 数据多边形 -->
-          <polygon class="as-radar-chart__data" :points="dataRingPoints" />
-          <!-- 数据顶点 -->
-          <circle
-            v-for="(p, i) in dataVertexPoints"
-            :key="'vertex-' + i"
-            class="as-radar-chart__vertex"
-            :cx="p.x"
-            :cy="p.y"
-            :r="3.2"
-          />
-          <!-- 维度标签 -->
-          <text
-            v-for="(p, i) in labelPoints"
-            :key="'label-' + i"
-            class="as-radar-chart__label"
-            :x="p.x"
-            :y="p.y"
-            :text-anchor="p.anchor"
-            dominant-baseline="middle"
-            font-size="10"
-            font-weight="600"
-          >{{ dimensions[i].label }}</text>
+    <view v-if="dimensions.length === 0" class="as-radar-chart__empty">
+      <view class="as-radar-chart__empty-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#8a96b0" stroke-width="1.5" style="display: block;">
+          <polygon points="12 2 22 20 2 20"></polygon>
+          <line x1="12" y1="2" x2="12" y2="20"></line>
         </svg>
       </view>
-
-      <!-- 综合评分 -->
-      <view v-if="score != null" class="as-radar-chart__score">
-        <text class="as-radar-chart__score-value">{{ scoreText }}</text>
-        <text class="as-radar-chart__score-label">综合评分</text>
-      </view>
-
-      <!-- 维度明细条形图 -->
-      <view class="as-radar-chart__details">
-        <view
+      <text class="as-radar-chart__empty-title">暂无数据</text>
+      <text class="as-radar-chart__empty-desc">数据加载完成后将展示{{ dimensions.length > 0 ? dimensions.length : '多' }}维雷达图</text>
+    </view>
+    <view v-else class="as-radar-chart__svg-wrap" :style="{ width: `${size}rpx`, height: `${size}rpx` }">
+      <svg
+        :viewBox="`0 0 ${viewBoxSize} ${viewBoxSize}`"
+        :width="`${size}rpx`"
+        :height="`${size}rpx`"
+        style="display: block;"
+      >
+        <!-- 网格层（多层同心多边形） -->
+        <polygon
+          v-for="level in gridLevels"
+          :key="'grid-' + level"
+          :points="gridPolygon(level)"
+          fill="none"
+          :stroke="level === gridLevels.length ? '#cdd8ec' : '#e1e9f5'"
+          :stroke-width="level === gridLevels.length ? 1.5 : 1"
+        ></polygon>
+        <!-- 轴线 -->
+        <line
           v-for="(dim, i) in dimensions"
-          :key="'dim-' + i"
-          class="as-radar-chart__detail"
-        >
-          <text class="as-radar-chart__detail-label">{{ dim.label }}</text>
-          <view class="as-radar-chart__detail-track">
-            <view
-              class="as-radar-chart__detail-bar"
-              :style="{ width: clampScore(dim.score) + '%' }"
-            ></view>
-          </view>
-          <text class="as-radar-chart__detail-score">{{ Math.round(dim.score) }}</text>
-        </view>
-      </view>
-    </template>
+          :key="'axis-' + i"
+          :x1="centerX"
+          :y1="centerY"
+          :x2="axisEnd(i).x"
+          :y2="axisEnd(i).y"
+          stroke="#e1e9f5"
+          stroke-width="1"
+        ></line>
+        <!-- 数据多边形 -->
+        <polygon
+          :points="dataPolygon"
+          :fill="statusColor"
+          :fill-opacity="0.18"
+          :stroke="statusColor"
+          stroke-width="2"
+          stroke-linejoin="round"
+        ></polygon>
+        <!-- 数据顶点 -->
+        <circle
+          v-for="(pt, i) in dataPoints"
+          :key="'pt-' + i"
+          :cx="pt.x"
+          :cy="pt.y"
+          :r="3.5"
+          :fill="statusColor"
+        ></circle>
+        <!-- 标签 -->
+        <text
+          v-for="(dim, i) in dimensions"
+          :key="'label-' + i"
+          :x="labelPos(i).x"
+          :y="labelPos(i).y"
+          :text-anchor="labelPos(i).anchor"
+          font-size="11"
+          font-weight="600"
+          fill="#0a1733"
+        >{{ dim.label }} {{ dim.value }}</text>
+      </svg>
+    </view>
   </view>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 
-interface Dimension {
+interface RadarDimension {
   label: string
-  score: number // 0-100
+  value: number
+  max?: number
 }
+
+type RadarStatus = 'primary' | 'success' | 'warning' | 'danger' | 'gold'
 
 const props = withDefaults(defineProps<{
-  dimensions: Dimension[]
-  title?: string
-  score?: number
+  dimensions: RadarDimension[]
+  size?: number
+  status?: RadarStatus
 }>(), {
-  title: '',
-  score: undefined
+  size: 400,
+  status: 'primary'
 })
 
-const center = 100
-const maxRadius = 80
-// 三层同心网格：内、中、外环；外环加粗作为满刻度
-const gridRadii = [27, 53, 80]
-const labelRadius = 93
-
-const count = computed(() => Math.max(props.dimensions.length, 1))
-
-function clampScore(s: number): number {
-  return Math.max(0, Math.min(100, s))
+const statusColorMap: Record<RadarStatus, string> = {
+  primary: '#0b5fff',
+  success: '#18a058',
+  warning: '#c89020',
+  danger: '#e54d5e',
+  gold: '#c89020'
 }
 
-// 计算指定半径上第 index 个顶点的坐标
-// 起始角度 -90°（正上方），顺时针分布
-function pointAt(radius: number, index: number, n: number): { x: number; y: number } {
-  const angle = (-90 + (360 / n) * index) * Math.PI / 180
+const statusColor = computed(() => statusColorMap[props.status])
+
+const viewBoxSize = 200
+const centerX = viewBoxSize / 2
+const centerY = viewBoxSize / 2
+const radius = viewBoxSize * 0.4
+
+const n = computed(() => props.dimensions.length)
+
+const gridLevels = computed(() => {
+  // 3-5 层同心多边形
+  const count = Math.min(Math.max(n.value, 3), 5)
+  return Array.from({ length: count }, (_, i) => i + 1)
+})
+
+function polygonPoints(level: number, ratios: number[]): string {
+  const r = (radius / gridLevels.value.length) * level
+  return ratios
+    .map((ratio, i) => {
+      const angle = (Math.PI * 2 * i) / n.value - Math.PI / 2
+      const x = centerX + r * Math.cos(angle)
+      const y = centerY + r * Math.sin(angle)
+      return `${x.toFixed(2)},${y.toFixed(2)}`
+    })
+    .join(' ')
+}
+
+function gridPolygon(level: number): string {
+  return polygonPoints(level, Array.from({ length: n.value }, () => 1))
+}
+
+function axisEnd(index: number): { x: number; y: number } {
+  const angle = (Math.PI * 2 * index) / n.value - Math.PI / 2
   return {
-    x: center + radius * Math.cos(angle),
-    y: center + radius * Math.sin(angle)
+    x: centerX + radius * Math.cos(angle),
+    y: centerY + radius * Math.sin(angle)
   }
 }
 
-// 网格多边形顶点串
-function ringPoints(radius: number): string {
-  const n = count.value
-  const pts: string[] = []
-  for (let i = 0; i < n; i++) {
-    const p = pointAt(radius, i, n)
-    pts.push(`${p.x.toFixed(2)},${p.y.toFixed(2)}`)
-  }
-  return pts.join(' ')
+const dataPoints = computed(() => {
+  return props.dimensions.map((dim, i) => {
+    const max = dim.max ?? 100
+    const ratio = Math.min(dim.value / max, 1)
+    const angle = (Math.PI * 2 * i) / n.value - Math.PI / 2
+    const r = radius * ratio
+    return {
+      x: Number((centerX + r * Math.cos(angle)).toFixed(2)),
+      y: Number((centerY + r * Math.sin(angle)).toFixed(2))
+    }
+  })
+})
+
+const dataPolygon = computed(() => {
+  return dataPoints.value.map(p => `${p.x},${p.y}`).join(' ')
+})
+
+function labelPos(index: number): { x: number; y: number; anchor: string } {
+  const angle = (Math.PI * 2 * index) / n.value - Math.PI / 2
+  const labelRadius = radius + 18
+  const x = centerX + labelRadius * Math.cos(angle)
+  const y = centerY + labelRadius * Math.sin(angle)
+
+  let anchor = 'middle'
+  const cos = Math.cos(angle)
+  if (cos < -0.1) anchor = 'end'
+  else if (cos > 0.1) anchor = 'start'
+
+  return { x: Number(x.toFixed(2)), y: Number(y.toFixed(2)), anchor }
 }
-
-// 轴线终点（满刻度处）
-const axisPoints = computed(() => {
-  const n = count.value
-  const pts: { x: number; y: number }[] = []
-  for (let i = 0; i < n; i++) {
-    pts.push(pointAt(maxRadius, i, n))
-  }
-  return pts
-})
-
-// 数据多边形顶点串（按各维度得分映射半径）
-const dataRingPoints = computed(() => {
-  const n = count.value
-  const pts: string[] = []
-  for (let i = 0; i < n; i++) {
-    const r = (clampScore(props.dimensions[i].score) / 100) * maxRadius
-    const p = pointAt(r, i, n)
-    pts.push(`${p.x.toFixed(2)},${p.y.toFixed(2)}`)
-  }
-  return pts.join(' ')
-})
-
-// 数据顶点坐标
-const dataVertexPoints = computed(() => {
-  const n = count.value
-  const pts: { x: number; y: number }[] = []
-  for (let i = 0; i < n; i++) {
-    const r = (clampScore(props.dimensions[i].score) / 100) * maxRadius
-    pts.push(pointAt(r, i, n))
-  }
-  return pts
-})
-
-// 标签位置与对齐方式（根据顶点方位调整 text-anchor）
-const labelPoints = computed(() => {
-  const n = count.value
-  const pts: { x: number; y: number; anchor: string }[] = []
-  for (let i = 0; i < n; i++) {
-    const p = pointAt(labelRadius, i, n)
-    const angle = (-90 + (360 / n) * i) * Math.PI / 180
-    const cos = Math.cos(angle)
-    let anchor = 'middle'
-    if (cos > 0.3) anchor = 'start'
-    else if (cos < -0.3) anchor = 'end'
-    pts.push({ x: p.x, y: p.y, anchor })
-  }
-  return pts
-})
-
-const scoreText = computed(() => {
-  if (props.score == null) return ''
-  return props.score % 1 === 0 ? String(props.score) : props.score.toFixed(1)
-})
 </script>
 
 <style lang="scss" scoped>
 .as-radar-chart {
-  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.as-radar-chart__title {
-  margin-bottom: $s-3;
+.as-radar-chart__svg-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.as-radar-chart__title-text {
-  font-size: $font-size-md;
-  font-weight: 700;
-  color: $ink;
-}
-
-/* ===== 空态 ===== */
 .as-radar-chart__empty {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: $s-10 $s-6;
+  background: $bg-soft;
+  border-radius: $r-lg;
+  width: 100%;
 }
 
 .as-radar-chart__empty-icon {
-  width: 96rpx;
-  height: 96rpx;
-  border-radius: 50%;
-  background: $bg-deep;
-  margin-bottom: $s-3;
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 40rpx;
-    height: 40rpx;
-    border: 4rpx solid $line-strong;
-    border-radius: 50%;
-  }
+  margin-bottom: $s-4;
+  opacity: 0.5;
 }
 
-.as-radar-chart__empty-text {
-  font-size: $font-size-sm;
-  color: $ink-mute;
-}
-
-/* ===== 雷达图 ===== */
-.as-radar-chart__chart {
-  width: 100%;
-  max-width: 460rpx;
-  margin: 0 auto;
-  padding: 0 $s-6;
-  box-sizing: border-box;
-}
-
-.as-radar-chart__svg {
-  width: 100%;
-  height: auto;
-  display: block;
-  // 标签可能略超 viewBox 边界，放行避免被裁切
-  overflow: visible;
-}
-
-.as-radar-chart__grid {
-  fill: none;
-  stroke: $line;
-  stroke-width: 1;
-
-  &.is-outer {
-    stroke: $line-strong;
-    stroke-width: 1.5;
-  }
-}
-
-.as-radar-chart__axis {
-  stroke: $line;
-  stroke-width: 1;
-}
-
-.as-radar-chart__data {
-  fill: $primary;
-  fill-opacity: 0.18;
-  stroke: $primary;
-  stroke-width: 2;
-  stroke-linejoin: round;
-}
-
-.as-radar-chart__vertex {
-  fill: $primary;
-}
-
-.as-radar-chart__label {
-  font-family: $font-sans;
-  fill: $ink;
-}
-
-/* ===== 综合评分 ===== */
-.as-radar-chart__score {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: $s-2;
-}
-
-.as-radar-chart__score-value {
-  font-family: $font-mono;
-  font-size: $font-size-2xl;
-  font-weight: 800;
-  color: $primary;
-  line-height: $lh-tight;
-}
-
-.as-radar-chart__score-label {
-  font-size: $font-size-xs;
-  color: $ink-mute;
-  margin-top: $s-1;
-}
-
-/* ===== 维度明细条形图 ===== */
-.as-radar-chart__details {
-  margin-top: $s-4;
-  display: flex;
-  flex-direction: column;
-  gap: $s-2;
-}
-
-.as-radar-chart__detail {
-  display: flex;
-  align-items: center;
-  gap: $s-2;
-}
-
-.as-radar-chart__detail-label {
-  width: 120rpx;
-  flex-shrink: 0;
-  font-size: $font-size-sm;
-  color: $ink-soft;
-}
-
-.as-radar-chart__detail-track {
-  flex: 1;
-  height: 12rpx;
-  background: $bg-soft;
-  border-radius: $r-full;
-  overflow: hidden;
-}
-
-.as-radar-chart__detail-bar {
-  height: 100%;
-  background: linear-gradient(90deg, $primary, $primary-light);
-  border-radius: $r-full;
-  transition: width $t-slow;
-}
-
-.as-radar-chart__detail-score {
-  width: 56rpx;
-  flex-shrink: 0;
-  text-align: right;
-  font-family: $font-mono;
-  font-size: $font-size-sm;
+.as-radar-chart__empty-title {
+  font-size: $font-size-md;
   font-weight: 600;
-  color: $primary;
+  color: $ink-soft;
+  margin-bottom: $s-2;
+}
+
+.as-radar-chart__empty-desc {
+  font-size: $font-size-sm;
+  color: $ink-mute;
+  text-align: center;
 }
 </style>

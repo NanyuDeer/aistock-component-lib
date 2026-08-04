@@ -1,45 +1,23 @@
 <template>
-  <view class="as-quote-header">
-    <!-- 股票信息行 -->
-    <view class="as-quote-header__stock">
-      <view class="as-quote-header__avatar">
-        <text class="as-quote-header__avatar-text">{{ avatarChar }}</text>
-      </view>
-      <view class="as-quote-header__meta">
+  <view
+    class="as-quote-header"
+    :class="[`is-${statusClass}`]"
+  >
+    <view class="as-quote-header__main">
+      <view class="as-quote-header__info">
         <view class="as-quote-header__name-row">
           <text class="as-quote-header__name">{{ name }}</text>
-          <view v-if="status" class="as-quote-header__status">
-            <text class="as-quote-header__status-text">{{ status }}</text>
-          </view>
+          <text v-if="code" class="as-quote-header__code">{{ code }}</text>
+          <text v-if="tag" class="as-quote-header__tag" :class="`is-${statusClass}`">{{ tag }}</text>
         </view>
-        <view class="as-quote-header__code-row">
-          <text v-if="market" class="as-quote-header__market">{{ market }}</text>
-          <text class="as-quote-header__code">{{ code }}</text>
+        <view class="as-quote-header__price-row">
+          <text class="as-quote-header__price" :class="`is-${statusClass}`">{{ formattedPrice }}</text>
+          <text class="as-quote-header__change" :class="`is-${statusClass}`">{{ formattedChange }}</text>
+          <text class="as-quote-header__percent" :class="`is-${statusClass}`">{{ formattedPercent }}</text>
         </view>
       </view>
-    </view>
-
-    <!-- 价格行 -->
-    <view class="as-quote-header__price-row">
-      <text class="as-quote-header__price" :class="trendClass">{{ formattedPrice }}</text>
-      <text class="as-quote-header__change" :class="trendClass">{{ formattedChange }}</text>
-      <view class="as-quote-header__change-tag" :class="trendClass">
-        <text class="as-quote-header__change-tag-text">{{ formattedChangePercent }}</text>
-      </view>
-    </view>
-
-    <!-- 指标行 -->
-    <view v-if="metrics && metrics.length" class="as-quote-header__metrics">
-      <view
-        v-for="metric in metrics"
-        :key="metric.label"
-        class="as-quote-header__metric"
-      >
-        <text class="as-quote-header__metric-label">{{ metric.label }}</text>
-        <text
-          class="as-quote-header__metric-value"
-          :class="metric.trend ? `is-${metric.trend}` : ''"
-        >{{ metric.value }}</text>
+      <view v-if="$slots.default" class="as-quote-header__actions">
+        <slot />
       </view>
     </view>
   </view>
@@ -48,40 +26,27 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-interface QuoteMetric {
-  label: string
-  value: string
-  trend?: 'up' | 'down' | 'flat'
-}
+type QuoteStatus = 'normal' | 'up' | 'down'
 
 const props = withDefaults(defineProps<{
   name: string
-  code: string
-  market?: string
+  code?: string
   price: number
   change: number
-  changePercent: number
-  status?: string
-  metrics?: QuoteMetric[]
-  avatarText?: string
+  changePct: number
+  tag?: string
+  status?: QuoteStatus
 }>(), {
-  market: '',
-  status: '',
-  metrics: () => [],
-  avatarText: ''
+  code: '',
+  tag: '',
+  status: 'normal'
 })
 
-/* ===== 涨跌趋势 ===== */
-const trendClass = computed(() => {
-  if (props.change > 0) return 'is-up'
-  if (props.change < 0) return 'is-down'
-  return 'is-flat'
-})
-
-/* ===== 格式化显示 ===== */
-const avatarChar = computed(() => {
-  if (props.avatarText) return props.avatarText
-  return props.name ? props.name.charAt(0) : ''
+const statusClass = computed(() => {
+  if (props.status !== 'normal') return props.status
+  if (props.change > 0) return 'up'
+  if (props.change < 0) return 'down'
+  return 'normal'
 })
 
 const formattedPrice = computed(() => {
@@ -93,91 +58,44 @@ const formattedChange = computed(() => {
   return `${sign}${props.change.toFixed(2)}`
 })
 
-const formattedChangePercent = computed(() => {
-  const sign = props.changePercent > 0 ? '+' : ''
-  return `${sign}${props.changePercent.toFixed(2)}%`
+const formattedPercent = computed(() => {
+  const sign = props.changePct > 0 ? '+' : ''
+  return `${sign}${props.changePct.toFixed(2)}%`
 })
 </script>
 
 <style lang="scss" scoped>
 .as-quote-header {
   background: $bg-card;
+  border-radius: $r-xl;
   padding: $s-4 $s-5;
+  border: 2rpx solid $line;
 }
 
-/* ===== Stock Info ===== */
-.as-quote-header__stock {
+.as-quote-header__main {
   display: flex;
-  align-items: center;
-  gap: $s-3;
+  align-items: flex-start;
+  justify-content: space-between;
 }
 
-.as-quote-header__avatar {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 50%;
-  background: linear-gradient(135deg, $primary, $primary-deep);
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
-.as-quote-header__avatar-text {
-  font-size: $font-size-lg;
-  font-weight: 700;
-  color: $white;
-  line-height: 1;
-}
-
-.as-quote-header__meta {
-  display: flex;
-  flex-direction: column;
-  gap: 4rpx;
+.as-quote-header__info {
   flex: 1;
   min-width: 0;
 }
 
+/* ===== Name Row ===== */
 .as-quote-header__name-row {
   display: flex;
   align-items: center;
   gap: $s-2;
+  margin-bottom: $s-2;
+  flex-wrap: wrap;
 }
 
 .as-quote-header__name {
   font-size: $font-size-lg;
   font-weight: 700;
   color: $ink;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.as-quote-header__status {
-  display: inline-flex;
-  align-items: center;
-  padding: 2rpx 12rpx;
-  border-radius: $r-xs;
-  background: $bg-soft;
-  flex-shrink: 0;
-}
-
-.as-quote-header__status-text {
-  font-size: 20rpx;
-  color: $ink-soft;
-  font-weight: 500;
-}
-
-.as-quote-header__code-row {
-  display: flex;
-  align-items: center;
-  gap: $s-1;
-}
-
-.as-quote-header__market {
-  font-size: $font-size-xs;
-  color: $ink-mute;
 }
 
 .as-quote-header__code {
@@ -186,12 +104,35 @@ const formattedChangePercent = computed(() => {
   font-family: $font-mono;
 }
 
+.as-quote-header__tag {
+  font-size: 20rpx;
+  font-weight: 600;
+  padding: 2rpx 14rpx;
+  border-radius: $r-full;
+  line-height: 1.4;
+
+  &.is-up {
+    background: $up-soft;
+    color: $up;
+  }
+
+  &.is-down {
+    background: $down-soft;
+    color: $down;
+  }
+
+  &.is-normal {
+    background: $primary-50;
+    color: $primary;
+  }
+}
+
 /* ===== Price Row ===== */
 .as-quote-header__price-row {
   display: flex;
   align-items: baseline;
   gap: $s-3;
-  margin-top: $s-4;
+  flex-wrap: wrap;
 }
 
 .as-quote-header__price {
@@ -199,79 +140,48 @@ const formattedChangePercent = computed(() => {
   font-weight: 800;
   font-family: $font-mono;
   line-height: $lh-tight;
-  color: $ink;
 
   &.is-up { color: $up; }
   &.is-down { color: $down; }
-  &.is-flat { color: $flat; }
+  &.is-normal { color: $ink; }
 }
 
 .as-quote-header__change {
   font-size: $font-size-lg;
   font-weight: 600;
   font-family: $font-mono;
-  color: $ink;
 
   &.is-up { color: $up; }
   &.is-down { color: $down; }
-  &.is-flat { color: $flat; }
+  &.is-normal { color: $flat; }
 }
 
-.as-quote-header__change-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 4rpx 16rpx;
+.as-quote-header__percent {
+  font-size: $font-size-sm;
+  font-weight: 600;
+  font-family: $font-mono;
+  padding: 2rpx 14rpx;
   border-radius: $r-xs;
 
   &.is-up {
+    color: $up;
     background: $up-soft;
   }
 
   &.is-down {
+    color: $down;
     background: $down-soft;
   }
 
-  &.is-flat {
+  &.is-normal {
+    color: $flat;
     background: $bg-deep;
   }
 }
 
-.as-quote-header__change-tag-text {
-  font-size: $font-size-xs;
-  font-weight: 600;
-  font-family: $font-mono;
-
-  .is-up & { color: $up; }
-  .is-down & { color: $down; }
-  .is-flat & { color: $flat; }
-}
-
-/* ===== Metrics Row ===== */
-.as-quote-header__metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $s-4;
-  margin-top: $s-4;
-}
-
-.as-quote-header__metric {
-  display: flex;
-  flex-direction: column;
-  gap: 4rpx;
-}
-
-.as-quote-header__metric-label {
-  font-size: $font-size-xs;
-  color: $ink-soft;
-}
-
-.as-quote-header__metric-value {
-  font-size: $font-size-xs;
-  font-family: $font-mono;
-  color: $ink;
-
-  &.is-up { color: $up; }
-  &.is-down { color: $down; }
-  &.is-flat { color: $flat; }
+/* ===== Actions ===== */
+.as-quote-header__actions {
+  flex-shrink: 0;
+  margin-left: $s-4;
 }
 </style>

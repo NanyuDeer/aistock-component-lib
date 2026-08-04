@@ -1,175 +1,161 @@
 <template>
-  <view class="as-timeline">
+  <view class="as-timeline" :class="`as-timeline--${mode}`">
     <view
-      v-for="(item, idx) in items"
-      :key="idx"
+      v-for="(item, index) in items"
+      :key="index"
       class="as-timeline__item"
+      :class="[
+        `as-timeline__item--${item.status || 'primary'}`,
+        {
+          'is-last': index === items.length - 1,
+          'is-alternate-left': mode === 'alternate' && index % 2 === 0,
+          'is-alternate-right': mode === 'alternate' && index % 2 !== 0,
+          'is-right': mode === 'right'
+        }
+      ]"
     >
-      <view class="as-timeline__rail">
-        <view class="as-timeline__dot" :class="`is-${item.type || 'neutral'}`" />
-        <view v-if="idx !== items.length - 1" class="as-timeline__line" />
-      </view>
-      <view class="as-timeline__card">
-        <view class="as-timeline__header">
-          <text class="as-timeline__time">{{ item.time }}</text>
-          <text class="as-timeline__tag" :class="`is-${item.type || 'neutral'}`">{{ typeLabel(item.type) }}</text>
-        </view>
+      <view class="as-timeline__dot" />
+      <view
+        v-if="mode === 'left' || (mode === 'alternate' && index % 2 === 0)"
+        class="as-timeline__content"
+      >
+        <text class="as-timeline__time">{{ item.time }}</text>
         <text class="as-timeline__title">{{ item.title }}</text>
-        <text v-if="item.description" class="as-timeline__desc">{{ item.description }}</text>
-        <view v-if="item.extra" class="as-timeline__footer">
-          <text class="as-timeline__extra" :class="`is-${item.type || 'neutral'}`">{{ item.extra }}</text>
-        </view>
+        <text v-if="item.desc" class="as-timeline__desc">{{ item.desc }}</text>
+      </view>
+      <view
+        v-if="mode === 'right'"
+        class="as-timeline__content"
+      >
+        <text class="as-timeline__time">{{ item.time }}</text>
+        <text class="as-timeline__title">{{ item.title }}</text>
+        <text v-if="item.desc" class="as-timeline__desc">{{ item.desc }}</text>
+      </view>
+      <view
+        v-if="mode === 'alternate' && index % 2 !== 0"
+        class="as-timeline__content"
+      >
+        <text class="as-timeline__time">{{ item.time }}</text>
+        <text class="as-timeline__title">{{ item.title }}</text>
+        <text v-if="item.desc" class="as-timeline__desc">{{ item.desc }}</text>
       </view>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
-type TimelineType = 'up' | 'down' | 'neutral'
+type TimelineStatus = 'primary' | 'success' | 'warning' | 'danger'
+type TimelineMode = 'left' | 'right' | 'alternate'
 
 interface TimelineItem {
-  /** 时间，如 '2024-Q1' */
   time: string
-  /** 标题 */
   title: string
-  /** 描述 */
-  description?: string
-  /** 类型：up=利好(红), down=利空(绿), neutral=中性(灰) */
-  type?: TimelineType
-  /** 额外信息，如涨跌百分比 */
-  extra?: string
+  desc?: string
+  status?: TimelineStatus
 }
 
 withDefaults(defineProps<{
   items: TimelineItem[]
-}>(), {})
-
-/** 类型标签文案 */
-function typeLabel(type?: TimelineType): string {
-  const labelMap: Record<TimelineType, string> = {
-    up: '利好',
-    down: '利空',
-    neutral: '中性'
-  }
-  return labelMap[type || 'neutral']
-}
+  mode?: TimelineMode
+}>(), {
+  mode: 'left'
+})
 </script>
 
 <style lang="scss" scoped>
 .as-timeline {
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  padding: $s-2 0;
 }
 
 .as-timeline__item {
   position: relative;
-  padding-left: $s-6; // 为左侧轨道留出空间
-  margin-bottom: $s-3;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
+  display: flex;
+  align-items: flex-start;
+  padding-bottom: $s-6;
 }
 
-/* 左侧轨道：圆点 + 连接线 */
-.as-timeline__rail {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 32rpx;
-  height: 100%;
+.as-timeline__item.is-last {
+  padding-bottom: 0;
 }
 
+/* ===== Dot ===== */
 .as-timeline__dot {
-  position: absolute;
-  top: $s-2;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  z-index: 1;
   width: 20rpx;
   height: 20rpx;
-  border-radius: $r-full;
-  z-index: 2;
-
-  &.is-up {
-    background: $up;
-    box-shadow: 0 0 0 6rpx rgba(229, 77, 94, 0.18);
-  }
-
-  &.is-down {
-    background: $down;
-    box-shadow: 0 0 0 6rpx rgba(24, 160, 88, 0.18);
-  }
-
-  &.is-neutral {
-    background: $ink-mute;
-    box-shadow: 0 0 0 6rpx rgba(138, 150, 176, 0.18);
-  }
+  border-radius: 50%;
+  margin-top: 6rpx;
+  flex-shrink: 0;
+  background: $primary;
+  border: 4rpx solid $primary-50;
 }
 
-/* 连接线：从当前圆点底部延伸至下一项圆点顶部，保证竖线连续 */
-.as-timeline__line {
+.as-timeline__item--primary .as-timeline__dot {
+  background: $primary;
+  border-color: $primary-50;
+}
+
+.as-timeline__item--success .as-timeline__dot {
+  background: $down;
+  border-color: $down-soft;
+}
+
+.as-timeline__item--warning .as-timeline__dot {
+  background: $warning;
+  border-color: $warning-soft;
+}
+
+.as-timeline__item--danger .as-timeline__dot {
+  background: $up;
+  border-color: $up-soft;
+}
+
+/* ===== Connecting line ===== */
+.as-timeline__dot::after {
+  content: '';
   position: absolute;
-  top: $s-2 + 20rpx;
-  bottom: -1 * ($s-3 + $s-2);
+  top: 24rpx;
   left: 50%;
   transform: translateX(-50%);
-  width: 2rpx;
+  width: 3rpx;
+  height: calc(100% + 22rpx);
   background: $line;
 }
 
-/* 右侧内容卡片 */
-.as-timeline__card {
-  background: $bg-card;
-  border: 2rpx solid $line;
-  border-radius: $r-md;
-  box-shadow: $shadow-xs;
-  padding: $s-3;
+.as-timeline__item.is-last .as-timeline__dot::after {
+  display: none;
 }
 
-.as-timeline__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: $s-1;
+/* ===== Content ===== */
+.as-timeline__content {
+  flex: 1;
+  min-width: 0;
+  margin-left: $s-3;
 }
 
+/* ===== Time ===== */
 .as-timeline__time {
+  display: block;
   font-size: $font-size-xs;
   color: $ink-mute;
   font-family: $font-mono;
+  line-height: $lh-tight;
+  margin-bottom: $s-1;
 }
 
-.as-timeline__tag {
-  font-size: 20rpx;
-  font-weight: 600;
-  padding: 2rpx 12rpx;
-  border-radius: $r-xs;
-
-  &.is-up {
-    background: $up-soft;
-    color: $up;
-  }
-
-  &.is-down {
-    background: $down-soft;
-    color: $down;
-  }
-
-  &.is-neutral {
-    background: $bg-deep;
-    color: $ink-mute;
-  }
-}
-
+/* ===== Title ===== */
 .as-timeline__title {
   display: block;
-  font-size: $font-size-md;
-  font-weight: 600;
+  font-size: $font-size-base;
+  font-weight: 500;
   color: $ink;
   line-height: $lh-tight;
   margin-bottom: $s-1;
 }
 
+/* ===== Desc ===== */
 .as-timeline__desc {
   display: block;
   font-size: $font-size-sm;
@@ -177,25 +163,41 @@ function typeLabel(type?: TimelineType): string {
   line-height: $lh-base;
 }
 
-.as-timeline__footer {
-  margin-top: $s-2;
+/* ===== Right mode ===== */
+.as-timeline--right .as-timeline__item {
+  flex-direction: row-reverse;
 }
 
-.as-timeline__extra {
-  font-size: $font-size-sm;
-  font-weight: 700;
-  font-family: $font-mono;
+.as-timeline--right .as-timeline__content {
+  margin-left: 0;
+  margin-right: $s-3;
+  text-align: right;
+}
 
-  &.is-up {
-    color: $up;
-  }
+.as-timeline--right .as-timeline__dot {
+  order: 0;
+}
 
-  &.is-down {
-    color: $down;
-  }
+/* ===== Alternate mode ===== */
+.as-timeline--alternate .as-timeline__item.is-alternate-left {
+  flex-direction: row;
+  padding-right: 50%;
+}
 
-  &.is-neutral {
-    color: $ink-mute;
-  }
+.as-timeline--alternate .as-timeline__item.is-alternate-left .as-timeline__content {
+  margin-left: $s-3;
+  margin-right: 0;
+  text-align: left;
+}
+
+.as-timeline--alternate .as-timeline__item.is-alternate-right {
+  flex-direction: row-reverse;
+  padding-left: 50%;
+}
+
+.as-timeline--alternate .as-timeline__item.is-alternate-right .as-timeline__content {
+  margin-left: 0;
+  margin-right: $s-3;
+  text-align: right;
 }
 </style>

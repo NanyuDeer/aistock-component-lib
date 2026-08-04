@@ -1,26 +1,14 @@
 <template>
-  <view class="as-bottom-sheet" :class="{ 'is-visible': visible }">
-    <!-- 遮罩层 -->
-    <view class="as-bottom-sheet__overlay" @click="handleOverlayClick"></view>
-
-    <!-- 抽屉容器 -->
-    <view class="as-bottom-sheet__panel">
-      <!-- 拖拽手柄 -->
+  <view v-if="isOpen" class="as-bottom-sheet" @click="handleMaskClick">
+    <view class="as-bottom-sheet__mask"></view>
+    <view class="as-bottom-sheet__container" @click.stop>
       <view class="as-bottom-sheet__handle"></view>
-
-      <!-- 标题区 -->
-      <view v-if="title || $slots.header" class="as-bottom-sheet__header">
-        <slot name="header">
-          <text class="as-bottom-sheet__title">{{ title }}</text>
-        </slot>
+      <view v-if="title" class="as-bottom-sheet__header">
+        <text class="as-bottom-sheet__title">{{ title }}</text>
       </view>
-
-      <!-- 内容区 -->
-      <scroll-view class="as-bottom-sheet__content" scroll-y>
+      <scroll-view class="as-bottom-sheet__body" scroll-y>
         <slot />
       </scroll-view>
-
-      <!-- 底部操作区 -->
       <view v-if="$slots.footer" class="as-bottom-sheet__footer">
         <slot name="footer" />
       </view>
@@ -29,30 +17,39 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from 'vue'
+
 const props = withDefaults(defineProps<{
-  visible: boolean
+  open?: boolean
   title?: string
-  closeable?: boolean
+  maskClosable?: boolean
 }>(), {
-  visible: false,
+  open: false,
   title: '',
-  closeable: true
+  maskClosable: true
 })
 
 const emit = defineEmits<{
-  'update:visible': [value: boolean]
+  'update:open': [value: boolean]
   close: []
 }>()
 
-const close = () => {
-  emit('update:visible', false)
-  emit('close')
+const isOpen = ref(props.open)
+
+watch(() => props.open, (val) => {
+  isOpen.value = val
+})
+
+const handleMaskClick = () => {
+  if (props.maskClosable) {
+    handleClose()
+  }
 }
 
-const handleOverlayClick = () => {
-  if (props.closeable) {
-    close()
-  }
+const handleClose = () => {
+  isOpen.value = false
+  emit('update:open', false)
+  emit('close')
 }
 </script>
 
@@ -64,64 +61,52 @@ const handleOverlayClick = () => {
   right: 0;
   bottom: 0;
   z-index: $z-drawer;
-  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
-.as-bottom-sheet.is-visible {
-  pointer-events: auto;
-}
-
-/* ===== Overlay ===== */
-.as-bottom-sheet__overlay {
-  position: fixed;
+.as-bottom-sheet__mask {
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background: $overlay-base;
-  backdrop-filter: $overlay-blur;
-  -webkit-backdrop-filter: $overlay-blur;
-  opacity: 0;
-  transition: opacity $t-base;
+  animation: as-bottom-sheet-fade 0.25s $ease-out;
 }
 
-.as-bottom-sheet.is-visible .as-bottom-sheet__overlay {
-  opacity: 1;
+@keyframes as-bottom-sheet-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* ===== Panel ===== */
-.as-bottom-sheet__panel {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
+.as-bottom-sheet__container {
+  position: relative;
   background: $bg-card;
   border-radius: $r-2xl $r-2xl 0 0;
-  max-height: 80vh;
+  max-height: 80%;
   display: flex;
   flex-direction: column;
-  transform: translateY(100%);
-  transition: transform $t-base;
-  box-shadow: $shadow-hover;
+  animation: as-bottom-sheet-slide 0.3s $ease-out;
 }
 
-.as-bottom-sheet.is-visible .as-bottom-sheet__panel {
-  transform: translateY(0);
+@keyframes as-bottom-sheet-slide {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }
 
-/* ===== Handle ===== */
 .as-bottom-sheet__handle {
-  width: 80rpx;
+  width: 64rpx;
   height: 8rpx;
-  background: $line-strong;
+  background: $ink-faint;
   border-radius: $r-full;
-  margin: 16rpx auto;
+  margin: $s-2 auto;
   flex-shrink: 0;
 }
 
-/* ===== Header ===== */
 .as-bottom-sheet__header {
-  padding: $s-3 $s-5;
+  padding: $s-2 $s-5 $s-4;
   flex-shrink: 0;
 }
 
@@ -132,18 +117,15 @@ const handleOverlayClick = () => {
   line-height: $lh-tight;
 }
 
-/* ===== Content ===== */
-.as-bottom-sheet__content {
+.as-bottom-sheet__body {
   flex: 1;
-  min-height: 0;
-  padding: $s-3 $s-5;
+  padding: 0 $s-5 $s-5;
+  overflow-y: auto;
 }
 
-/* ===== Footer ===== */
 .as-bottom-sheet__footer {
-  padding: $s-3 $s-5;
-  padding-bottom: calc(#{$s-3} + #{$safe-bottom});
-  flex-shrink: 0;
+  padding: $s-4 $s-5;
   border-top: 2rpx solid $line-soft;
+  flex-shrink: 0;
 }
 </style>
