@@ -1,5 +1,28 @@
 # CHANGELOG
 
+## [feat/all-components] 2026-08-13 — 补齐 31 个组件，组件库升级至 87 个
+**开发者**: AiStock Team
+
+### 新增
+- 新增 31 个组件，覆盖 6 个新分层，组件库合计 87 个组件：
+  - 导航扩展（5）：Breadcrumb、Divider、Steps、Segmented、Dropdown
+  - AI 交互（4）：StreamingText、ChatBubble、AiEventReport、AiGraph
+  - 音频与播客（3）：AudioPlayer、PodcastCard、FloatingPodcast
+  - 事件与洞察（6）：ImportanceStars、EventItemCard、EventHeadlineCard、InsightListCard、InsightAlertCard、GuideCard
+  - 高级行情（7）：StockChart、TrendKlineCompare、TrendDimCard、StockDetailTable、StockCardList、StockIntelList、WindLeaderPanel
+  - 辅助组件（6）：LoginQrCode、Analytics、CycleSelect、NewsSlider、HotBurstPanel、MarketOverview
+- 新增 design/FinDesign-完整组件库.html 设计系统文件
+
+### 改进
+- 替换设计系统 HTML 为 FinDesign-完整组件库.html（含 46 个导航项的完整组件规范）
+- 更新组件使用指南：新增 6 个章节（第 12-17 章），总览表更新为 87 个组件，目录重编至 19 章
+- index.ts 新增第 10-12 层导出（音频播客、高级行情、辅助组件）
+
+### 修复
+- AiGraph：修复 v-for 与 v-if 同元素导致的 Vue 3 渲染错误（v-if 优先级高于 v-for 致 link 未定义）
+
+---
+
 ## [feat/all-components] 2026-08-03 — 完成 56 组件库建设 + 色彩规范更新
 **开发者**: AiStock Team
 
