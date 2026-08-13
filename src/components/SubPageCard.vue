@@ -24,6 +24,11 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * @deprecated 此组件已弃用，请使用 SubPageCard2 替代。
+ * SubPageCard2 提供更好的白色导航栏设计、fixed 铺满布局和 scroll-view 支持。
+ * 保留此组件仅为向后兼容，新功能请勿使用。
+ */
 withDefaults(defineProps<{
   title?: string
   showBack?: boolean

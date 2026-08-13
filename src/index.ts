@@ -120,3 +120,8 @@ export { default as CycleSelect } from './components/CycleSelect.vue'
 export { default as NewsSlider } from './components/NewsSlider.vue'
 export { default as HotBurstPanel } from './components/HotBurstPanel.vue'
 export { default as MarketOverview } from './components/MarketOverview.vue'
+
+// ===== 补充导出：main 分支已有的扩展组件 =====
+export { default as DataTable } from './components/DataTable.vue'
+export { default as SubPageCard2 } from './components/SubPageCard2.vue'
+export { default as Footer } from './components/Footer.vue'
