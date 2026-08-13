@@ -1015,6 +1015,131 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
   }
   .stat-card:hover::before { transform: scaleX(1); }
 
+  /* ---- Enhanced Index Card (fin-index-card) ---- */
+  .fin-index-card {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--r-xl);
+    padding: 16px 18px;
+    overflow: hidden;
+    transition: all var(--t-base);
+    cursor: pointer;
+  }
+  .fin-index-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 0 2px 2px 0;
+    transition: width 0.2s var(--ease-out);
+  }
+  .fin-index-card--up::before { background: var(--up); }
+  .fin-index-card--down::before { background: var(--down); }
+  .fin-index-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--line-strong, #d1d5db);
+  }
+  .fin-index-card:hover::before { width: 4px; }
+  .fin-index-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .fin-index-card__name-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .fin-index-card__name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .fin-index-card__code {
+    font-size: 10px;
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+    letter-spacing: 0.5px;
+  }
+  .fin-index-card__live {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--ink-mute);
+  }
+  .fin-index-card__dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    animation: fin-pulse 2s ease-in-out infinite;
+  }
+  .fin-index-card__dot--up { background: var(--up); }
+  .fin-index-card__dot--down { background: var(--down); }
+  @keyframes fin-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 currentColor; }
+    50% { opacity: 0.5; transform: scale(1.4); }
+  }
+  .fin-index-card__price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .fin-index-card__price {
+    font-size: 26px;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+  }
+  .fin-index-card__pct {
+    font-size: 12px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    padding: 2px 8px;
+    border-radius: var(--r-xs);
+  }
+  .fin-index-card__pct--up { background: var(--up-soft); color: var(--up); }
+  .fin-index-card__pct--down { background: var(--down-soft); color: var(--down); }
+  .fin-index-card__change {
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .fin-index-card__sparkline {
+    width: 100%;
+    height: 44px;
+    margin-bottom: 8px;
+  }
+  .fin-index-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+  }
+  .fin-index-card__vol {
+    font-size: 10px;
+    color: var(--ink-mute);
+  }
+  .fin-index-card__vol-val {
+    font-family: var(--font-mono);
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .fin-index-card__range {
+    font-size: 10px;
+    color: var(--ink-mute);
+    font-family: var(--font-mono);
+  }
+
   /* Fade In */
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(8px); }
@@ -1316,6 +1441,47 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
   }
   .empty-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
   .empty-desc { font-size: 12px; color: var(--ink-mute); }
+  .empty-action { margin-top: 20px; }
+
+  /* ---- LoadingState (Spinner) ---- */
+  .ds-loading { display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .ds-loading--vertical { flex-direction: column; gap: 12px; }
+  .ds-loading__spinner {
+    display: inline-block; border-radius: 50%;
+    border: 3px solid var(--line-strong);
+    border-top-color: var(--primary);
+    animation: ds-loading-spin 0.8s linear infinite;
+  }
+  .ds-loading__spinner--sm { width: 16px; height: 16px; border-width: 2px; }
+  .ds-loading__spinner--md { width: 20px; height: 20px; border-width: 3px; }
+  .ds-loading__spinner--lg { width: 32px; height: 32px; border-width: 4px; }
+  .ds-loading__text { font-size: 12px; color: var(--ink-soft); }
+  @keyframes ds-loading-spin { to { transform: rotate(360deg); } }
+
+  /* ---- StatGrid ---- */
+  .ds-stat-grid { display: flex; flex-wrap: wrap; border-radius: var(--r-md); overflow: hidden; }
+  .ds-stat-grid--bordered { background: var(--bg-card); border: 1px solid var(--line); }
+  .ds-stat-grid__item {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 8px; text-align: center; min-width: 0; overflow: hidden;
+  }
+  .ds-stat-grid--bordered .ds-stat-grid__item { border-right: 1px solid var(--line-soft); }
+  .ds-stat-grid__item--last-in-row { border-right: none !important; }
+  .ds-stat-grid__item--row-border { border-bottom: 1px solid var(--line-soft); }
+  .ds-stat-grid__value {
+    font-size: 14px; font-weight: 700; font-family: var(--font-mono);
+    color: var(--ink); line-height: 1.2;
+  }
+  .ds-stat-grid__value.is-brand { color: var(--primary); }
+  .ds-stat-grid__value.is-up { color: var(--up); }
+  .ds-stat-grid__value.is-down { color: var(--down); }
+  .ds-stat-grid__value.is-warning { color: var(--warning); }
+  .ds-stat-grid__unit { font-size: 10px; font-weight: 500; margin-left: 1px; }
+  .ds-stat-grid__label {
+    font-size: 10px; color: var(--ink-mute); line-height: 1.4;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1;
+    overflow: hidden; word-break: break-all; max-width: 100%; text-align: center;
+  }
 
   /* ---- Modal / Drawer ---- */
   .modal-mask {
@@ -1419,17 +1585,28 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
   .timeline-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
 
   /* ---- Data Grid (advanced table) ---- */
-  .data-grid { width: 100%; border-collapse: collapse; font-size: 13px; background: #fff; border-radius: var(--r-md); overflow: hidden; }
+  .data-grid-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--r-md); }
+  .data-grid { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 13px; background: #fff; border-radius: var(--r-md); overflow: hidden; table-layout: fixed; }
   .data-grid th {
-    background: var(--bg-soft); padding: 10px 12px; text-align: left; font-size: 12px;
+    background: var(--bg-soft); padding: 8px 6px; text-align: left; font-size: 12px;
     font-weight: 600; color: var(--ink-soft); border-bottom: 1px solid var(--line); white-space: nowrap;
   }
   .data-grid th.sortable { cursor: pointer; user-select: none; }
   .data-grid th.sortable:hover { color: var(--primary); }
   .data-grid th.sorted { color: var(--primary); }
-  .data-grid td { padding: 10px 12px; border-bottom: 1px solid var(--line-soft); color: var(--ink); }
+  .data-grid td { padding: 8px 6px; border-bottom: 1px solid var(--line-soft); color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .data-grid tr:hover td { background: var(--bg-soft); }
   .data-grid tr:last-child td { border-bottom: none; }
+  .data-grid td:nth-child(1), .data-grid th:nth-child(1) { width: 36px; }
+  .data-grid td:nth-child(2), .data-grid th:nth-child(2) { width: 120px; }
+  .data-grid td:nth-child(3), .data-grid th:nth-child(3) { width: 68px; text-align: right; }
+  .data-grid td:nth-child(4), .data-grid th:nth-child(4) { width: 62px; text-align: center; }
+  .data-grid td:nth-child(5), .data-grid th:nth-child(5) { width: 56px; text-align: right; }
+  .data-grid td:nth-child(6), .data-grid th:nth-child(6) { width: 56px; text-align: right; }
+  .data-grid td:nth-child(7), .data-grid th:nth-child(7) { width: 58px; text-align: right; }
+  .data-grid td:nth-child(8), .data-grid th:nth-child(8) { width: 56px; text-align: center; }
+  .data-grid td:nth-child(9), .data-grid th:nth-child(9) { width: 42px; text-align: center; }
+  .data-grid td:nth-child(10), .data-grid th:nth-child(10) { width: 48px; text-align: center; }
 
   /* ---- Page Header ---- */
   .page-header { background: #fff; border: 1px solid var(--line); border-radius: var(--r-xl); padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; box-shadow: var(--shadow-sm); }
@@ -1458,9 +1635,27 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
   .phone-screen { background: var(--bg-page); border-radius: 20px; overflow: hidden; height: 480px; position: relative; }
   .app-navbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #fff; border-bottom: 1px solid var(--line); height: 44px; }
   .app-navbar-title { font-size: 15px; font-weight: 700; color: var(--ink); }
-  .app-tabbar { position: absolute; bottom: 0; left: 0; right: 0; display: flex; background: #fff; border-top: 1px solid var(--line); height: 56px; padding-bottom: var(--safe-bottom); }
-  .app-tabbar-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; color: var(--ink-mute); position: relative; cursor: pointer; transition: color var(--t-fast); }
-  .app-tabbar-item.active { color: var(--primary); font-weight: 600; }
+  .app-chatbar { position: absolute; bottom: 0; left: 0; right: 0; padding: 4px 12px 6px; background: var(--bg-page); z-index: 2; }
+  .app-chatbar-row { display: flex; align-items: center; gap: 8px; }
+  .app-chatbar-side { flex-shrink: 0; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: #fff; border-radius: var(--r-full); border: 1px solid rgba(11,95,255,0.15); box-shadow: var(--shadow-sm); }
+  .app-chatbar-side-text { font-size: 10px; font-weight: 600; color: var(--ink-soft); letter-spacing: 0.5px; }
+  .app-chatbar-capsule { flex: 1; min-width: 0; height: 38px; display: flex; align-items: center; padding: 0 8px 0 4px; gap: 8px; background: #fff; border: 1px solid rgba(11,95,255,0.15); border-radius: var(--r-full); box-shadow: var(--shadow-hover); }
+  .app-chatbar-avatar { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; }
+  .app-chatbar-avatar-text { font-size: 10px; font-weight: 700; color: #fff; line-height: 1; }
+  .app-chatbar-placeholder { flex: 1; font-size: 12px; color: var(--ink-mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .app-chatbar-unread { flex-shrink: 0; min-width: 16px; height: 16px; padding: 0 4px; background: rgba(11,95,255,0.1); border-radius: var(--r-full); display: flex; align-items: center; justify-content: center; }
+  .app-chatbar-unread-text { font-size: 9px; color: var(--primary); font-weight: 600; line-height: 1; }
+  .app-chatbar-mic { flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--ink-mute); }
+  .app-chatbar-disclaimer { display: flex; align-items: center; justify-content: center; height: 20px; }
+  .app-chatbar-disclaimer-text { font-size: 9px; color: var(--ink-faint); }
+  .app-tabbar { position: absolute; bottom: 72px; left: 0; right: 0; display: flex; align-items: center; justify-content: space-around; padding: 8px 16px 0; background: var(--bg-page); height: 52px; z-index: 1; }
+  .app-tabbar-item { display: flex; align-items: center; justify-content: center; height: 28px; padding: 0 4px; border-radius: var(--r-full); transition: all var(--t-base); color: #8a96b0; cursor: pointer; }
+  .app-tabbar-item.active { background: rgba(11,95,255,0.15); padding: 0 12px; gap: 4px; color: var(--primary); }
+  .app-tabbar-icon-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
+  .app-tabbar-text { font-size: 10px; font-weight: 600; color: var(--primary); line-height: 1; white-space: nowrap; }
+  .app-tabbar-badge-dot { position: absolute; top: -1px; right: -1px; width: 7px; height: 7px; background: var(--up); border-radius: 50%; border: 1px solid var(--bg-page); }
+  .app-tabbar-badge-num { position: absolute; top: -5px; right: -8px; min-width: 14px; height: 14px; padding: 0 3px; background: var(--up); border-radius: 7px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--bg-page); }
+  .app-tabbar-badge-num-text { font-size: 9px; color: #fff; font-weight: 700; line-height: 1; }
   .bottom-sheet { position: absolute; bottom: 0; left: 0; right: 0; background: #fff; border-radius: var(--r-2xl) var(--r-2xl) 0 0; padding: 8px 0 16px; box-shadow: 0 -8px 32px rgba(10,23,51,0.15); }
   .bottom-sheet-handle { width: 36px; height: 4px; background: var(--line-strong); border-radius: 2px; margin: 0 auto 12px; }
   .action-sheet { position: absolute; bottom: 0; left: 0; right: 0; }
@@ -1471,11 +1666,45 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
   .action-sheet-cancel { padding: 14px 20px; text-align: center; font-size: 14px; font-weight: 600; background: #fff; margin-top: 8px; cursor: pointer; }
 
   /* ---- Quote Header ---- */
-  .quote-header { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  .quote-header { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+  .quote-header-left { position: relative; }
+  .quote-price-card {
+    background: linear-gradient(135deg, var(--up-soft), transparent 70%);
+    border: 1px solid var(--line-soft);
+    border-radius: var(--r-lg);
+    padding: 16px 18px;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .quote-price-card.fall { background: linear-gradient(135deg, var(--down-soft), transparent 70%); }
+  .quote-price-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--up), var(--up-soft));
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+  }
+  .quote-price-card.fall::before { background: linear-gradient(90deg, var(--down), var(--down-soft)); }
+  .quote-stat-item {
+    display: flex; flex-direction: column; gap: 2px;
+    padding: 8px 12px;
+    background: var(--bg-soft);
+    border-radius: var(--r-md);
+    border: 1px solid transparent;
+    transition: all var(--t-fast);
+    min-width: 72px;
+  }
+  .quote-stat-item:hover { border-color: var(--primary-100); background: var(--primary-50); }
+  .quote-stat-label { font-size: 11px; color: var(--ink-mute); font-weight: 500; }
+  .quote-stat-value { font-size: 13px; font-weight: 700; font-family: var(--font-mono); color: var(--ink); }
   .quote-header-right { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .quote-metric { background: var(--bg-soft); border-radius: var(--r-md); padding: 10px 12px; }
+  .quote-metric {
+    background: var(--bg-soft); border-radius: var(--r-md); padding: 10px 12px;
+    border: 1px solid transparent; transition: all var(--t-fast);
+  }
+  .quote-metric:hover { border-color: var(--primary-100); background: var(--primary-50); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
   .quote-metric-label { font-size: 11px; color: var(--ink-mute); margin-bottom: 4px; }
   .quote-metric-value { font-size: 15px; font-weight: 700; color: var(--ink); font-family: var(--font-mono); }
+  .quote-divider { width: 1px; background: var(--line-soft); align-self: stretch; }
 
   /* ---- Ticker ---- */
   .ticker { background: linear-gradient(90deg, var(--primary-deep), var(--primary)); border-radius: var(--r-md); padding: 8px 0; overflow: hidden; }
@@ -1574,6 +1803,41 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
   .announce-tag.warn { background: var(--warn-soft); color: var(--warn); }
   .announce-title { font-size: 13px; font-weight: 600; color: var(--ink); margin: 4px 0; line-height: 1.5; }
   .announce-meta { font-size: 11px; color: var(--ink-mute); font-family: var(--font-mono); }
+
+  /* Feed card action buttons */
+  .announce-actions { display: flex; gap: 6px; }
+  .announce-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 5px 12px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; line-height: 1;
+    border: 1px solid transparent; cursor: pointer;
+    transition: all 0.18s ease; white-space: nowrap;
+  }
+  .announce-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+  .announce-btn--ghost {
+    background: var(--bg-soft); color: var(--ink-soft);
+    border-color: var(--line);
+  }
+  .announce-btn--ghost:hover {
+    background: var(--primary-50); color: var(--primary);
+    border-color: var(--primary-100, rgba(11,95,255,0.2));
+  }
+  .announce-btn--primary {
+    background: var(--primary); color: #fff;
+    box-shadow: 0 2px 8px -2px rgba(11,95,255,0.35);
+  }
+  .announce-btn--primary:hover {
+    background: #0947cc; transform: translateY(-1px);
+    box-shadow: 0 4px 12px -2px rgba(11,95,255,0.45);
+  }
+  .announce-btn--danger {
+    background: rgba(229,77,94,0.08); color: var(--up);
+    border-color: rgba(229,77,94,0.2);
+  }
+  .announce-btn--danger:hover {
+    background: var(--up); color: #fff; border-color: var(--up);
+    box-shadow: 0 2px 8px -2px rgba(229,77,94,0.35);
+  }
 
   /* ---- Watchlist ---- */
   .watchlist { background: #fff; border: 1px solid var(--line); border-radius: var(--r-xl); overflow: hidden; }
@@ -5934,6 +6198,357 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
   color: var(--trae-text-default);
   user-select: none;
 }
+<style id="ext-components-css">
+/* ===== Extension Components CSS ===== */
+.ext-streaming { font-size: 14px; line-height: 1.5; color: var(--ink); }
+.ext-streaming__cursor { display: inline-block; width: 2px; height: 16px; background: var(--primary); margin-left: 2px; vertical-align: text-bottom; animation: ext-cursor-blink 1s infinite; }
+@keyframes ext-cursor-blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+.ext-chat-bubble { display: flex; width: 100%; margin-bottom: 12px; }
+.ext-chat-bubble--user { justify-content: flex-end; }
+.ext-chat-bubble--ai { justify-content: flex-start; align-items: flex-start; gap: 8px; }
+.ext-chat-bubble__user { max-width: 80%; background: var(--primary); color: #fff; border-radius: 8px 8px 4px 8px; padding: 8px 12px; font-size: 14px; line-height: 1.5; }
+.ext-chat-bubble__avatar { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-xs); }
+.ext-chat-bubble__avatar svg { color: #fff; }
+.ext-chat-bubble__body { max-width: 80%; background: linear-gradient(135deg, var(--bg-card) 0%, #f7f9ff 100%); border-radius: 8px 8px 8px 4px; padding: 8px 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--line); font-size: 14px; line-height: 1.5; color: var(--ink); }
+.ext-audio-player { background: var(--bg-card); border-radius: 10px; padding: 12px; box-shadow: var(--shadow-sm); }
+.ext-audio-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.ext-audio-cover { width: 28px; height: 28px; border-radius: 6px; background: var(--primary-50); display:flex; align-items:center; justify-content:center; }
+.ext-audio-title { flex:1; font-size: 14px; font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ext-audio-controls { display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 10px; }
+.ext-audio-btn { display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: transform 0.15s; }
+.ext-audio-btn--side { width: 40px; height: 40px; background: var(--bg-soft); }
+.ext-audio-btn--main { width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); box-shadow: var(--shadow-primary); }
+.ext-audio-progress { position: relative; height: 20px; display: flex; align-items: center; }
+.ext-audio-track { position: absolute; left:0; right:0; top:50%; height: 4px; transform: translateY(-50%); border-radius: 2px; background: var(--bg-deep); }
+.ext-audio-fill { position: absolute; left:0; top:50%; height: 4px; transform: translateY(-50%); border-radius: 2px; background: var(--primary); }
+.ext-audio-thumb { position: absolute; top:50%; width: 12px; height: 12px; background: #fff; border: 2px solid var(--primary); border-radius: 50%; transform: translate(-50%,-50%); box-shadow: var(--shadow-xs); }
+.ext-audio-time { display: flex; justify-content: space-between; margin-top: 4px; }
+.ext-audio-time span { font-size: 11px; color: var(--ink-mute); font-family: var(--font-mono); }
+.ext-podcast-card { background: var(--bg-card); border-radius: 10px; padding: 12px; border: 1px solid var(--line); box-shadow: var(--shadow-xs); }
+.ext-podcast-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.ext-podcast-title { font-size: 14px; font-weight: 600; color: var(--primary); }
+.ext-podcast-preview { font-size: 12px; color: var(--ink-mute); line-height: 1.6; background: var(--bg-soft); padding: 8px 12px; border-radius: 8px; margin-bottom: 8px; }
+.ext-floating-podcast { position: relative; display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%); border-radius: 12px; padding: 10px 14px; box-shadow: var(--shadow-hover); color: #fff; }
+.ext-floating-podcast__cover { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.ext-floating-podcast__info { flex:1; min-width:0; }
+.ext-floating-podcast__title { font-size: 13px; font-weight: 600; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ext-floating-podcast__sub { font-size: 11px; color: rgba(255,255,255,0.7); }
+.ext-floating-podcast__play { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor: pointer; }
+.ext-insight-alert {
+  position: relative; background: var(--bg-card); border: 1px solid var(--line);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-sm); overflow: hidden;
+  transition: all var(--t-base);
+}
+.ext-insight-alert:hover { box-shadow: var(--shadow-card); transform: translateY(-1px); }
+.ext-insight-alert__header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; position: relative;
+}
+.ext-insight-alert__header::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+}
+.ext-insight-alert__header--up::before { background: linear-gradient(180deg, var(--up), var(--up-soft)); }
+.ext-insight-alert__header--down::before { background: linear-gradient(180deg, var(--down), var(--down-soft)); }
+.ext-insight-alert__stock { display: flex; align-items: center; gap: 8px; }
+.ext-insight-alert__avatar {
+  width: 28px; height: 28px; border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.ext-insight-alert__avatar--up { background: linear-gradient(135deg, var(--up), #ff8a95); }
+.ext-insight-alert__avatar--down { background: linear-gradient(135deg, var(--down), #5ae8a8); }
+.ext-insight-alert__name { font-size: 14px; font-weight: 700; color: var(--ink); }
+.ext-insight-alert__code { font-size: 11px; color: var(--ink-mute); font-family: var(--font-mono); }
+.ext-insight-alert__tag {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 3px 10px; border-radius: var(--r-full); font-size: 11px; font-weight: 700;
+}
+.ext-insight-alert__tag--up { background: var(--up-soft); color: var(--up); }
+.ext-insight-alert__tag--down { background: var(--down-soft); color: var(--down); }
+.ext-insight-alert__body { padding: 12px 14px; }
+.ext-insight-alert__msg { font-size: 12.5px; color: var(--ink-soft); line-height: 1.6; display: flex; align-items: flex-start; gap: 6px; }
+.ext-insight-alert__msg-icon { flex-shrink: 0; margin-top: 2px; opacity: 0.6; }
+.ext-insight-alert__msg .hl-up { color: var(--up); font-weight: 700; font-family: var(--font-mono); }
+.ext-insight-alert__msg .hl-down { color: var(--down); font-weight: 700; font-family: var(--font-mono); }
+.ext-insight-alert__msg .hl-data { color: var(--ink); font-weight: 600; font-family: var(--font-mono); }
+.ext-insight-alert__metrics { display: flex; gap: 8px; margin-top: 10px; }
+.ext-insight-alert__metric {
+  flex: 1; background: var(--bg-soft); border-radius: var(--r-sm);
+  padding: 6px 10px; display: flex; flex-direction: column; gap: 1px;
+}
+.ext-insight-alert__metric-label { font-size: 10px; color: var(--ink-mute); font-weight: 500; }
+.ext-insight-alert__metric-value { font-size: 13px; font-weight: 700; font-family: var(--font-mono); line-height: 1.2; }
+.ext-insight-alert__metric-value--up { color: var(--up); }
+.ext-insight-alert__metric-value--down { color: var(--down); }
+.ext-insight-alert__metric-value--neutral { color: var(--ink); }
+.ext-insight-alert__sparkbar-wrap { margin-top: 10px; }
+.ext-insight-alert__sparkbar-label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.ext-insight-alert__sparkbar-title { font-size: 10px; color: var(--ink-mute); font-weight: 500; }
+.ext-insight-alert__sparkbar-sum { font-size: 11px; font-weight: 700; font-family: var(--font-mono); }
+.ext-insight-alert__sparkbar { display: flex; align-items: flex-end; gap: 2px; height: 24px; padding: 0 2px; background: var(--bg-soft); border-radius: var(--r-sm); padding-top: 4px; padding-bottom: 4px; }
+.ext-insight-alert__sparkbar-bar { flex: 1; border-radius: 1px; min-height: 3px; transition: height 0.3s; }
+.ext-insight-alert__sparkbar-bar--up { background: linear-gradient(180deg, var(--up), var(--up-soft)); }
+.ext-insight-alert__sparkbar-bar--down { background: linear-gradient(180deg, var(--down), var(--down-soft)); }
+.ext-insight-alert__footer {
+  display: flex; align-items: center; justify-content: space-between; margin-top: 10px;
+  padding-top: 8px; border-top: 1px dashed var(--line-soft);
+}
+.ext-insight-alert__type {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; color: var(--ink-mute); font-weight: 500;
+}
+.ext-insight-alert__type::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--ink-faint);
+}
+.ext-insight-alert__type--up::before { background: var(--up); }
+.ext-insight-alert__type--down::before { background: var(--down); }
+.ext-insight-alert__time {
+  font-size: 11px; color: var(--ink-mute); font-family: var(--font-mono);
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.ext-confidence {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 8px; border-radius: var(--r-full); font-size: 10px; font-weight: 700;
+  margin-left: 6px;
+}
+.ext-confidence::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
+.ext-confidence--high { background: var(--warning-soft); color: var(--warning); }
+.ext-confidence--high::before { background: var(--warning); }
+.ext-confidence--mid { background: rgba(138,150,176,0.15); color: var(--ink-mute); }
+.ext-confidence--mid::before { background: var(--ink-mute); }
+.ext-guide-card { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 10px; transition: transform 0.25s; position: relative; overflow: hidden; }
+.ext-guide-card--brand { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); box-shadow: 0 4px 16px -4px rgba(11,95,255,0.4); }
+.ext-guide-card--accent { background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%); box-shadow: 0 4px 16px -4px rgba(11,95,255,0.3); }
+.ext-guide-card--warning { background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%); box-shadow: 0 4px 16px -4px rgba(200,144,32,0.4); }
+.ext-guide-card__icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ext-guide-card__body { flex: 1; min-width: 0; }
+.ext-guide-card__title { font-size: 14px; font-weight: 600; color: #fff; }
+.ext-guide-card__desc { font-size: 11px; color: rgba(255,255,255,0.8); }
+.ext-guide-card__arrow { font-size: 18px; color: rgba(255,255,255,0.6); font-weight: 300; flex-shrink: 0; }
+.ext-list-cell { display: flex; align-items: center; padding: 14px 20px; background: var(--bg-card); transition: all 0.15s; }
+.ext-list-cell + .ext-list-cell { border-top: 1px solid var(--line-soft); }
+.ext-list-cell__prefix { flex-shrink: 0; margin-right: 12px; }
+.ext-list-cell__content { flex: 1; min-width: 0; }
+.ext-list-cell__title { font-size: 14px; color: var(--ink); font-weight: 500; }
+.ext-list-cell__desc { margin-top: 2px; font-size: 11px; color: var(--ink-mute); }
+.ext-list-cell__right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: 16px; }
+.ext-list-cell__value { font-size: 13px; color: var(--ink-soft); font-family: var(--font-mono); }
+.ext-list-cell__arrow { width: 8px; height: 8px; border-right: 2px solid var(--ink-faint); border-top: 2px solid var(--ink-faint); transform: rotate(45deg); }
+.ext-stars { display: inline-flex; align-items: center; gap: 1px; }
+.ext-star { color: var(--ink-faint); font-size: 14px; line-height: 1; transition: color 0.2s; }
+.ext-star.active { color: var(--gold-light); }
+.ext-event-item { background: var(--bg-card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; box-shadow: var(--shadow-xs); transition: all var(--t-base); position: relative; overflow: hidden; }
+.ext-event-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+.ext-event-item--up::before { background: var(--up); }
+.ext-event-item--down::before { background: var(--down); }
+.ext-event-item--neutral::before { background: var(--primary); }
+.ext-event-item:hover { border-color: var(--line-strong, #d1d5db); box-shadow: var(--shadow-hover); }
+.ext-event-item__header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.ext-event-item__type { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: var(--r-xs); flex-shrink: 0; }
+.ext-event-item__type--policy { background: rgba(11,95,255,0.1); color: var(--primary); }
+.ext-event-item__type--economy { background: rgba(200,144,32,0.12); color: var(--accent); }
+.ext-event-item__type--company { background: rgba(24,160,88,0.1); color: var(--down); }
+.ext-event-item__source { font-size: 11px; color: var(--ink-mute); display: flex; align-items: center; gap: 3px; }
+.ext-event-item__source--unverified { color: var(--ink-faint); font-style: italic; }
+.ext-event-item__time { font-size: 11px; color: var(--ink-mute); font-family: var(--font-mono); margin-left: auto; }
+.ext-event-item__title { font-size: 15px; font-weight: 600; color: var(--ink); line-height: 1.45; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.ext-event-item__industries { display: flex; gap: 6px; overflow: hidden; margin-bottom: 8px; flex-wrap: nowrap; }
+.ext-event-item__ind { display: inline-flex; align-items: center; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: var(--r-xs); white-space: nowrap; flex-shrink: 0; }
+.ext-event-item__ind--up { background: var(--up-soft); color: var(--up); }
+.ext-event-item__ind--down { background: var(--down-soft); color: var(--down); }
+.ext-event-item__ind--neutral { background: var(--bg-soft); color: var(--ink-mute); }
+.ext-event-item__ai-summary { display: flex; align-items: flex-start; gap: 6px; padding: 8px 10px; background: linear-gradient(135deg, rgba(11,95,255,0.05), rgba(11,95,255,0.02)); border-radius: var(--r-sm); border-left: 3px solid var(--primary); margin-bottom: 8px; }
+.ext-event-item__ai-badge { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.ext-event-item__ai-text { font-size: 12px; color: var(--ink-soft); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.ext-event-item__footer { display: flex; align-items: center; gap: 8px; padding-top: 8px; border-top: 1px solid var(--line); justify-content: flex-end; }
+.ext-event-item__btn { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: var(--r-full); cursor: pointer; border: none; transition: all var(--t-fast); }
+.ext-event-item__btn--ghost { background: var(--bg-soft); color: var(--ink-soft); }
+.ext-event-item__btn--ghost:hover { background: rgba(200,144,32,0.1); color: var(--accent); }
+.ext-event-item__btn--primary { background: var(--primary); color: #fff; display: flex; align-items: center; gap: 3px; }
+.ext-event-item__btn--primary:hover { background: var(--primary-dark, #0947cc); }
+.ext-event-item__tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.ext-event-tag { padding: 2px 8px; border-radius: 4px; font-size: 11px; }
+.ext-event-tag--hot { background: var(--up-soft); color: var(--up); }
+.ext-event-tag--sector { background: var(--primary-50); color: var(--primary); }
+.ext-event-tag--policy { background: var(--warn-bg); color: var(--warning); }
+.ext-event-headline { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%); border-radius: 12px; padding: 16px; color: #fff; box-shadow: var(--shadow-card); }
+.ext-event-headline__badge { display: inline-block; padding: 2px 10px; border-radius: 4px; background: rgba(255,255,255,0.2); font-size: 11px; margin-bottom: 8px; }
+.ext-event-headline__title { font-size: 16px; font-weight: 700; line-height: 1.4; margin-bottom: 8px; }
+.ext-event-headline__source { font-size: 11px; color: rgba(255,255,255,0.7); }
+.ext-insight-list { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--line); overflow: hidden; }
+.ext-insight-list__header { padding: 10px 12px; background: var(--bg-soft); border-bottom: 1px solid var(--line); font-size: 13px; font-weight: 600; color: var(--ink); display: flex; align-items: center; gap: 6px; }
+.ext-insight-list__item { padding: 10px 12px; border-bottom: 1px solid var(--line-soft); display: flex; align-items: flex-start; gap: 8px; }
+.ext-insight-list__item:last-child { border-bottom: none; }
+.ext-insight-list__dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+.ext-insight-list__dot--up { background: var(--up); }
+.ext-insight-list__dot--down { background: var(--down); }
+.ext-insight-list__text { flex: 1; font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+.ext-insight-list__time { font-size: 11px; color: var(--ink-mute); flex-shrink: 0; }
+.ext-stock-chart { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--line); padding: 14px 16px; }
+.ext-chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.ext-chart-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+.ext-chart-sub { font-size: 11px; color: var(--ink-mute); margin-top: 2px; }
+.ext-chart-price { font-size: 22px; font-weight: 800; font-family: var(--font-mono); }
+.ext-chart-change { font-size: 12px; font-weight: 600; font-family: var(--font-mono); }
+.ext-chart-periods { display: flex; gap: 4px; margin-bottom: 8px; }
+.ext-chart-period { font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: var(--r-xs); background: var(--bg-soft); color: var(--ink-mute); cursor: pointer; transition: all var(--t-fast); }
+.ext-chart-period.is-active { background: var(--primary); color: #fff; }
+.ext-chart-ma-legend { display: flex; gap: 12px; margin-bottom: 6px; font-size: 11px; font-family: var(--font-mono); }
+.ext-chart-ma-item { display: flex; align-items: center; gap: 3px; }
+.ext-chart-ma-dot { width: 10px; height: 2px; border-radius: 1px; }
+.ext-candle-row { display: flex; align-items: flex-end; gap: 3px; height: 120px; position: relative; margin-bottom: 4px; }
+.ext-candle { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; position: relative; height: 100%; }
+.ext-candle__wick { width: 1px; background: var(--ink-faint); position: absolute; bottom: 0; z-index: 1; }
+.ext-candle--up .ext-candle__wick { background: var(--up); }
+.ext-candle--down .ext-candle__wick { background: var(--down); }
+.ext-candle__body { width: 70%; max-width: 10px; border-radius: 1px; position: relative; z-index: 2; }
+.ext-candle--up .ext-candle__body { background: var(--up); }
+.ext-candle--down .ext-candle__body { background: var(--down); }
+.ext-candle--down .ext-candle__body { border: 1px solid var(--down); background: var(--bg-card); }
+.ext-chart-ma-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
+.ext-vol-row { display: flex; align-items: flex-end; gap: 3px; height: 36px; margin-top: 2px; }
+.ext-vol-bar { flex: 1; max-width: 10px; border-radius: 1px 1px 0 0; opacity: 0.6; }
+.ext-vol-bar--up { background: var(--up); }
+.ext-vol-bar--down { background: var(--down); }
+.ext-chart-axis { display: flex; justify-content: space-between; font-size: 10px; color: var(--ink-faint); font-family: var(--font-mono); margin-top: 4px; }
+.ext-compare-chart { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--line); padding: 12px; }
+.ext-compare-legend { display: flex; gap: 12px; margin-bottom: 8px; }
+.ext-compare-legend-item { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--ink-soft); }
+.ext-compare-legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+.ext-dim-card { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--line); padding: 12px; }
+.ext-dim-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.ext-dim-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+.ext-dim-score { font-size: 18px; font-weight: 700; }
+.ext-dim-bar { height: 6px; border-radius: 3px; background: var(--bg-deep); overflow: hidden; margin-bottom: 8px; }
+.ext-dim-bar__fill { height: 100%; border-radius: 3px; }
+.ext-dim-desc { font-size: 11px; color: var(--ink-mute); line-height: 1.4; }
+.ext-stock-table { width: 100%; border-collapse: collapse; }
+.ext-stock-table th { text-align: left; padding: 6px 8px; font-size: 11px; color: var(--ink-mute); border-bottom: 1px solid var(--line); font-weight: 500; }
+.ext-stock-table td { padding: 6px 8px; font-size: 12px; color: var(--ink); border-bottom: 1px solid var(--line-soft); }
+.ext-stock-table tr:last-child td { border-bottom: none; }
+.ext-stock-card { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--line-soft); margin-bottom: 6px; }
+.ext-stock-card__info { flex: 1; min-width: 0; }
+.ext-stock-card__name { font-size: 13px; font-weight: 600; color: var(--ink); }
+.ext-stock-card__code { font-size: 11px; color: var(--ink-mute); }
+.ext-stock-card__price { text-align: right; }
+.ext-stock-card__pct { font-size: 12px; font-weight: 600; }
+.ext-intel-item { display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--line-soft); margin-bottom: 6px; }
+.ext-intel-item__icon { width: 24px; height: 24px; border-radius: 6px; background: var(--primary-50); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ext-intel-item__body { flex: 1; }
+.ext-intel-item__title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+.ext-intel-item__desc { font-size: 11px; color: var(--ink-mute); line-height: 1.4; }
+.ext-wind-panel { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--line); padding: 14px 16px; }
+.ext-wind-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.ext-wind-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
+.ext-wind-tab { font-size: 12px; font-weight: 600; padding: 4px 14px; border-radius: var(--r-xs); cursor: pointer; background: var(--bg-soft); color: var(--ink-mute); transition: all var(--t-fast); }
+.ext-wind-tab.is-active { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%); color: #fff; box-shadow: 0 2px 8px rgba(11,95,255,0.3); }
+.ext-wind-tab:hover:not(.is-active) { background: var(--bg-deep); color: var(--ink-soft); }
+.ext-wind-heat { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px; margin-left: 4px; }
+.ext-wind-heat--start { background: rgba(11,95,255,0.08); color: var(--primary-light); }
+.ext-wind-heat--rising { background: rgba(11,95,255,0.14); color: var(--primary); }
+.ext-wind-heat--peak { background: rgba(229,77,94,0.1); color: var(--up); }
+.ext-wind-heat--fading { background: rgba(24,160,88,0.1); color: var(--down); }
+.ext-wind-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+.ext-wind-bubbles { margin-bottom: 10px; }
+.ext-bubble-chart { width: 100%; height: 260px; display: block; }
+.ext-bubble-chart circle { stroke: #fff; stroke-width: 2; cursor: pointer; transition: opacity 0.2s; }
+.ext-bubble-chart g:hover circle { opacity: 0.75; }
+.ext-bubble-chart text { fill: #fff; font-size: 10px; font-weight: 600; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.ext-wind-bubble { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+.ext-wind-bubble--hot { background: var(--up-soft); color: var(--up); }
+.ext-wind-bubble--warm { background: var(--primary-50); color: var(--primary); }
+.ext-wind-bubble--cool { background: var(--bg-soft); color: var(--ink-soft); }
+.ext-wind-leader-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.ext-wind-leader-card { padding: 8px 10px; background: var(--bg-soft); border-radius: 6px; border: 1px solid var(--line-soft); }
+.ext-wind-leader-name { font-size: 12px; font-weight: 600; color: var(--ink); }
+.ext-wind-leader-meta { display: flex; justify-content: space-between; margin-top: 4px; }
+.ext-wind-leader-price { font-size: 11px; font-family: var(--font-mono); color: var(--ink-soft); }
+.ext-wind-leader-pct { font-size: 11px; font-weight: 600; }
+.ext-login-qr { background: var(--bg-card); border-radius: 12px; border: 1px solid var(--line); padding: 20px; text-align: center; box-shadow: var(--shadow-card); }
+.ext-login-qr__box { width: 120px; height: 120px; margin: 0 auto 12px; border-radius: 8px; background: var(--bg-soft); display: grid; grid-template-columns: repeat(8,1fr); grid-template-rows: repeat(8,1fr); gap: 1px; padding: 8px; }
+.ext-login-qr__cell { background: var(--ink); border-radius: 1px; }
+.ext-login-qr__cell--off { background: transparent; }
+.ext-login-qr__title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.ext-login-qr__desc { font-size: 12px; color: var(--ink-mute); }
+.ext-login-qr__refresh { margin-top: 8px; font-size: 12px; color: var(--primary); cursor: pointer; }
+.ext-cycle-select { display: flex; gap: 4px; background: var(--bg-soft); border-radius: 8px; padding: 3px; }
+.ext-cycle-item { padding: 6px 16px; border-radius: 6px; font-size: 13px; color: var(--ink-soft); cursor: pointer; transition: all 0.2s; }
+.ext-cycle-item.active { background: var(--bg-card); color: var(--primary); font-weight: 600; box-shadow: var(--shadow-xs); }
+.ext-news-slider { position: relative; overflow: hidden; border-radius: 10px; }
+.ext-news-slide { padding: 14px 16px; background: linear-gradient(135deg, var(--primary-50) 0%, var(--bg-card) 100%); border-radius: 10px; border: 1px solid var(--line); }
+.ext-news-slide__tag { display: inline-block; padding: 2px 8px; border-radius: 4px; background: var(--primary); color: #fff; font-size: 11px; margin-bottom: 6px; }
+.ext-news-slide__title { font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.4; margin-bottom: 6px; }
+.ext-news-slide__source { font-size: 11px; color: var(--ink-mute); }
+.ext-news-dots { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
+.ext-news-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-faint); }
+.ext-news-dot.active { background: var(--primary); width: 16px; border-radius: 3px; }
+.ext-hot-burst { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--line); padding: 12px; }
+.ext-hot-burst__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.ext-hot-burst__title { font-size: 14px; font-weight: 600; color: var(--up); display: flex; align-items: center; gap: 4px; }
+.ext-hot-burst__time { font-size: 11px; color: var(--ink-mute); }
+.ext-hot-burst__list { display: flex; flex-direction: column; gap: 4px; }
+.ext-hot-burst__item { display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: var(--up-soft); border-radius: 6px; }
+.ext-hot-burst__name { flex: 1; font-size: 12px; color: var(--ink); font-weight: 500; }
+.ext-hot-burst__pct { font-size: 12px; font-weight: 700; color: var(--up); }
+.ext-market-ov { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--line); overflow: hidden; }
+.ext-market-ov__header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg-soft); border-bottom: 1px solid var(--line); }
+.ext-market-ov__title { font-size: 13px; font-weight: 600; color: var(--ink); }
+.ext-market-ov__status { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--ink-mute); }
+.ext-market-ov__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--up); animation: ext-pulse 2s infinite; }
+@keyframes ext-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+.ext-market-ov__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line-soft); }
+.ext-index-card { position: relative; padding: 12px 14px; background: var(--bg-card); transition: background 0.15s; }
+.ext-index-card:hover { background: var(--bg-soft); }
+.ext-index-card--up { border-left: 3px solid var(--up); }
+.ext-index-card--down { border-left: 3px solid var(--down); }
+.ext-index-card__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.ext-index-card__name { font-size: 12px; color: var(--ink-soft); font-weight: 500; }
+.ext-index-card__code { font-size: 9px; color: var(--ink-faint); letter-spacing: 0.5px; }
+.ext-index-card__price { font-size: 20px; font-weight: 800; font-family: var(--font-mono); line-height: 1.2; margin-bottom: 4px; }
+.ext-index-card__change-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.ext-index-card__change-amt { font-size: 12px; font-weight: 600; font-family: var(--font-mono); }
+.ext-index-card__pct { font-size: 12px; font-weight: 700; font-family: var(--font-mono); padding: 1px 6px; border-radius: 3px; }
+.ext-index-card__pct--up { background: var(--up-soft); color: var(--up); }
+.ext-index-card__pct--down { background: var(--down-soft); color: var(--down); }
+.ext-index-card__sparkline { width: 100%; height: 28px; margin-top: 2px; }
+.ext-index-card__vol { font-size: 10px; color: var(--ink-mute); margin-top: 4px; }
+.ext-page-card { background: var(--bg-card); border-radius: 12px; box-shadow: var(--shadow-card); overflow: hidden; }
+.ext-page-card__header { padding: 12px 16px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+.ext-page-card__title { font-size: 14px; font-weight: 600; color: var(--ink); }
+.ext-page-card__body { padding: 12px 16px; }
+.ext-subpage-card { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--line); overflow: hidden; }
+.ext-subpage-card__header { padding: 10px 12px; background: var(--bg-soft); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 6px; }
+.ext-subpage-card__back { font-size: 16px; color: var(--primary); cursor: pointer; }
+.ext-subpage-card__title { font-size: 13px; font-weight: 600; color: var(--ink); }
+.ext-subpage-card__body { padding: 10px 12px; }
+.ext-icon-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.ext-icon-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--line-soft); }
+.ext-icon-item__svg { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: var(--primary); }
+.ext-icon-item__name { font-size: 10px; color: var(--ink-mute); text-align: center; }
+.ext-ai-report { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--line); padding: 14px; }
+.ext-ai-report__header { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.ext-ai-report__badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: #fff; font-size: 11px; font-weight: 600; }
+.ext-ai-report__title { font-size: 14px; font-weight: 600; color: var(--ink); }
+.ext-ai-report__summary { font-size: 12px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 8px; }
+.ext-ai-report__points { display: flex; flex-direction: column; gap: 4px; }
+.ext-ai-report__point { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; color: var(--ink-soft); line-height: 1.4; }
+.ext-ai-report__point-dot { width: 4px; height: 4px; border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
+.ext-ai-graph { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--line); padding: 12px; }
+.ext-ai-graph__nodes { display: flex; align-items: center; justify-content: space-around; height: 100px; position: relative; }
+.ext-ai-graph__node { display: flex; flex-direction: column; align-items: center; gap: 4px; z-index: 2; }
+.ext-ai-graph__circle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: #fff; }
+.ext-ai-graph__label { font-size: 10px; color: var(--ink-mute); }
+.ext-ai-graph__lines { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.ext-analytics { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--line); padding: 12px; }
+.ext-analytics__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.ext-analytics__title { font-size: 14px; font-weight: 600; color: var(--ink); }
+.ext-analytics__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.ext-analytics__item { padding: 8px 10px; background: var(--bg-soft); border-radius: 6px; }
+.ext-analytics__label { font-size: 11px; color: var(--ink-mute); margin-bottom: 2px; }
+.ext-analytics__value { font-size: 18px; font-weight: 700; color: var(--ink); }
+.ext-analytics__trend { font-size: 11px; font-weight: 600; }
+
+  </style>
 </style></head>
 <body>
 
@@ -6114,6 +6729,32 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
       <div class="nav-item" data-target="animations">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
         动效 Motion
+      </div>
+
+      <div class="nav-section-title">扩展组件 Extension</div>
+      <div class="nav-item" data-target="ai-interact">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4.5" y="8" width="15" height="11" rx="3"/><path d="M12 8V4.5"/><circle cx="12" cy="3.4" r="1.1" fill="currentColor" stroke="none"/><circle cx="9" cy="13" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r="1.1" fill="currentColor" stroke="none"/></svg>
+        AI 交互 AI Interact
+      </div>
+      <div class="nav-item" data-target="audio-media">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        音频播客 Audio
+      </div>
+      <div class="nav-item" data-target="event-insight">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        事件洞察 Event
+      </div>
+      <div class="nav-item" data-target="fin-advanced">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+        高级行情 Advanced
+      </div>
+      <div class="nav-item" data-target="layout-cell">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        布局单元格 Layout
+      </div>
+      <div class="nav-item" data-target="util-comp">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        辅助组件 Utility
       </div>
     </div>
   </aside>
@@ -7486,6 +8127,51 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
             </tbody>
           </table>
         </div>
+      </div>
+
+      <div class="ds-subsection">统计网格 StatGrid</div>
+      <div class="demo-block mb-4">
+        <div class="demo-preview">
+          <p class="text-xs mb-3" style="color: var(--ink-soft);">多列指标网格，常用于板块卡片内的关键数据展示。支持涨跌色高亮、单位、副标题，带分隔线的带边框变体与龙头页板块卡片风格一致。</p>
+          <div style="max-width: 360px;">
+            <div class="ds-stat-grid ds-stat-grid--bordered">
+              <div class="ds-stat-grid__item" style="flex-basis: 25%;">
+                <span class="ds-stat-grid__value is-up">+3.25%</span>
+                <span class="ds-stat-grid__label">今日涨幅</span>
+              </div>
+              <div class="ds-stat-grid__item" style="flex-basis: 25%;">
+                <span class="ds-stat-grid__value is-up">+2.18%</span>
+                <span class="ds-stat-grid__label">均涨幅</span>
+              </div>
+              <div class="ds-stat-grid__item" style="flex-basis: 25%;">
+                <span class="ds-stat-grid__value">3.25亿</span>
+                <span class="ds-stat-grid__label">净流入</span>
+              </div>
+              <div class="ds-stat-grid__item ds-stat-grid__item--last-in-row" style="flex-basis: 25%;">
+                <span class="ds-stat-grid__value">北方华创</span>
+                <span class="ds-stat-grid__label">领涨股</span>
+              </div>
+            </div>
+          </div>
+          <p class="text-xs mt-4 mb-3" style="color: var(--ink-soft);">3 列变体，适用于更少指标或更宽展示场景：</p>
+          <div style="max-width: 360px;">
+            <div class="ds-stat-grid ds-stat-grid--bordered">
+              <div class="ds-stat-grid__item" style="flex-basis: 33.33%;">
+                <span class="ds-stat-grid__value is-brand">85</span>
+                <span class="ds-stat-grid__label">资金面</span>
+              </div>
+              <div class="ds-stat-grid__item" style="flex-basis: 33.33%;">
+                <span class="ds-stat-grid__value is-up">62</span>
+                <span class="ds-stat-grid__label">技术面</span>
+              </div>
+              <div class="ds-stat-grid__item ds-stat-grid__item--last-in-row" style="flex-basis: 33.33%;">
+                <span class="ds-stat-grid__value is-warning">38</span>
+                <span class="ds-stat-grid__label">情绪面</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
         <div class="ds-subsection-title mt-6">折叠面板 Collapse</div>
         <p class="text-xs mb-3" style="color: var(--ink-soft);">用于收纳大量信息，点击标题展开/收起内容区域。金融场景中常用于研报章节、公告详情、FAQ、筛选条件高级模式等。</p>
@@ -7565,7 +8251,6 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
             <div class="timeline-desc">预计 T+1 日完成清算交收</div>
           </div>
         </div>
-      </div>
     </section>
 
     <!-- ============ Feedback ============ -->
@@ -7696,6 +8381,29 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
           </div>
         </div>
 
+        <div class="ds-subsection-title mt-6">加载状态 LoadingState</div>
+        <p class="text-xs mb-3" style="color: var(--ink-soft);">旋转加载指示器，用于异步数据请求、页面切换、提交操作等场景。支持 sm/md/lg 三种尺寸与 horizontal/vertical 两种布局，文案可自定义。金融场景中常用于行情加载、报告生成、策略回测等等待态。</p>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="panel" style="padding: 24px;">
+            <div class="ds-loading ds-loading--vertical">
+              <div class="ds-loading__spinner ds-loading__spinner--lg"></div>
+              <span class="ds-loading__text">正在加载行情数据...</span>
+            </div>
+          </div>
+          <div class="panel" style="padding: 24px;">
+            <div class="ds-loading">
+              <div class="ds-loading__spinner ds-loading__spinner--md"></div>
+              <span class="ds-loading__text">生成报告中</span>
+            </div>
+          </div>
+          <div class="panel" style="padding: 24px;">
+            <div class="ds-loading">
+              <div class="ds-loading__spinner ds-loading__spinner--sm"></div>
+              <span class="ds-loading__text">同步自选股</span>
+            </div>
+          </div>
+        </div>
+
         <div class="ds-subsection-title mt-6">空状态 Empty</div>
         <p class="text-xs mb-3" style="color: var(--ink-soft);">用于无数据、无搜索结果、无权限等空场景的占位展示，提供图标、标题、描述与操作引导，避免页面出现空白。</p>
         <div class="grid grid-cols-3 gap-4">
@@ -7724,6 +8432,20 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
               </div>
               <div class="empty-title">无访问权限</div>
               <div class="empty-desc">请联系管理员开通研报查看权限</div>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-xs mt-4 mb-3" style="color: var(--ink-soft);">带操作按钮的空状态：提供重试、引导等交互入口，避免用户停留在死胡同页面。</p>
+        <div class="panel" style="padding: 32px; max-width: 320px;">
+          <div class="empty">
+            <div class="empty-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            </div>
+            <div class="empty-title">暂无风口龙头数据</div>
+            <div class="empty-desc">数据更新后将在这里展示</div>
+            <div class="empty-action">
+              <button class="btn btn-primary" style="padding: 6px 20px; font-size: 12px;">重新加载</button>
             </div>
           </div>
         </div>
@@ -8216,6 +8938,7 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
       </p>
       <div class="ds-card">
         <div class="ds-subsection-title">行情列表</div>
+        <div class="data-grid-wrap">
         <table class="data-grid">
           <thead>
             <tr>
@@ -8234,7 +8957,7 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
           <tbody>
             <tr>
               <td><label class="ds-check" style="padding: 0;"><input type="checkbox" checked=""><span class="box" style="width: 14px; height: 14px;"></span></label></td>
-              <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar avatar-xs">茅</div><div><div style="font-size:13px;font-weight:600;">贵州茅台</div><div class="font-mono" style="font-size:10px;color: var(--ink-mute);">600519</div></div></div></td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar avatar-xs" style="background:linear-gradient(135deg,var(--gold-light),var(--gold));">茅</div><div><div style="font-size:13px;font-weight:600;">贵州茅台</div><div class="font-mono" style="font-size:10px;color: var(--ink-mute);">600519</div></div></div></td>
               <td class="font-mono font-bold" style="color: var(--up);">1,680.00</td>
               <td><span class="tag tag-up" style="font-size:12px;">+2.34%</span></td>
               <td class="font-mono" style="color: var(--up);">+38.40</td>
@@ -8246,7 +8969,7 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
             </tr>
             <tr>
               <td><label class="ds-check" style="padding: 0;"><input type="checkbox"><span class="box" style="width: 14px; height: 14px;"></span></label></td>
-              <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar avatar-xs" style="background:linear-gradient(135deg,var(--gold-light),var(--gold));">五</div><div><div style="font-size:13px;font-weight:600;">五粮液</div><div class="font-mono" style="font-size:10px;color: var(--ink-mute);">000858</div></div></div></td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar avatar-xs" style="background:linear-gradient(135deg,var(--primary-300),var(--primary-600));">五</div><div><div style="font-size:13px;font-weight:600;">五粮液</div><div class="font-mono" style="font-size:10px;color: var(--ink-mute);">000858</div></div></div></td>
               <td class="font-mono font-bold" style="color: var(--up);">156.30</td>
               <td><span class="tag tag-up" style="font-size:12px;">+1.87%</span></td>
               <td class="font-mono" style="color: var(--up);">+2.87</td>
@@ -8258,7 +8981,7 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
             </tr>
             <tr>
               <td><label class="ds-check" style="padding: 0;"><input type="checkbox"><span class="box" style="width: 14px; height: 14px;"></span></label></td>
-              <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar avatar-xs" style="background:linear-gradient(135deg,var(--accent),var(--accent-deep));">宁</div><div><div style="font-size:13px;font-weight:600;">宁德时代</div><div class="font-mono" style="font-size:10px;color: var(--ink-mute);">300750</div></div></div></td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar avatar-xs" style="background:linear-gradient(135deg,#5b8def,#7aa3f5);">宁</div><div><div style="font-size:13px;font-weight:600;">宁德时代</div><div class="font-mono" style="font-size:10px;color: var(--ink-mute);">300750</div></div></div></td>
               <td class="font-mono font-bold" style="color: var(--down);">182.60</td>
               <td><span class="tag tag-down" style="font-size:12px;">-1.56%</span></td>
               <td class="font-mono" style="color: var(--down);">-2.89</td>
@@ -8270,7 +8993,7 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
             </tr>
             <tr>
               <td><label class="ds-check" style="padding: 0;"><input type="checkbox"><span class="box" style="width: 14px; height: 14px;"></span></label></td>
-              <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar avatar-xs" style="background:linear-gradient(135deg,var(--primary-300),var(--primary-600));">比</div><div><div style="font-size:13px;font-weight:600;">比亚迪</div><div class="font-mono" style="font-size:10px;color: var(--ink-mute);">002594</div></div></div></td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar avatar-xs" style="background:linear-gradient(135deg,var(--gold-light),var(--gold));">比</div><div><div style="font-size:13px;font-weight:600;">比亚迪</div><div class="font-mono" style="font-size:10px;color: var(--ink-mute);">002594</div></div></div></td>
               <td class="font-mono font-bold" style="color: var(--up);">285.40</td>
               <td><span class="tag tag-up" style="font-size:12px;">+3.21%</span></td>
               <td class="font-mono" style="color: var(--up);">+8.88</td>
@@ -8282,6 +9005,7 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
             </tr>
           </tbody>
         </table>
+        </div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;font-size:12px;color: var(--ink-soft);">
           <span>共 128 条 · 第 1-4 条</span>
           <div class="pagination">
@@ -8321,28 +9045,28 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
             <div class="cmd-list">
               <div class="cmd-section">股票</div>
               <div class="cmd-item selected">
-                <div class="avatar avatar-xs">茅</div>
+                <div class="avatar avatar-xs" style="background:linear-gradient(135deg,var(--gold-light),var(--gold));">茅</div>
                 <div style="flex:1;">
                   <div style="font-size:13px;font-weight:600;">贵州茅台</div>
                   <div class="font-mono" style="font-size:11px;color:var(--ink-mute);">600519 · 1,892.50 +2.47%</div>
                 </div>
-                <span class="tag tag-up" style="font-size:10px;">S</span>
+                <span class="grade-badge grade-S" style="width:20px;height:20px;font-size:10px;">S</span>
               </div>
               <div class="cmd-item">
-                <div class="avatar avatar-xs" style="background:linear-gradient(135deg,var(--gold-light),var(--gold));">五</div>
+                <div class="avatar avatar-xs" style="background:linear-gradient(135deg,var(--primary-300),var(--primary-600));">五</div>
                 <div style="flex:1;">
                   <div style="font-size:13px;font-weight:600;">五粮液</div>
                   <div class="font-mono" style="font-size:11px;color:var(--ink-mute);">000858 · 168.20 -0.85%</div>
                 </div>
-                <span class="tag tag-gold" style="font-size:10px;">A</span>
+                <span class="grade-badge grade-A" style="width:20px;height:20px;font-size:10px;">A</span>
               </div>
               <div class="cmd-item">
-                <div class="avatar avatar-xs" style="background:linear-gradient(135deg,var(--accent),var(--accent-deep));">比</div>
+                <div class="avatar avatar-xs" style="background:linear-gradient(135deg,var(--gold-light),var(--gold));">比</div>
                 <div style="flex:1;">
                   <div style="font-size:13px;font-weight:600;">比亚迪</div>
                   <div class="font-mono" style="font-size:11px;color:var(--ink-mute);">002594 · 285.40 +3.21%</div>
                 </div>
-                <span class="tag tag-up" style="font-size:10px;">S</span>
+                <span class="grade-badge grade-S" style="width:20px;height:20px;font-size:10px;">S</span>
               </div>
               <div class="cmd-section">快捷操作</div>
               <div class="cmd-item">
@@ -8350,7 +9074,7 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
                 <div style="flex:1;">
                   <div style="font-size:13px;font-weight:600;">添加自选股</div>
                 </div>
-                <span class="tag tag-neutral" style="font-size:10px;">A</span>
+                <span class="cmd-shortcut">A</span>
               </div>
               <div class="cmd-item">
                 <div class="cmd-icon" style="background:var(--up-soft);color:var(--up);">!</div>
@@ -8375,7 +9099,7 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
     <section class="ds-section" id="app-nav">
       <div class="ds-section-title">导航栏与标签栏 NavBar &amp; TabBar</div>
       <p class="ds-section-desc">
-        移动端导航栏位于屏幕顶部，承载返回按钮、页面标题与右侧操作；标签栏位于底部，用于在主要功能模块间切换。金融 App 的导航需适配安全区域（刘海屏、底部 Home Indicator），标签栏通常包含行情、交易、资产、我的等核心入口，选中态采用主色高亮。
+        移动端导航栏位于屏幕顶部，承载返回按钮、页面标题与右侧操作；标签栏位于底部，用于在主要功能模块间切换。金融 App 的导航需适配安全区域（刘海屏、底部 Home Indicator）。标签栏采用胶囊式设计：未选中项仅显示图标，选中项以淡蓝胶囊背景 + 图标 + 文字横向排列，突出当前所在模块。
       </p>
       <div class="ds-card">
         <div class="ds-subsection-title">顶部导航栏 NavBar</div>
@@ -8424,49 +9148,76 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
         <div class="flex gap-6 flex-wrap">
           <div class="phone-frame">
             <div class="phone-screen">
-              <div style="padding: 16px; color: var(--ink-soft); font-size: 13px;">页面内容区域</div>
+              <div style="padding: 16px; color: var(--ink-soft); font-size: 13px;">早点听 · 播报页面</div>
               <div class="app-tabbar">
                 <div class="app-tabbar-item active">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l9-6 9 6"></path><path d="M3 17v4h18v-4"></path></svg>
-                  <span>行情</span>
+                  <div class="app-tabbar-icon-wrap">
+                    <svg width="20" height="20" viewBox="0 0 1024 1024" fill="currentColor"><path d="M210.304 124.970667l60.330667 60.330666A340.266667 340.266667 0 0 0 170.666667 426.666667c0 94.293333 38.186667 179.626667 99.968 241.365333L210.346667 728.32A425.344 425.344 0 0 1 85.333333 426.666667a425.344 425.344 0 0 1 124.970667-301.696z m603.392 0A425.344 425.344 0 0 1 938.666667 426.666667a425.344 425.344 0 0 1-124.970667 301.696l-60.330667-60.330667A340.266667 340.266667 0 0 0 853.333333 426.666667c0-94.293333-38.186667-179.626667-99.968-241.365334L813.653333 125.013333zM330.965333 245.632l60.373334 60.373333A170.112 170.112 0 0 0 341.333333 426.666667c0 47.146667 19.114667 89.813333 50.005334 120.661333l-60.373334 60.373333A255.189333 255.189333 0 0 1 256 426.666667c0-70.698667 28.672-134.698667 74.965333-181.034667z m362.069334 0A255.189333 255.189333 0 0 1 768 426.666667a255.189333 255.189333 0 0 1-74.965333 181.034666l-60.373334-60.373333A170.112 170.112 0 0 0 682.666667 426.666667a170.112 170.112 0 0 0-50.005334-120.661334l60.373334-60.373333zM512 512a85.333333 85.333333 0 1 1 0-170.666667 85.333333 85.333333 0 0 1 0 170.666667z m-42.666667 85.333333h85.333334v341.333334h-85.333334v-341.333334z"/></svg>
+                  </div>
+                  <span class="app-tabbar-text">早点听</span>
                 </div>
                 <div class="app-tabbar-item">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"></path><path d="M7 14l4-4 4 4 6-6"></path></svg>
-                  <span>交易</span>
-                  <div class="badge-dot"></div>
+                  <div class="app-tabbar-icon-wrap">
+                    <svg width="20" height="20" viewBox="0 0 1024 1024" fill="currentColor"><path d="M128 512h85.333333v384H128v-384z m682.666667-170.666667h85.333333v554.666667h-85.333333V341.333333z m-341.333334-256h85.333334v810.666667h-85.333334V85.333333z"/></svg>
+                    <div class="app-tabbar-badge-dot"></div>
+                  </div>
                 </div>
                 <div class="app-tabbar-item">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
-                  <span>资产</span>
+                  <div class="app-tabbar-icon-wrap">
+                    <svg width="20" height="20" viewBox="0 0 1024 1024" fill="currentColor"><path d="M602.496 421.504c183.296 183.253333 291.370667 372.394667 241.365333 422.4-20.266667 20.224-63.402667 14.506667-119.765333-11.648a384.341333 384.341333 0 0 1-451.84-20.224l-1.621333 1.706667-60.330667-60.373334 1.621333-1.706666A384.256 384.256 0 0 1 191.786667 299.946667c-26.197333-56.405333-31.914667-99.541333-11.648-119.808 48.128-48.128 225.152 50.218667 401.792 221.098666l20.565333 20.266667z m-60.330667 60.330667C461.781333 401.450667 378.453333 334.592 308.736 293.12l-7.936 7.68a298.752 298.752 0 0 0-28.032 390.058667l78.762667-78.762667a85.333333 85.333333 0 1 1 60.416 60.373333l-78.848 78.762667a298.752 298.752 0 0 0 390.101333-28.032l7.637333-8.021333-2.261333-3.797334c-41.642667-68.906667-107.52-150.613333-186.410667-229.546666z m301.696-301.696a85.333333 85.333333 0 0 1-6.997333 126.976 384.64 384.64 0 0 1 28.245333 356.053333 903.168 903.168 0 0 0-59.136-98.389333 298.24 298.24 0 0 0-82.773333-263.978667 298.325333 298.325333 0 0 0-263.978667-82.773333 899.925333 899.925333 0 0 0-98.389333-59.136 384.682667 384.682667 0 0 1 356.138667 28.288 85.333333 85.333333 0 0 1 126.890666-7.04z"/></svg>
+                    <div class="app-tabbar-badge-num"><span class="app-tabbar-badge-num-text">3</span></div>
+                  </div>
                 </div>
-                <div class="app-tabbar-item">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"></path></svg>
-                  <span>我的</span>
-                  <div class="badge-num">3</div>
+              </div>
+              <!-- GlobalChatBar -->
+              <div class="app-chatbar">
+                <div class="app-chatbar-row">
+                  <div class="app-chatbar-side"><span class="app-chatbar-side-text">交易</span></div>
+                  <div class="app-chatbar-capsule">
+                    <div class="app-chatbar-avatar"><span class="app-chatbar-avatar-text">AI</span></div>
+                    <span class="app-chatbar-placeholder">搜问或按住说</span>
+                    <div class="app-chatbar-unread"><span class="app-chatbar-unread-text">2</span></div>
+                    <div class="app-chatbar-mic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg></div>
+                  </div>
+                  <div class="app-chatbar-side"><span class="app-chatbar-side-text">自选</span></div>
                 </div>
+                <div class="app-chatbar-disclaimer"><span class="app-chatbar-disclaimer-text">内容由AI生成，不构成投资建议</span></div>
               </div>
             </div>
           </div>
           <div class="phone-frame">
             <div class="phone-screen">
-              <div style="padding: 16px; color: var(--ink-soft); font-size: 13px;">交易页面</div>
+              <div style="padding: 16px; color: var(--ink-soft); font-size: 13px;">选股 · 行情页面</div>
               <div class="app-tabbar">
                 <div class="app-tabbar-item">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l9-6 9 6"></path><path d="M3 17v4h18v-4"></path></svg>
-                  <span>行情</span>
+                  <div class="app-tabbar-icon-wrap">
+                    <svg width="20" height="20" viewBox="0 0 1024 1024" fill="currentColor"><path d="M210.304 124.970667l60.330667 60.330666A340.266667 340.266667 0 0 0 170.666667 426.666667c0 94.293333 38.186667 179.626667 99.968 241.365333L210.346667 728.32A425.344 425.344 0 0 1 85.333333 426.666667a425.344 425.344 0 0 1 124.970667-301.696z m603.392 0A425.344 425.344 0 0 1 938.666667 426.666667a425.344 425.344 0 0 1-124.970667 301.696l-60.330667-60.330667A340.266667 340.266667 0 0 0 853.333333 426.666667c0-94.293333-38.186667-179.626667-99.968-241.365334L813.653333 125.013333zM330.965333 245.632l60.373334 60.373333A170.112 170.112 0 0 0 341.333333 426.666667c0 47.146667 19.114667 89.813333 50.005334 120.661333l-60.373334 60.373333A255.189333 255.189333 0 0 1 256 426.666667c0-70.698667 28.672-134.698667 74.965333-181.034667z m362.069334 0A255.189333 255.189333 0 0 1 768 426.666667a255.189333 255.189333 0 0 1-74.965333 181.034666l-60.373334-60.373333A170.112 170.112 0 0 0 682.666667 426.666667a170.112 170.112 0 0 0-50.005334-120.661334l60.373334-60.373333zM512 512a85.333333 85.333333 0 1 1 0-170.666667 85.333333 85.333333 0 0 1 0 170.666667z m-42.666667 85.333333h85.333334v341.333334h-85.333334v-341.333334z"/></svg>
+                  </div>
                 </div>
                 <div class="app-tabbar-item active">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"></path><path d="M7 14l4-4 4 4 6-6"></path></svg>
-                  <span>交易</span>
+                  <div class="app-tabbar-icon-wrap">
+                    <svg width="20" height="20" viewBox="0 0 1024 1024" fill="currentColor"><path d="M128 512h85.333333v384H128v-384z m682.666667-170.666667h85.333333v554.666667h-85.333333V341.333333z m-341.333334-256h85.333334v810.666667h-85.333334V85.333333z"/></svg>
+                  </div>
+                  <span class="app-tabbar-text">选股</span>
                 </div>
                 <div class="app-tabbar-item">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
-                  <span>资产</span>
+                  <div class="app-tabbar-icon-wrap">
+                    <svg width="20" height="20" viewBox="0 0 1024 1024" fill="currentColor"><path d="M602.496 421.504c183.296 183.253333 291.370667 372.394667 241.365333 422.4-20.266667 20.224-63.402667 14.506667-119.765333-11.648a384.341333 384.341333 0 0 1-451.84-20.224l-1.621333 1.706667-60.330667-60.373334 1.621333-1.706666A384.256 384.256 0 0 1 191.786667 299.946667c-26.197333-56.405333-31.914667-99.541333-11.648-119.808 48.128-48.128 225.152 50.218667 401.792 221.098666l20.565333 20.266667z m-60.330667 60.330667C461.781333 401.450667 378.453333 334.592 308.736 293.12l-7.936 7.68a298.752 298.752 0 0 0-28.032 390.058667l78.762667-78.762667a85.333333 85.333333 0 1 1 60.416 60.373333l-78.848 78.762667a298.752 298.752 0 0 0 390.101333-28.032l7.637333-8.021333-2.261333-3.797334c-41.642667-68.906667-107.52-150.613333-186.410667-229.546666z m301.696-301.696a85.333333 85.333333 0 0 1-6.997333 126.976 384.64 384.64 0 0 1 28.245333 356.053333 903.168 903.168 0 0 0-59.136-98.389333 298.24 298.24 0 0 0-82.773333-263.978667 298.325333 298.325333 0 0 0-263.978667-82.773333 899.925333 899.925333 0 0 0-98.389333-59.136 384.682667 384.682667 0 0 1 356.138667 28.288 85.333333 85.333333 0 0 1 126.890666-7.04z"/></svg>
+                  </div>
                 </div>
-                <div class="app-tabbar-item">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"></path></svg>
-                  <span>我的</span>
+              </div>
+              <!-- GlobalChatBar -->
+              <div class="app-chatbar">
+                <div class="app-chatbar-row">
+                  <div class="app-chatbar-side"><span class="app-chatbar-side-text">交易</span></div>
+                  <div class="app-chatbar-capsule">
+                    <div class="app-chatbar-avatar"><span class="app-chatbar-avatar-text">AI</span></div>
+                    <span class="app-chatbar-placeholder">搜问或按住说</span>
+                    <div class="app-chatbar-mic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg></div>
+                  </div>
+                  <div class="app-chatbar-side"><span class="app-chatbar-side-text">自选</span></div>
                 </div>
+                <div class="app-chatbar-disclaimer"><span class="app-chatbar-disclaimer-text">内容由AI生成，不构成投资建议</span></div>
               </div>
             </div>
           </div>
@@ -8828,25 +9579,65 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
         <div class="quote-header">
           <div class="quote-header-left">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-              <div class="avatar avatar-md">茅</div>
+              <div class="avatar avatar-md" style="background:linear-gradient(135deg,var(--up),var(--gold-light));">茅</div>
               <div>
                 <div style="font-size:18px;font-weight:700;color:var(--ink);">贵州茅台</div>
                 <div class="font-mono" style="font-size:12px;color:var(--ink-mute);">600519.SH · 上交所</div>
               </div>
               <span class="tag tag-up" style="margin-left:4px;">交易中</span>
             </div>
-            <div style="display:flex;align-items:baseline;gap:12px;">
-              <span class="font-display" style="font-size:36px;font-weight:800;color:var(--up);font-family:var(--font-mono);">1,892.50</span>
-              <span class="font-mono" style="font-size:16px;font-weight:600;color:var(--up);">+45.60</span>
-              <span class="tag tag-up" style="font-size:14px;padding:4px 10px;">+2.47%</span>
+            <div class="quote-price-card">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+                <div>
+                  <div style="display:flex;align-items:baseline;gap:12px;">
+                    <span class="font-display" style="font-size:40px;font-weight:800;color:var(--up);font-family:var(--font-mono);line-height:1.1;">1,892.50</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+                    <span class="font-mono" style="font-size:15px;font-weight:600;color:var(--up);">+45.60</span>
+                    <span style="display:inline-flex;align-items:center;gap:2px;background:var(--up-soft);color:var(--up);font-size:13px;font-weight:700;padding:2px 8px;border-radius:var(--r-sm);font-family:var(--font-mono);">
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1L9 7H1L5 1Z" fill="currentColor"/></svg>+2.47%
+                    </span>
+                  </div>
+                </div>
+                <svg width="100" height="48" viewBox="0 0 100 48" fill="none" style="flex-shrink:0;">
+                  <defs>
+                    <linearGradient id="spark-up" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#e54d5e" stop-opacity="0.2"/>
+                      <stop offset="100%" stop-color="#e54d5e" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M5 35 L15 32 L25 28 L35 30 L45 24 L55 20 L65 22 L75 15 L85 12 L95 8" stroke="#e54d5e" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M5 35 L15 32 L25 28 L35 30 L45 24 L55 20 L65 22 L75 15 L85 12 L95 8 L95 48 L5 48 Z" fill="url(#spark-up)"/>
+                  <circle cx="95" cy="8" r="2.5" fill="#e54d5e"/>
+                  <circle cx="95" cy="8" r="4.5" fill="#e54d5e" opacity="0.2"/>
+                </svg>
+              </div>
             </div>
-            <div style="display:flex;gap:16px;margin-top:8px;font-size:12px;color:var(--ink-soft);">
-              <span>今开 <span class="font-mono" style="color:var(--up);">1,856.00</span></span>
-              <span>最高 <span class="font-mono" style="color:var(--up);">1,905.20</span></span>
-              <span>最低 <span class="font-mono" style="color:var(--down);">1,848.30</span></span>
-              <span>昨收 <span class="font-mono">1,846.90</span></span>
-              <span>成交量 <span class="font-mono">28.5万手</span></span>
-              <span>成交额 <span class="font-mono">53.8亿</span></span>
+            <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px;margin-top:10px;">
+              <div class="quote-stat-item">
+                <span class="quote-stat-label">今开</span>
+                <span class="quote-stat-value" style="color:var(--up);">1,856.00</span>
+              </div>
+              <div class="quote-stat-item">
+                <span class="quote-stat-label">最高</span>
+                <span class="quote-stat-value" style="color:var(--up);">1,905.20</span>
+              </div>
+              <div class="quote-stat-item">
+                <span class="quote-stat-label">最低</span>
+                <span class="quote-stat-value" style="color:var(--down);">1,848.30</span>
+              </div>
+              <div class="quote-stat-item">
+                <span class="quote-stat-label">昨收</span>
+                <span class="quote-stat-value">1,846.90</span>
+              </div>
+              <div class="quote-stat-item">
+                <span class="quote-stat-label">成交量</span>
+                <span class="quote-stat-value">28.5万手</span>
+              </div>
+              <div class="quote-stat-item">
+                <span class="quote-stat-label">成交额</span>
+                <span class="quote-stat-value">53.8亿</span>
+              </div>
             </div>
           </div>
           <div class="quote-header-right">
@@ -8858,9 +9649,16 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
             <div class="quote-metric"><div class="quote-metric-label">综合评分</div><div class="quote-metric-value"><span class="grade-badge grade-S">S</span> <span style="font-weight:700;">92.5</span></div></div>
           </div>
         </div>
-        <div style="margin-top:12px;display:flex;align-items:center;gap:8px;">
-          <span class="data-freshness live"><span class="freshness-dot live"></span>实时行情 · 延迟 &lt; 3s</span>
-          <span style="font-size:11px;color:var(--ink-mute);">数据源：交易所直连 · 最后更新 15:00:02</span>
+        <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="data-freshness live"><span class="freshness-dot live"></span>实时行情 · 延迟 &lt; 3s</span>
+            <span style="font-size:11px;color:var(--ink-mute);">数据源：交易所直连 · 最后更新 15:00:02</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <button style="display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:var(--r-full);border:1px solid var(--line);background:var(--bg-card);font-size:12px;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:all var(--t-fast);">分时</button>
+            <button style="display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:var(--r-full);border:1px solid var(--primary);background:var(--primary);font-size:12px;font-weight:600;color:#fff;cursor:pointer;box-shadow:var(--shadow-primary);">日K</button>
+            <button style="display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:var(--r-full);border:1px solid var(--line);background:var(--bg-card);font-size:12px;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:all var(--t-fast);">周K</button>
+          </div>
         </div>
       </div>
     </section>
@@ -9180,9 +9978,9 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
             <div class="text-xs" style="color: var(--ink-soft); line-height: 1.6;">公司拟向全体股东每10股派发现金红利276.24元（含税），合计分配利润约347.32亿元，占2024年归母净利润的40.28%。</div>
             <div class="flex justify-between items-center mt-3">
               <span class="text-xs" style="color: var(--ink-mute);">来源：上交所</span>
-              <div class="flex gap-2">
-                <button class="btn-text" style="font-size: 11px;">收藏</button>
-                <button class="btn-text" style="font-size: 11px;">查看详情</button>
+              <div class="announce-actions">
+                <button class="announce-btn announce-btn--ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>收藏</button>
+                <button class="announce-btn announce-btn--primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 5l7 7-7 7M5 12h16"/></svg>查看详情</button>
               </div>
             </div>
           </div>
@@ -9195,9 +9993,9 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
             <div class="text-xs" style="color: var(--ink-soft); line-height: 1.6;">2025年白酒板块有望迎来基本面与估值的双重修复，高端白酒龙头配置价值突出。维持贵州茅台"买入"评级，目标价1,850元。</div>
             <div class="flex justify-between items-center mt-3">
               <span class="text-xs" style="color: var(--ink-mute);">来源：中信证券 · 食品饮料团队</span>
-              <div class="flex gap-2">
+              <div class="announce-actions">
                 <span class="grade-badge grade-gold">买入</span>
-                <button class="btn-text" style="font-size: 11px;">详情</button>
+                <button class="announce-btn announce-btn--ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 5l7 7-7 7M5 12h16"/></svg>详情</button>
               </div>
             </div>
           </div>
@@ -9210,7 +10008,7 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
             <div class="text-xs" style="color: var(--ink-soft); line-height: 1.6;">您设置的预警价格 12.50 已触发，当前价 12.52，涨幅 +2.34%。请及时关注行情变化。</div>
             <div class="flex justify-between items-center mt-3">
               <span class="text-xs" style="color: var(--ink-mute);">价格预警 · 自动触发</span>
-              <button class="btn-text" style="font-size: 11px; color: var(--up);">查看行情</button>
+              <button class="announce-btn announce-btn--danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>查看行情</button>
             </div>
           </div>
           <div class="announce-card">
@@ -9222,9 +10020,9 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
             <div class="text-xs" style="color: var(--ink-soft); line-height: 1.6;">截至2024年12月12日，公司已累计回购股份约1,250万股，占公司总股本的0.28%，成交总金额约22.5亿元。</div>
             <div class="flex justify-between items-center mt-3">
               <span class="text-xs" style="color: var(--ink-mute);">来源：深交所</span>
-              <div class="flex gap-2">
-                <button class="btn-text" style="font-size: 11px;">收藏</button>
-                <button class="btn-text" style="font-size: 11px;">查看详情</button>
+              <div class="announce-actions">
+                <button class="announce-btn announce-btn--ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>收藏</button>
+                <button class="announce-btn announce-btn--primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 5l7 7-7 7M5 12h16"/></svg>查看详情</button>
               </div>
             </div>
           </div>
@@ -9241,45 +10039,117 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
       <div class="ds-card">
         <div class="ds-subsection-title">主要指数</div>
         <div class="grid grid-cols-4 gap-4">
-          <div class="stat-card">
-            <div class="flex justify-between items-start mb-1">
-              <span class="text-sm font-semibold" style="color: var(--ink);">上证指数</span>
-              <span class="data-freshness live" style="font-size: 10px;"><span class="freshness-dot live"></span>实时</span>
+          <!-- 上证指数 -->
+          <div class="fin-index-card fin-index-card--up">
+            <div class="fin-index-card__header">
+              <div class="fin-index-card__name-row">
+                <span class="fin-index-card__name">上证指数</span>
+                <span class="fin-index-card__code">000001</span>
+              </div>
+              <span class="fin-index-card__live"><span class="fin-index-card__dot fin-index-card__dot--up"></span>实时</span>
             </div>
-            <div class="font-mono font-bold text-lg" style="color: var(--up);">3,245.68</div>
-            <div class="font-mono text-xs" style="color: var(--up);">+39.52 +1.23%</div>
-            <svg width="100%" height="32" viewBox="0 0 120 32" style="margin-top:6px;"><defs><linearGradient id="idx1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--up)" stop-opacity=".3"></stop><stop offset="100%" stop-color="var(--up)" stop-opacity="0"></stop></linearGradient></defs><polyline points="0,24 15,22 30,25 45,18 60,15 75,12 90,14 105,8 120,6" fill="none" stroke="var(--up)" stroke-width="1.5"></polyline><polygon points="0,24 15,22 30,25 45,18 60,15 75,12 90,14 105,8 120,6 120,32 0,32" fill="url(#idx1)"></polygon></svg>
-            <div class="text-xs mt-1" style="color: var(--ink-soft);">成交额 <span class="font-mono">3,856亿</span></div>
+            <div class="fin-index-card__price-row">
+              <span class="fin-index-card__price" style="color: var(--up);">3,245.68</span>
+              <span class="fin-index-card__pct fin-index-card__pct--up">+1.23%</span>
+            </div>
+            <div class="fin-index-card__change" style="color: var(--up);">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><polygon points="5,0 10,8 0,8"></polygon></svg>
+              +39.52
+            </div>
+            <svg class="fin-index-card__sparkline" viewBox="0 0 120 44" preserveAspectRatio="none">
+              <defs><linearGradient id="fix-idx1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--up)" stop-opacity=".2"/><stop offset="100%" stop-color="var(--up)" stop-opacity="0"/></linearGradient></defs>
+              <polyline points="0,32 15,30 30,34 45,24 60,20 75,16 90,18 105,10 120,7" fill="none" stroke="var(--up)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+              <polygon points="0,32 15,30 30,34 45,24 60,20 75,16 90,18 105,10 120,7 120,44 0,44" fill="url(#fix-idx1)"/>
+              <circle cx="120" cy="7" r="2.5" fill="var(--up)"/>
+            </svg>
+            <div class="fin-index-card__footer">
+              <span class="fin-index-card__vol">成交额 <span class="fin-index-card__vol-val">3,856亿</span></span>
+              <span class="fin-index-card__range">3,208 — 3,260</span>
+            </div>
           </div>
-          <div class="stat-card">
-            <div class="flex justify-between items-start mb-1">
-              <span class="text-sm font-semibold" style="color: var(--ink);">深证成指</span>
-              <span class="data-freshness live" style="font-size: 10px;"><span class="freshness-dot live"></span>实时</span>
+          <!-- 深证成指 -->
+          <div class="fin-index-card fin-index-card--up">
+            <div class="fin-index-card__header">
+              <div class="fin-index-card__name-row">
+                <span class="fin-index-card__name">深证成指</span>
+                <span class="fin-index-card__code">399001</span>
+              </div>
+              <span class="fin-index-card__live"><span class="fin-index-card__dot fin-index-card__dot--up"></span>实时</span>
             </div>
-            <div class="font-mono font-bold text-lg" style="color: var(--up);">10,876.45</div>
-            <div class="font-mono text-xs" style="color: var(--up);">+93.78 +0.87%</div>
-            <svg width="100%" height="32" viewBox="0 0 120 32" style="margin-top:6px;"><defs><linearGradient id="idx2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--up)" stop-opacity=".3"></stop><stop offset="100%" stop-color="var(--up)" stop-opacity="0"></stop></linearGradient></defs><polyline points="0,22 15,20 30,24 45,16 60,18 75,14 90,10 105,12 120,8" fill="none" stroke="var(--up)" stroke-width="1.5"></polyline><polygon points="0,22 15,20 30,24 45,16 60,18 75,14 90,10 105,12 120,8 120,32 0,32" fill="url(#idx2)"></polygon></svg>
-            <div class="text-xs mt-1" style="color: var(--ink-soft);">成交额 <span class="font-mono">4,252亿</span></div>
+            <div class="fin-index-card__price-row">
+              <span class="fin-index-card__price" style="color: var(--up);">10,876.45</span>
+              <span class="fin-index-card__pct fin-index-card__pct--up">+0.87%</span>
+            </div>
+            <div class="fin-index-card__change" style="color: var(--up);">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><polygon points="5,0 10,8 0,8"></polygon></svg>
+              +93.78
+            </div>
+            <svg class="fin-index-card__sparkline" viewBox="0 0 120 44" preserveAspectRatio="none">
+              <defs><linearGradient id="fix-idx2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--up)" stop-opacity=".2"/><stop offset="100%" stop-color="var(--up)" stop-opacity="0"/></linearGradient></defs>
+              <polyline points="0,30 15,28 30,32 45,22 60,24 75,18 90,12 105,14 120,9" fill="none" stroke="var(--up)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+              <polygon points="0,30 15,28 30,32 45,22 60,24 75,18 90,12 105,14 120,9 120,44 0,44" fill="url(#fix-idx2)"/>
+              <circle cx="120" cy="9" r="2.5" fill="var(--up)"/>
+            </svg>
+            <div class="fin-index-card__footer">
+              <span class="fin-index-card__vol">成交额 <span class="fin-index-card__vol-val">4,252亿</span></span>
+              <span class="fin-index-card__range">10,782 — 10,890</span>
+            </div>
           </div>
-          <div class="stat-card">
-            <div class="flex justify-between items-start mb-1">
-              <span class="text-sm font-semibold" style="color: var(--ink);">创业板指</span>
-              <span class="data-freshness live" style="font-size: 10px;"><span class="freshness-dot live"></span>实时</span>
+          <!-- 创业板指 -->
+          <div class="fin-index-card fin-index-card--down">
+            <div class="fin-index-card__header">
+              <div class="fin-index-card__name-row">
+                <span class="fin-index-card__name">创业板指</span>
+                <span class="fin-index-card__code">399006</span>
+              </div>
+              <span class="fin-index-card__live"><span class="fin-index-card__dot fin-index-card__dot--down"></span>实时</span>
             </div>
-            <div class="font-mono font-bold text-lg" style="color: var(--down);">2,156.32</div>
-            <div class="font-mono text-xs" style="color: var(--down);">-9.78 -0.45%</div>
-            <svg width="100%" height="32" viewBox="0 0 120 32" style="margin-top:6px;"><defs><linearGradient id="idx3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--down)" stop-opacity=".3"></stop><stop offset="100%" stop-color="var(--down)" stop-opacity="0"></stop></linearGradient></defs><polyline points="0,10 15,12 30,8 45,14 60,16 75,18 90,20 105,22 120,24" fill="none" stroke="var(--down)" stroke-width="1.5"></polyline><polygon points="0,10 15,12 30,8 45,14 60,16 75,18 90,20 105,22 120,24 120,32 0,32" fill="url(#idx3)"></polygon></svg>
-            <div class="text-xs mt-1" style="color: var(--ink-soft);">成交额 <span class="font-mono">1,523亿</span></div>
+            <div class="fin-index-card__price-row">
+              <span class="fin-index-card__price" style="color: var(--down);">2,156.32</span>
+              <span class="fin-index-card__pct fin-index-card__pct--down">-0.45%</span>
+            </div>
+            <div class="fin-index-card__change" style="color: var(--down);">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><polygon points="5,10 10,2 0,2"></polygon></svg>
+              -9.78
+            </div>
+            <svg class="fin-index-card__sparkline" viewBox="0 0 120 44" preserveAspectRatio="none">
+              <defs><linearGradient id="fix-idx3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--down)" stop-opacity=".2"/><stop offset="100%" stop-color="var(--down)" stop-opacity="0"/></linearGradient></defs>
+              <polyline points="0,12 15,14 30,10 45,16 60,20 75,24 90,28 105,30 120,34" fill="none" stroke="var(--down)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+              <polygon points="0,12 15,14 30,10 45,16 60,20 75,24 90,28 105,30 120,34 120,44 0,44" fill="url(#fix-idx3)"/>
+              <circle cx="120" cy="34" r="2.5" fill="var(--down)"/>
+            </svg>
+            <div class="fin-index-card__footer">
+              <span class="fin-index-card__vol">成交额 <span class="fin-index-card__vol-val">1,523亿</span></span>
+              <span class="fin-index-card__range">2,146 — 2,168</span>
+            </div>
           </div>
-          <div class="stat-card">
-            <div class="flex justify-between items-start mb-1">
-              <span class="text-sm font-semibold" style="color: var(--ink);">科创50</span>
-              <span class="data-freshness live" style="font-size: 10px;"><span class="freshness-dot live"></span>实时</span>
+          <!-- 科创50 -->
+          <div class="fin-index-card fin-index-card--up">
+            <div class="fin-index-card__header">
+              <div class="fin-index-card__name-row">
+                <span class="fin-index-card__name">科创50</span>
+                <span class="fin-index-card__code">000688</span>
+              </div>
+              <span class="fin-index-card__live"><span class="fin-index-card__dot fin-index-card__dot--up"></span>实时</span>
             </div>
-            <div class="font-mono font-bold text-lg" style="color: var(--up);">986.42</div>
-            <div class="font-mono text-xs" style="color: var(--up);">+15.32 +1.58%</div>
-            <svg width="100%" height="32" viewBox="0 0 120 32" style="margin-top:6px;"><defs><linearGradient id="idx4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--up)" stop-opacity=".3"></stop><stop offset="100%" stop-color="var(--up)" stop-opacity="0"></stop></linearGradient></defs><polyline points="0,26 15,24 30,20 45,22 60,16 75,14 90,10 105,8 120,5" fill="none" stroke="var(--up)" stroke-width="1.5"></polyline><polygon points="0,26 15,24 30,20 45,22 60,16 75,14 90,10 105,8 120,5 120,32 0,32" fill="url(#idx4)"></polygon></svg>
-            <div class="text-xs mt-1" style="color: var(--ink-soft);">成交额 <span class="font-mono">856亿</span></div>
+            <div class="fin-index-card__price-row">
+              <span class="fin-index-card__price" style="color: var(--up);">986.42</span>
+              <span class="fin-index-card__pct fin-index-card__pct--up">+1.58%</span>
+            </div>
+            <div class="fin-index-card__change" style="color: var(--up);">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><polygon points="5,0 10,8 0,8"></polygon></svg>
+              +15.32
+            </div>
+            <svg class="fin-index-card__sparkline" viewBox="0 0 120 44" preserveAspectRatio="none">
+              <defs><linearGradient id="fix-idx4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--up)" stop-opacity=".2"/><stop offset="100%" stop-color="var(--up)" stop-opacity="0"/></linearGradient></defs>
+              <polyline points="0,36 15,32 30,26 45,28 60,20 75,18 90,12 105,10 120,6" fill="none" stroke="var(--up)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+              <polygon points="0,36 15,32 30,26 45,28 60,20 75,18 90,12 105,10 120,6 120,44 0,44" fill="url(#fix-idx4)"/>
+              <circle cx="120" cy="6" r="2.5" fill="var(--up)"/>
+            </svg>
+            <div class="fin-index-card__footer">
+              <span class="fin-index-card__vol">成交额 <span class="fin-index-card__vol-val">856亿</span></span>
+              <span class="fin-index-card__range">971 — 990</span>
+            </div>
           </div>
         </div>
       </div>
@@ -9358,7 +10228,7 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
         <div class="flex gap-6 flex-wrap items-center">
           <!-- 雷达图 -->
           <div style="flex-shrink: 0;">
-            <svg viewBox="0 0 200 200" width="240" height="240" style="display:block;">
+            <svg viewBox="-45 -12 285 228" width="290" height="240" style="display:block;">
               <!-- grid rings -->
               <polygon points="100,73.33 125.36,91.76 115.68,121.58 84.32,121.58 74.64,91.76" fill="none" stroke="#e1e9f5" stroke-width="1"></polygon>
               <polygon points="100,46.67 150.72,83.52 131.35,143.15 68.65,143.15 49.28,83.52" fill="none" stroke="#e1e9f5" stroke-width="1"></polygon>
@@ -9377,12 +10247,17 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
               <circle cx="142.32" cy="158.25" r="3.2" fill="#0b5fff"></circle>
               <circle cx="69.43" cy="142.07" r="3.2" fill="#0b5fff"></circle>
               <circle cx="39.13" cy="80.22" r="3.2" fill="#0b5fff"></circle>
-              <!-- labels -->
-              <text x="100" y="12" text-anchor="middle" font-size="10" font-weight="600" fill="#0a1733">趋势 85</text>
-              <text x="184" y="72" text-anchor="start" font-size="10" font-weight="600" fill="#0a1733">量能 72</text>
-              <text x="152" y="180" text-anchor="middle" font-size="10" font-weight="600" fill="#0a1733">基本面 90</text>
-              <text x="48" y="180" text-anchor="middle" font-size="10" font-weight="600" fill="#0a1733">资金面 65</text>
-              <text x="16" y="72" text-anchor="end" font-size="10" font-weight="600" fill="#0a1733">技术面 80</text>
+              <!-- labels (white bg for readability) -->
+              <rect x="78" y="-8" width="44" height="14" rx="3" fill="#fff" stroke="#e1e9f5" stroke-width="0.5"></rect>
+              <text x="100" y="2" text-anchor="middle" font-size="10" font-weight="700" fill="#0a1733">趋势 85</text>
+              <rect x="186" y="58" width="44" height="14" rx="3" fill="#fff" stroke="#e1e9f5" stroke-width="0.5"></rect>
+              <text x="208" y="68" text-anchor="middle" font-size="10" font-weight="700" fill="#0a1733">量能 72</text>
+              <rect x="130" y="170" width="52" height="14" rx="3" fill="#fff" stroke="#e1e9f5" stroke-width="0.5"></rect>
+              <text x="156" y="180" text-anchor="middle" font-size="10" font-weight="700" fill="#0a1733">基本面 90</text>
+              <rect x="18" y="170" width="52" height="14" rx="3" fill="#fff" stroke="#e1e9f5" stroke-width="0.5"></rect>
+              <text x="44" y="180" text-anchor="middle" font-size="10" font-weight="700" fill="#0a1733">资金面 65</text>
+              <rect x="-30" y="58" width="44" height="14" rx="3" fill="#fff" stroke="#e1e9f5" stroke-width="0.5"></rect>
+              <text x="-8" y="68" text-anchor="middle" font-size="10" font-weight="700" fill="#0a1733">技术面 80</text>
             </svg>
           </div>
 
@@ -9545,7 +10420,7 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
                     </radialGradient>
                   </defs>
                   <text x="100" y="15" text-anchor="middle" font-size="10" fill="#4b5a7a" font-weight="600">技术面 82</text>
-                  <text x="185" y="65" text-anchor="middle" font-size="10" fill="#4b5a7a" font-weight="600">赛道 75</text>
+                  <text x="172" y="60" text-anchor="middle" font-size="10" fill="#4b5a7a" font-weight="600">赛道 75</text>
                   <text x="155" y="175" text-anchor="middle" font-size="10" fill="#4b5a7a" font-weight="600">消息 60</text>
                   <text x="45" y="175" text-anchor="middle" font-size="10" fill="#4b5a7a" font-weight="600">基本面 70</text>
                 </svg>
@@ -9611,54 +10486,6 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
       <div class="ds-subsection-title mt-8">金融仪表盘综合示例</div>
       <p class="text-xs mb-4" style="color: var(--ink-soft);">以下为金融业务场景下的仪表盘综合示例，整合行情头、指数卡片、资金流向、风险度仪表、自选股列表等核心组件，展示设计系统在实际业务页面中的组合应用效果。</p>
 
-      <!-- 行情概览栏 -->
-      <div class="grid grid-cols-4 gap-4 mb-4">
-        <div class="index-card">
-          <div class="flex justify-between items-center mb-1">
-            <span class="index-name">上证指数</span>
-            <span class="data-freshness live"><span class="freshness-dot live"></span>实时</span>
-          </div>
-          <div class="index-value" style="color: var(--up);">3,245.68</div>
-          <div class="index-change" style="color: var(--up);">+39.52 +1.23%</div>
-          <svg width="100%" height="32" viewBox="0 0 120 32" style="margin-top: 8px;">
-            <path class="mini-chart-up" d="M0,24 L15,22 L30,25 L45,18 L60,15 L75,12 L90,14 L105,8 L120,6" stroke-width="1.5"></path>
-          </svg>
-        </div>
-        <div class="index-card">
-          <div class="flex justify-between items-center mb-1">
-            <span class="index-name">深证成指</span>
-            <span class="data-freshness live"><span class="freshness-dot live"></span>实时</span>
-          </div>
-          <div class="index-value" style="color: var(--up);">10,876.45</div>
-          <div class="index-change" style="color: var(--up);">+93.78 +0.87%</div>
-          <svg width="100%" height="32" viewBox="0 0 120 32" style="margin-top: 8px;">
-            <path class="mini-chart-up" d="M0,22 L15,20 L30,24 L45,16 L60,18 L75,14 L90,10 L105,12 L120,8" stroke-width="1.5"></path>
-          </svg>
-        </div>
-        <div class="index-card">
-          <div class="flex justify-between items-center mb-1">
-            <span class="index-name">创业板指</span>
-            <span class="data-freshness live"><span class="freshness-dot live"></span>实时</span>
-          </div>
-          <div class="index-value" style="color: var(--down);">2,156.32</div>
-          <div class="index-change" style="color: var(--down);">-9.78 -0.45%</div>
-          <svg width="100%" height="32" viewBox="0 0 120 32" style="margin-top: 8px;">
-            <path class="mini-chart-down" d="M0,10 L15,12 L30,8 L45,14 L60,16 L75,18 L90,20 L105,22 L120,24" stroke-width="1.5"></path>
-          </svg>
-        </div>
-        <div class="index-card">
-          <div class="flex justify-between items-center mb-1">
-            <span class="index-name">两市成交额</span>
-            <span class="data-freshness live"><span class="freshness-dot live"></span>实时</span>
-          </div>
-          <div class="index-value">10,487亿</div>
-          <div class="index-change" style="color: var(--up);">+856亿 +8.9%</div>
-          <svg width="100%" height="32" viewBox="0 0 120 32" style="margin-top: 8px;">
-            <path class="mini-chart-up" d="M0,20 L15,18 L30,22 L45,16 L60,14 L75,10 L90,12 L105,8 L120,6" stroke-width="1.5"></path>
-          </svg>
-        </div>
-      </div>
-
       <!-- 主内容区：左侧行情头+资金流向，右侧风险度+自选股 -->
       <div class="grid grid-cols-3 gap-4">
         <!-- 左侧：行情头 + 资金流向 -->
@@ -9679,12 +10506,13 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
                   <span class="font-mono" style="font-size:15px;font-weight:600;color:var(--up);">+45.60</span>
                   <span class="tag tag-up" style="font-size:13px;padding:3px 8px;">+2.47%</span>
                 </div>
-                <div style="display:flex;gap:16px;margin-top:8px;font-size:12px;color:var(--ink-soft);">
+                <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px 16px;margin-top:8px;font-size:12px;color:var(--ink-soft);">
                   <span>今开 <span class="font-mono" style="color:var(--up);">1,856.00</span></span>
                   <span>最高 <span class="font-mono" style="color:var(--up);">1,905.20</span></span>
                   <span>最低 <span class="font-mono" style="color:var(--down);">1,848.30</span></span>
                   <span>昨收 <span class="font-mono">1,846.90</span></span>
-                  <span>成交额 <span class="font-mono">53.8亿</span></span>
+                  <span style="line-height:1.6;">成交量<br><span class="font-mono">28.5万手</span></span>
+                  <span style="line-height:1.6;">成交额<br><span class="font-mono">53.8亿</span></span>
                 </div>
               </div>
               <div class="quote-header-right">
@@ -9736,7 +10564,7 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
           </div>
         </div>
 
-        <!-- 右侧：风险度 + 自选股 -->
+        <!-- 右侧：风险度 -->
         <div class="space-y-4">
           <div class="panel" style="padding: 20px; text-align: center;">
             <div class="font-bold text-sm mb-3" style="text-align: left;">账户风险度</div>
@@ -9753,53 +10581,6 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
             </div>
             <div class="mt-3 text-xs" style="color: var(--ink-soft);">维持担保比例 158%</div>
             <div class="progress mt-2"><div class="progress-bar gold" style="width: 60%;"></div></div>
-          </div>
-
-          <div class="watchlist">
-            <div class="watchlist-header">
-              <span class="font-bold text-sm">自选股</span>
-              <button class="btn-text" style="font-size: 11px;">全部</button>
-            </div>
-            <div class="watchlist-row">
-              <div>
-                <div class="text-sm font-semibold">贵州茅台</div>
-                <div class="font-mono text-xs" style="color: var(--ink-mute);">600519</div>
-              </div>
-              <div class="text-right">
-                <div class="font-mono font-bold text-sm" style="color: var(--up);">1,680.00</div>
-                <div class="font-mono text-xs" style="color: var(--up);">+2.34%</div>
-              </div>
-            </div>
-            <div class="watchlist-row">
-              <div>
-                <div class="text-sm font-semibold">五粮液</div>
-                <div class="font-mono text-xs" style="color: var(--ink-mute);">000858</div>
-              </div>
-              <div class="text-right">
-                <div class="font-mono font-bold text-sm" style="color: var(--up);">156.30</div>
-                <div class="font-mono text-xs" style="color: var(--up);">+1.87%</div>
-              </div>
-            </div>
-            <div class="watchlist-row">
-              <div>
-                <div class="text-sm font-semibold">宁德时代</div>
-                <div class="font-mono text-xs" style="color: var(--ink-mute);">300750</div>
-              </div>
-              <div class="text-right">
-                <div class="font-mono font-bold text-sm" style="color: var(--down);">182.60</div>
-                <div class="font-mono text-xs" style="color: var(--down);">-1.56%</div>
-              </div>
-            </div>
-            <div class="watchlist-row">
-              <div>
-                <div class="text-sm font-semibold">中国平安</div>
-                <div class="font-mono text-xs" style="color: var(--ink-mute);">601318</div>
-              </div>
-              <div class="text-right">
-                <div class="font-mono font-bold text-sm" style="color: var(--up);">48.92</div>
-                <div class="font-mono text-xs" style="color: var(--up);">+0.99%</div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -9852,6 +10633,737 @@ document.querySelectorAll('.filter-chip .remove').forEach(rm => {
         </div>
       </div>
     </section>
+
+    <!-- ============ AI Interaction ============ -->
+    <section class="ds-section" id="ai-interact">
+      <div class="ds-section-title">AI 交互组件 AI Interaction</div>
+      <p class="ds-section-desc">
+        AI 交互组件覆盖大模型对话场景的核心 UI 单元：流式打字输出、聊天气泡、AI 事件分析报告、AI 关系图谱。所有组件遵循品牌蓝色主调，打字光标使用 --primary 闪烁，气泡圆角遵循 --r-md 体系。
+      </p>
+      <div class="ds-subsection">流式文本 StreamingText</div>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">StreamingText · 打字光标</div>
+          <div class="ext-streaming mb-3">今日A股市场整体偏强，沪指收涨0.86%报3245.78点<span class="ext-streaming__cursor"></span></div>
+          <p class="text-xs leading-relaxed" style="color: var(--ink-soft);">模拟 AI 逐字输出，光标以主色 1s 闪烁，支持追加与替换两种模式。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">StreamingText · 多行流式</div>
+          <div class="ext-streaming mb-3">板块方面，半导体板块领涨，涨幅达3.2%；新能源板块跟进，资金净流入45亿<span class="ext-streaming__cursor"></span></div>
+          <p class="text-xs leading-relaxed" style="color: var(--ink-soft);">流式追加场景：新文本以已显示内容为前缀时从断点继续打字。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">StreamingText · 完成</div>
+          <div class="ext-streaming mb-3">分析完成：今日市场情绪指数为72，处于乐观区间，建议关注科技与消费主线。</div>
+          <p class="text-xs leading-relaxed" style="color: var(--ink-soft);">打字完成后光标消失，触发 done 事件。</p>
+        </div>
+      </div>
+      <div class="ds-subsection">聊天气泡 ChatBubble</div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">ChatBubble · 用户 + AI</div>
+          <div class="ext-chat-bubble ext-chat-bubble--user"><div class="ext-chat-bubble__user">帮我分析一下今日大盘走势</div></div>
+          <div class="ext-chat-bubble ext-chat-bubble--ai">
+            <div class="ext-chat-bubble__avatar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4.5" y="8" width="15" height="11" rx="3"/><path d="M12 8V4.5"/><circle cx="12" cy="3.4" r="1.1" fill="currentColor" stroke="none"/><circle cx="9" cy="13" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r="1.1" fill="currentColor" stroke="none"/><path d="M9.5 16.5h5"/></svg></div>
+            <div class="ext-chat-bubble__body">今日沪指收涨0.86%，深成指涨1.23%。半导体板块领涨，资金净流入45亿。市场情绪偏乐观，建议关注科技主线。</div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">user 右对齐主色背景 + 白色文字；assistant 左对齐白色背景 + AI 头像 + 阴影。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">ChatBubble · 富内容卡片</div>
+          <div class="ext-chat-bubble ext-chat-bubble--user"><div class="ext-chat-bubble__user">今日有哪些异动？</div></div>
+          <div class="ext-chat-bubble ext-chat-bubble--ai">
+            <div class="ext-chat-bubble__avatar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4.5" y="8" width="15" height="11" rx="3"/><path d="M12 8V4.5"/><circle cx="12" cy="3.4" r="1.1" fill="currentColor" stroke="none"/><circle cx="9" cy="13" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r="1.1" fill="currentColor" stroke="none"/></svg></div>
+            <div class="ext-chat-bubble__body">检测到3只异动个股：<div style="margin-top:8px; padding:8px; background:var(--bg-soft); border-radius:6px;"><div style="font-size:12px; font-weight:600; color:var(--up);">寒武纪 · 688256</div><div style="font-size:11px; color:var(--ink-mute);">涨幅 +9.87% · 量比 4.2</div></div></div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">assistant 气泡通过 card 插槽支持插入富内容卡片。</p>
+        </div>
+      </div>
+      <div class="ds-subsection">AI 事件报告 AiEventReport</div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">AiEventReport · 事件分析</div>
+          <div class="ext-ai-report">
+            <div class="ext-ai-report__header"><span class="ext-ai-report__badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path></svg> AI 分析</span><span class="ext-ai-report__title">央行降准0.5个百分点</span></div>
+            <p class="ext-ai-report__summary">央行宣布下调金融机构存款准备金率0.5个百分点，预计释放长期资金约1万亿元。此次降准为全面降准，旨在支持实体经济发展。</p>
+            <div class="ext-ai-report__points">
+              <div class="ext-ai-report__point"><span class="ext-ai-report__point-dot" style="background:var(--up)"></span>利好银行板块，降低资金成本约56亿/年</div>
+              <div class="ext-ai-report__point"><span class="ext-ai-report__point-dot" style="background:var(--primary)"></span>地产链预期改善，关注优质龙头</div>
+              <div class="ext-ai-report__point"><span class="ext-ai-report__point-dot" style="background:var(--warning)"></span>短期情绪利好，中期需关注基本面验证</div>
+            </div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">AI 自动生成事件摘要 + 影响分析 + 关键要点，带 AI 标识。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">AiEventReport · 板块传导</div>
+          <div class="ext-ai-report">
+            <div class="ext-ai-report__header"><span class="ext-ai-report__badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path></svg> AI 分析</span><span class="ext-ai-report__title">半导体国产替代加速</span></div>
+            <p class="ext-ai-report__summary">美国商务部对先进芯片出口管制升级，国产替代逻辑强化。设备端北方华创、中微公司订单饱满。</p>
+            <div class="ext-ai-report__points">
+              <div class="ext-ai-report__point"><span class="ext-ai-report__point-dot" style="background:var(--up)"></span>上游设备：北方华创 +8.2%、中微公司 +6.5%</div>
+              <div class="ext-ai-report__point"><span class="ext-ai-report__point-dot" style="background:var(--up)"></span>中游材料：沪硅产业 +5.8%、雅克科技 +4.3%</div>
+              <div class="ext-ai-report__point"><span class="ext-ai-report__point-dot" style="background:var(--down)"></span>下游设计：部分企业受制于先进制程受限</div>
+            </div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">支持板块传导链分析，标注上中下游影响方向。</p>
+        </div>
+      </div>
+      <div class="ds-subsection">AI 关系图谱 AiGraph</div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">AiGraph · 板块关联</div>
+          <div class="ext-ai-graph">
+            <div class="ext-ai-graph__nodes">
+              <svg class="ext-ai-graph__lines" viewBox="0 0 300 100" preserveAspectRatio="none"><line x1="50" y1="50" x2="150" y2="50" stroke="var(--primary)" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.4"/><line x1="150" y1="50" x2="250" y2="50" stroke="var(--primary)" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.4"/></svg>
+              <div class="ext-ai-graph__node"><div class="ext-ai-graph__circle" style="background:var(--primary)">上游</div><span class="ext-ai-graph__label">硅片</span></div>
+              <div class="ext-ai-graph__node"><div class="ext-ai-graph__circle" style="background:var(--accent)">中游</div><span class="ext-ai-graph__label">芯片</span></div>
+              <div class="ext-ai-graph__node"><div class="ext-ai-graph__circle" style="background:var(--gold)">下游</div><span class="ext-ai-graph__label">终端</span></div>
+            </div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">AI 自动生成产业链节点关系图，支持上中下游标注与传导方向。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">AiGraph · 资金流向</div>
+          <div class="ext-ai-graph">
+            <div class="ext-ai-graph__nodes">
+              <svg class="ext-ai-graph__lines" viewBox="0 0 300 100" preserveAspectRatio="none"><path d="M50 50 Q150 10 250 50" fill="none" stroke="var(--up)" stroke-width="2" opacity="0.5"/><path d="M50 50 Q150 90 250 50" fill="none" stroke="var(--down)" stroke-width="2" opacity="0.5"/></svg>
+              <div class="ext-ai-graph__node"><div class="ext-ai-graph__circle" style="background:var(--up)">流入</div><span class="ext-ai-graph__label">+45亿</span></div>
+              <div class="ext-ai-graph__node"><div class="ext-ai-graph__circle" style="background:var(--primary)">主力</div><span class="ext-ai-graph__label">半导体</span></div>
+              <div class="ext-ai-graph__node"><div class="ext-ai-graph__circle" style="background:var(--down)">流出</div><span class="ext-ai-graph__label">-12亿</span></div>
+            </div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">资金流向关系图，红色流入 / 绿色流出，弧线连接。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Audio & Podcast ============ -->
+    <section class="ds-section" id="audio-media">
+      <div class="ds-section-title">音频与播客 Audio & Podcast</div>
+      <p class="ds-section-desc">
+        音频组件覆盖 AI 语音播报全流程：AudioPlayer 跨端播放器（H5 / App 双引擎）、PodcastCard 播客生成卡片（idle → loading → ready → error 四态）、FloatingPodcast 浮动迷你播放器。播放按钮使用品牌蓝渐变 + shadow-primary。
+      </p>
+      <div class="ds-subsection">音频播放器 AudioPlayer</div>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">AudioPlayer · 播放中</div>
+          <div class="ext-audio-player">
+            <div class="ext-audio-header"><div class="ext-audio-cover"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><span class="ext-audio-title">今日市场早播报</span></div>
+            <div class="ext-audio-controls">
+              <div class="ext-audio-btn ext-audio-btn--side"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--ink-soft)"><path d="M11 18V6l-8 6 8 6zM21 18V6l-8 6 8 6z"/></svg></div>
+              <div class="ext-audio-btn ext-audio-btn--main"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></div>
+              <div class="ext-audio-btn ext-audio-btn--side"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--ink-soft)"><path d="M13 18V6l8 6-8 6zM3 18V6l8 6-8 6z"/></svg></div>
+            </div>
+            <div class="ext-audio-progress"><div class="ext-audio-track"></div><div class="ext-audio-fill" style="width: 35%;"></div><div class="ext-audio-thumb" style="left: 35%;"></div></div>
+            <div class="ext-audio-time"><span>00:21</span><span>01:02</span></div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">跨端播放器：快退-10s / 播放暂停 / 快进+10s，进度条可点击跳转。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">AudioPlayer · 暂停态</div>
+          <div class="ext-audio-player">
+            <div class="ext-audio-header"><div class="ext-audio-cover"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><span class="ext-audio-title">异动个股深度分析</span></div>
+            <div class="ext-audio-controls">
+              <div class="ext-audio-btn ext-audio-btn--side"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--ink-soft)"><path d="M11 18V6l-8 6 8 6zM21 18V6l-8 6 8 6z"/></svg></div>
+              <div class="ext-audio-btn ext-audio-btn--main"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div>
+              <div class="ext-audio-btn ext-audio-btn--side"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--ink-soft)"><path d="M13 18V6l8 6-8 6zM3 18V6l8 6-8 6z"/></svg></div>
+            </div>
+            <div class="ext-audio-progress"><div class="ext-audio-track"></div><div class="ext-audio-fill" style="width: 0%;"></div><div class="ext-audio-thumb" style="left: 0%;"></div></div>
+            <div class="ext-audio-time"><span>00:00</span><span>01:35</span></div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">暂停态：播放按钮显示三角图标，进度归零。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">AudioPlayer · 进度70%</div>
+          <div class="ext-audio-player">
+            <div class="ext-audio-header"><div class="ext-audio-cover"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><span class="ext-audio-title">板块轮动策略播报</span></div>
+            <div class="ext-audio-controls">
+              <div class="ext-audio-btn ext-audio-btn--side"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--ink-soft)"><path d="M11 18V6l-8 6 8 6zM21 18V6l-8 6 8 6z"/></svg></div>
+              <div class="ext-audio-btn ext-audio-btn--main"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></div>
+              <div class="ext-audio-btn ext-audio-btn--side"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--ink-soft)"><path d="M13 18V6l8 6-8 6zM3 18V6l8 6-8 6z"/></svg></div>
+            </div>
+            <div class="ext-audio-progress"><div class="ext-audio-track"></div><div class="ext-audio-fill" style="width: 70%;"></div><div class="ext-audio-thumb" style="left: 70%;"></div></div>
+            <div class="ext-audio-time"><span>01:03</span><span>01:29</span></div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">进度条填充与拖拽头联动，时间用等宽字体显示。</p>
+        </div>
+      </div>
+      <div class="ds-subsection">播客卡片 PodcastCard</div>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">PodcastCard · idle 态</div>
+          <div class="ext-podcast-card">
+            <div class="ext-podcast-header"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/></svg><span class="ext-podcast-title">AI 播报</span></div>
+            <div class="ext-podcast-preview">今日市场冲高回落，沪指收涨0.86%，成交额突破8000亿。半导体板块领涨...</div>
+            <button style="padding:4px 12px; border-radius:6px; background:var(--primary); color:#fff; font-size:12px; border:none; cursor:pointer;">生成播报</button>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">idle 态：显示文本预览 + 生成按钮。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">PodcastCard · loading 态</div>
+          <div class="ext-podcast-card">
+            <div class="ext-podcast-header"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/></svg><span class="ext-podcast-title">AI 播报</span></div>
+            <div style="display:flex; align-items:center; gap:8px; padding:8px 0;"><div class="pulse-dot"></div><span style="font-size:12px; color:var(--ink-soft);">正在合成播报音频，约 5-15 秒...</span></div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">loading 态：脉冲点 + 加载文案。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">PodcastCard · ready 态</div>
+          <div class="ext-podcast-card">
+            <div class="ext-podcast-header"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/></svg><span class="ext-podcast-title">AI 播报</span></div>
+            <div class="ext-audio-controls" style="gap:16px; margin-bottom:6px;">
+              <div class="ext-audio-btn ext-audio-btn--main" style="width:40px; height:40px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div>
+              <div class="ext-audio-progress" style="flex:1; height:20px;"><div class="ext-audio-track"></div><div class="ext-audio-fill" style="width: 20%;"></div><div class="ext-audio-thumb" style="left: 20%;"></div></div>
+            </div>
+            <div class="ext-audio-time"><span>00:06</span><span>00:32</span></div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">ready 态：内嵌 AudioPlayer 播放组件。</p>
+        </div>
+      </div>
+      <div class="ds-subsection">浮动播客 FloatingPodcast</div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">FloatingPodcast · 播放中</div>
+          <div class="ext-floating-podcast">
+            <div class="ext-floating-podcast__cover"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+            <div class="ext-floating-podcast__info"><div class="ext-floating-podcast__title">今日市场早播报</div><div class="ext-floating-podcast__sub">00:21 / 01:02</div></div>
+            <div class="ext-floating-podcast__play"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">品牌蓝渐变浮动播放器，退出页面后续播，固定在底部。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">FloatingPodcast · 暂停</div>
+          <div class="ext-floating-podcast">
+            <div class="ext-floating-podcast__cover"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+            <div class="ext-floating-podcast__info"><div class="ext-floating-podcast__title">异动个股深度分析</div><div class="ext-floating-podcast__sub">已暂停 · 00:00 / 01:35</div></div>
+            <div class="ext-floating-podcast__play"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">暂停态显示三角播放图标，副标题标注暂停状态。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Event & Insight ============ -->
+    <section class="ds-section" id="event-insight">
+      <div class="ds-section-title">事件与洞察 Event & Insight</div>
+      <p class="ds-section-desc">
+        事件组件覆盖财经事件全生命周期：ImportanceStars 重要性星级（1-5 金色实心 + 灰色空心）、EventItemCard 事件列表项、EventHeadlineCard 事件头条、InsightListCard 洞察列表、InsightAlertCard 异动提醒卡片（涨跌方向色条 + 置信度标签）、GuideCard 引导卡片（品牌蓝 / 青色 / 金色三主题渐变）。
+      </p>
+      <div class="ds-subsection">重要性星级 ImportanceStars</div>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">5 星 · 极高</div>
+          <div class="ext-stars mb-3"><span class="ext-star active">★</span><span class="ext-star active">★</span><span class="ext-star active">★</span><span class="ext-star active">★</span><span class="ext-star active">★</span></div>
+          <p class="text-xs leading-relaxed" style="color: var(--ink-soft);">5 颗金色实心星，表示极高重要性事件。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">3 星 · 中等</div>
+          <div class="ext-stars mb-3"><span class="ext-star active">★</span><span class="ext-star active">★</span><span class="ext-star active">★</span><span class="ext-star">★</span><span class="ext-star">★</span></div>
+          <p class="text-xs leading-relaxed" style="color: var(--ink-soft);">3 颗金色 + 2 颗灰色空心星。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">1 星 · 低</div>
+          <div class="ext-stars mb-3"><span class="ext-star active">★</span><span class="ext-star">★</span><span class="ext-star">★</span><span class="ext-star">★</span><span class="ext-star">★</span></div>
+          <p class="text-xs leading-relaxed" style="color: var(--ink-soft);">1 颗金色 + 4 颗灰色，低重要性事件。</p>
+        </div>
+      </div>
+      <div class="ds-subsection">事件卡片 EventCard</div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">EventItemCard · 列表项</div>
+          <!-- 利好事件 -->
+          <div class="ext-event-item ext-event-item--up mb-3">
+            <div class="ext-event-item__header">
+              <span class="ext-event-item__type ext-event-item__type--policy">政策</span>
+              <span class="ext-event-item__source"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>央行官网</span>
+              <span class="ext-event-item__time">2026-08-09 14:30</span>
+              <div class="ext-stars"><span class="ext-star active">★</span><span class="ext-star active">★</span><span class="ext-star active">★</span><span class="ext-star active">★</span><span class="ext-star">★</span></div>
+            </div>
+            <div class="ext-event-item__title">央行下调存款准备金率0.5个百分点，释放长期资金约1万亿元</div>
+            <div class="ext-event-item__industries">
+              <span class="ext-event-item__ind ext-event-item__ind--up">银行 ↑</span>
+              <span class="ext-event-item__ind ext-event-item__ind--up">地产 ↑</span>
+              <span class="ext-event-item__ind ext-event-item__ind--up">券商 ↑</span>
+              <span class="ext-event-item__ind ext-event-item__ind--neutral">消费 →</span>
+            </div>
+            <div class="ext-event-item__ai-summary">
+              <span class="ext-event-item__ai-badge">AI</span>
+              <span class="ext-event-item__ai-text">降准释放流动性约1万亿，利好银行净息差与地产融资成本，预计短期板块涨幅2-3%。</span>
+            </div>
+            <div class="ext-event-item__footer">
+              <button class="ext-event-item__btn ext-event-item__btn--ghost">+ 关注</button>
+              <button class="ext-event-item__btn ext-event-item__btn--primary"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>AI解析</button>
+            </div>
+          </div>
+          <!-- 利空事件 -->
+          <div class="ext-event-item ext-event-item--down mb-3">
+            <div class="ext-event-item__header">
+              <span class="ext-event-item__type ext-event-item__type--company">公司</span>
+              <span class="ext-event-item__source ext-event-item__source--unverified">来源暂不可验证</span>
+              <span class="ext-event-item__time">2026-08-09 10:15</span>
+              <div class="ext-stars"><span class="ext-star active">★</span><span class="ext-star active">★</span><span class="ext-star active">★</span><span class="ext-star">★</span><span class="ext-star active">★</span></div>
+            </div>
+            <div class="ext-event-item__title">某头部新能源车企Q2净利润同比下降45%，低于市场预期</div>
+            <div class="ext-event-item__industries">
+              <span class="ext-event-item__ind ext-event-item__ind--down">新能源车 ↓</span>
+              <span class="ext-event-item__ind ext-event-item__ind--down">锂电 ↓</span>
+              <span class="ext-event-item__ind ext-event-item__ind--neutral">零部件 →</span>
+            </div>
+            <div class="ext-event-item__ai-summary">
+              <span class="ext-event-item__ai-badge">AI</span>
+              <span class="ext-event-item__ai-text">业绩低于预期或引发板块估值回调，关注供应链盈利下修风险，短期建议观望。</span>
+            </div>
+            <div class="ext-event-item__footer">
+              <button class="ext-event-item__btn ext-event-item__btn--ghost" style="background:rgba(200,144,32,0.1); color:var(--accent);">✓ 已关注</button>
+              <button class="ext-event-item__btn ext-event-item__btn--primary"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>AI解析</button>
+            </div>
+          </div>
+          <p class="text-xs leading-relaxed" style="color: var(--ink-soft);">事件列表项：左侧涨跌色条 + 事件类型色标 + 来源 + 时间 + 星级 + 标题 + Top5影响行业 + AI摘要 + 关注/AI解析按钮。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">EventHeadlineCard · 头条</div>
+          <div class="ext-event-headline">
+            <span class="ext-event-headline__badge">头条</span>
+            <div class="ext-event-headline__title">国务院发布新一轮以旧换新政策，覆盖家电、汽车、机械三大领域</div>
+            <div class="ext-event-headline__source">来源：新华社 · 2小时前</div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">品牌蓝渐变背景头条卡片，白字标题 + 来源。</p>
+        </div>
+      </div>
+      <div class="ds-subsection">洞察卡片 InsightCard</div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">InsightListCard · 洞察列表</div>
+          <div class="ext-insight-list">
+            <div class="ext-insight-list__header"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 今日洞察</div>
+            <div class="ext-insight-list__item"><div class="ext-insight-list__dot ext-insight-list__dot--up"></div><div class="ext-insight-list__text">半导体板块主力净流入45亿，北方华创涨停</div><span class="ext-insight-list__time">10:32</span></div>
+            <div class="ext-insight-list__item"><div class="ext-insight-list__dot ext-insight-list__dot--down"></div><div class="ext-insight-list__text">新能源板块资金流出12亿，宁德时代跌2.3%</div><span class="ext-insight-list__time">11:05</span></div>
+            <div class="ext-insight-list__item"><div class="ext-insight-list__dot ext-insight-list__dot--up"></div><div class="ext-insight-list__text">北向资金净流入38亿，连续3日加仓</div><span class="ext-insight-list__time">14:20</span></div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">洞察列表：涨跌色点 + 文本 + 时间。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">InsightAlertCard · 异动提醒</div>
+          <div class="ext-insight-alert mb-3">
+            <div class="ext-insight-alert__header ext-insight-alert__header--up">
+              <div class="ext-insight-alert__stock">
+                <div class="ext-insight-alert__avatar ext-insight-alert__avatar--up">寒</div>
+                <div>
+                  <div class="ext-insight-alert__name">寒武纪</div>
+                  <div class="ext-insight-alert__code">688256</div>
+                </div>
+              </div>
+              <span class="ext-insight-alert__tag ext-insight-alert__tag--up">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1L9 7H1L5 1Z" fill="currentColor"/></svg>涨停
+              </span>
+            </div>
+            <div class="ext-insight-alert__body">
+              <div class="ext-insight-alert__msg">
+                <svg class="ext-insight-alert__msg-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1L13 12H1L7 1Z"/><path d="M7 5v3M7 10v0.5" stroke-linecap="round"/></svg>
+                <span>涨幅达 <span class="hl-up">9.87%</span> 触及涨停，量比 <span class="hl-data">4.2</span>，主力资金净流入 <span class="hl-up">3.2亿</span></span>
+              </div>
+              <div class="ext-insight-alert__footer">
+                <div style="display:flex;align-items:center;">
+                  <span class="ext-insight-alert__type ext-insight-alert__type--up">涨停异动</span>
+                  <span class="ext-confidence ext-confidence--high">高置信</span>
+                </div>
+                <span class="ext-insight-alert__time">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 3.5V6l1.5 1"/></svg>14:25
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="ext-insight-alert mb-3">
+            <div class="ext-insight-alert__header ext-insight-alert__header--down">
+              <div class="ext-insight-alert__stock">
+                <div class="ext-insight-alert__avatar ext-insight-alert__avatar--down">宁</div>
+                <div>
+                  <div class="ext-insight-alert__name">宁德时代</div>
+                  <div class="ext-insight-alert__code">300750</div>
+                </div>
+              </div>
+              <span class="ext-insight-alert__tag ext-insight-alert__tag--down">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 9L1 3H9L5 9Z" fill="currentColor"/></svg>大跌
+              </span>
+            </div>
+            <div class="ext-insight-alert__body">
+              <div class="ext-insight-alert__msg">
+                <svg class="ext-insight-alert__msg-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1L13 12H1L7 1Z"/><path d="M7 5v3M7 10v0.5" stroke-linecap="round"/></svg>
+                <span>跌幅 <span class="hl-down">-2.3%</span>，主力资金净流出 <span class="hl-down">5.8亿</span>，量能放大，量比 <span class="hl-data">2.8</span></span>
+              </div>
+              <div class="ext-insight-alert__footer">
+                <div style="display:flex;align-items:center;">
+                  <span class="ext-insight-alert__type ext-insight-alert__type--down">资金流出</span>
+                  <span class="ext-confidence ext-confidence--mid">中置信</span>
+                </div>
+                <span class="ext-insight-alert__time">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 3.5V6l1.5 1"/></svg>13:48
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="ext-insight-alert">
+            <div class="ext-insight-alert__header ext-insight-alert__header--up">
+              <div class="ext-insight-alert__stock">
+                <div class="ext-insight-alert__avatar ext-insight-alert__avatar--up">比</div>
+                <div>
+                  <div class="ext-insight-alert__name">比亚迪</div>
+                  <div class="ext-insight-alert__code">002594</div>
+                </div>
+              </div>
+              <span class="ext-insight-alert__tag ext-insight-alert__tag--up">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1L9 7H1L5 1Z" fill="currentColor"/></svg>放量
+              </span>
+            </div>
+            <div class="ext-insight-alert__body">
+              <div class="ext-insight-alert__msg">
+                <svg class="ext-insight-alert__msg-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1L13 12H1L7 1Z"/><path d="M7 5v3M7 10v0.5" stroke-linecap="round"/></svg>
+                <span>成交量骤增至 <span class="hl-data">52.3万手</span>，换手率 <span class="hl-data">3.8%</span>，北向资金加仓 <span class="hl-up">8.6亿</span></span>
+              </div>
+              <div class="ext-insight-alert__footer">
+                <div style="display:flex;align-items:center;">
+                  <span class="ext-insight-alert__type ext-insight-alert__type--up">放量突破</span>
+                  <span class="ext-confidence ext-confidence--high">高置信</span>
+                </div>
+                <span class="ext-insight-alert__time">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 3.5V6l1.5 1"/></svg>15:02
+                </span>
+              </div>
+            </div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">异动提醒：方向色侧条 + 头像 + 涨跌标签 + 数据高亮 + 置信度。</p>
+        </div>
+      </div>
+      <div class="ds-subsection">引导卡片 GuideCard</div>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">GuideCard · brand</div>
+          <div class="ext-guide-card ext-guide-card--brand"><div class="ext-guide-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><div class="ext-guide-card__body"><div class="ext-guide-card__title">新手引导</div><div class="ext-guide-card__desc">3分钟了解核心功能</div></div><span class="ext-guide-card__arrow">›</span></div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">品牌蓝渐变，用于主功能引导。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">GuideCard · accent</div>
+          <div class="ext-guide-card ext-guide-card--accent"><div class="ext-guide-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="ext-guide-card__body"><div class="ext-guide-card__title">AI 分析</div><div class="ext-guide-card__desc">智能解读市场异动</div></div><span class="ext-guide-card__arrow">›</span></div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">青色渐变，用于 AI 功能引导。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">GuideCard · warning</div>
+          <div class="ext-guide-card ext-guide-card--warning"><div class="ext-guide-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="ext-guide-card__body"><div class="ext-guide-card__title">风险提示</div><div class="ext-guide-card__desc">设置异动提醒阈值</div></div><span class="ext-guide-card__arrow">›</span></div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">金色渐变，用于风险与提醒引导。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Advanced Market ============ -->
+    <section class="ds-section" id="fin-advanced">
+      <div class="ds-section-title">高级行情组件 Advanced Market</div>
+      <p class="ds-section-desc">
+        高级行情组件覆盖深度行情展示：StockChart K线图、TrendKlineCompare K线对比、TrendDimCard 趋势维度卡片、StockDetailTable 股票详情表格、StockCardList 股票卡片列表、StockIntelList 股票情报列表、WindLeaderPanel 风口龙头面板。
+      </p>
+      <div class="ds-subsection">K线图 StockChart</div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">StockChart · 日K</div>
+          <div class="ext-stock-chart">
+            <div class="ext-chart-header"><div><div class="ext-chart-name">寒武纪 688256</div><div class="ext-chart-sub">日K · 前复权</div></div><div style="text-align:right;"><div class="ext-chart-price" style="color:var(--up)">256.80</div><div class="ext-chart-change" style="color:var(--up)">+23.10 +9.87%</div></div></div>
+            <div class="ext-chart-periods"><span class="ext-chart-period is-active">日K</span><span class="ext-chart-period">周K</span><span class="ext-chart-period">月K</span><span class="ext-chart-period">季K</span></div>
+            <div class="ext-chart-ma-legend"><span class="ext-chart-ma-item"><span class="ext-chart-ma-dot" style="background:#f5a623"></span>MA5 245.3</span><span class="ext-chart-ma-item"><span class="ext-chart-ma-dot" style="background:#0b5fff"></span>MA10 231.7</span><span class="ext-chart-ma-item"><span class="ext-chart-ma-dot" style="background:#a855f7"></span>MA20 218.5</span></div>
+            <div class="ext-candle-row">
+              <div class="ext-candle ext-candle--down"><div class="ext-candle__wick" style="height:50%;"></div><div class="ext-candle__body" style="height:18%;"></div></div>
+              <div class="ext-candle ext-candle--up"><div class="ext-candle__wick" style="height:60%;"></div><div class="ext-candle__body" style="height:28%;"></div></div>
+              <div class="ext-candle ext-candle--up"><div class="ext-candle__wick" style="height:40%;"></div><div class="ext-candle__body" style="height:22%;"></div></div>
+              <div class="ext-candle ext-candle--down"><div class="ext-candle__wick" style="height:55%;"></div><div class="ext-candle__body" style="height:35%;"></div></div>
+              <div class="ext-candle ext-candle--up"><div class="ext-candle__wick" style="height:70%;"></div><div class="ext-candle__body" style="height:42%;"></div></div>
+              <div class="ext-candle ext-candle--up"><div class="ext-candle__wick" style="height:50%;"></div><div class="ext-candle__body" style="height:32%;"></div></div>
+              <div class="ext-candle ext-candle--up"><div class="ext-candle__wick" style="height:80%;"></div><div class="ext-candle__body" style="height:55%;"></div></div>
+              <div class="ext-candle ext-candle--down"><div class="ext-candle__wick" style="height:65%;"></div><div class="ext-candle__body" style="height:40%;"></div></div>
+              <div class="ext-candle ext-candle--up"><div class="ext-candle__wick" style="height:88%;"></div><div class="ext-candle__body" style="height:62%;"></div></div>
+              <div class="ext-candle ext-candle--up"><div class="ext-candle__wick" style="height:72%;"></div><div class="ext-candle__body" style="height:50%;"></div></div>
+              <div class="ext-candle ext-candle--up"><div class="ext-candle__wick" style="height:95%;"></div><div class="ext-candle__body" style="height:75%;"></div></div>
+              <div class="ext-candle ext-candle--up"><div class="ext-candle__wick" style="height:82%;"></div><div class="ext-candle__body" style="height:60%;"></div></div>
+              <svg class="ext-chart-ma-overlay" viewBox="0 0 1200 120" preserveAspectRatio="none"><polyline points="0,95 100,92 200,88 300,85 400,78 500,72 600,65 700,58 800,48 900,38 1000,28 1100,20" fill="none" stroke="#f5a623" stroke-width="1.5" opacity="0.8"/><polyline points="0,98 100,96 200,93 300,90 400,85 500,80 600,74 700,68 800,60 900,52 1000,42 1100,35" fill="none" stroke="#0b5fff" stroke-width="1.5" opacity="0.8"/><polyline points="0,100 100,99 200,97 300,95 400,92 500,88 600,84 700,80 800,74 900,68 1000,60 1100,52" fill="none" stroke="#a855f7" stroke-width="1.5" opacity="0.7"/></svg>
+            </div>
+            <div class="ext-vol-row">
+              <div class="ext-vol-bar ext-vol-bar--down" style="height:40%;"></div>
+              <div class="ext-vol-bar ext-vol-bar--up" style="height:55%;"></div>
+              <div class="ext-vol-bar ext-vol-bar--up" style="height:35%;"></div>
+              <div class="ext-vol-bar ext-vol-bar--down" style="height:60%;"></div>
+              <div class="ext-vol-bar ext-vol-bar--up" style="height:70%;"></div>
+              <div class="ext-vol-bar ext-vol-bar--up" style="height:50%;"></div>
+              <div class="ext-vol-bar ext-vol-bar--up" style="height:85%;"></div>
+              <div class="ext-vol-bar ext-vol-bar--down" style="height:65%;"></div>
+              <div class="ext-vol-bar ext-vol-bar--up" style="height:92%;"></div>
+              <div class="ext-vol-bar ext-vol-bar--up" style="height:75%;"></div>
+              <div class="ext-vol-bar ext-vol-bar--up" style="height:100%;"></div>
+              <div class="ext-vol-bar ext-vol-bar--up" style="height:80%;"></div>
+            </div>
+            <div class="ext-chart-axis"><span>08/01</span><span>08/05</span><span>08/07</span><span>08/09</span></div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">日K线图：红涨绿跌，支持 MA 均线叠加。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">TrendKlineCompare · 对比</div>
+          <div class="ext-compare-chart">
+            <div class="ext-compare-legend"><div class="ext-compare-legend-item"><div class="ext-compare-legend-dot" style="background:var(--primary)"></div>个股</div><div class="ext-compare-legend-item"><div class="ext-compare-legend-dot" style="background:var(--gold)"></div>行业均值</div><div class="ext-compare-legend-item"><div class="ext-compare-legend-dot" style="background:var(--ink-faint)"></div>大盘</div></div>
+            <svg viewBox="0 0 300 80" style="width:100%; height:80px;"><polyline points="0,60 30,55 60,50 90,45 120,30 150,35 180,20 210,25 240,15 270,10 300,5" fill="none" stroke="var(--primary)" stroke-width="2"/><polyline points="0,55 30,58 60,52 90,48 120,40 150,42 180,35 210,38 240,30 270,28 300,25" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="4 2"/><polyline points="0,50 30,52 60,48 90,50 120,45 150,48 180,42 210,45 240,40 270,42 300,38" fill="none" stroke="var(--ink-faint)" stroke-width="1.5" stroke-dasharray="2 2"/></svg>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">个股 vs 行业均值 vs 大盘对比走势。</p>
+        </div>
+      </div>
+      <div class="ds-subsection">趋势维度 TrendDimCard</div>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">TrendDimCard · 资金面</div>
+          <div class="ext-dim-card"><div class="ext-dim-header"><span class="ext-dim-title">资金面</span><span class="ext-dim-score" style="color:var(--up)">85</span></div><div class="ext-dim-bar"><div class="ext-dim-bar__fill" style="width:85%; background:var(--up)"></div></div><div class="ext-dim-desc">主力净流入45亿，北向连续3日加仓</div></div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">资金面评分85，强势流入。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">TrendDimCard · 技术面</div>
+          <div class="ext-dim-card"><div class="ext-dim-header"><span class="ext-dim-title">技术面</span><span class="ext-dim-score" style="color:var(--primary)">62</span></div><div class="ext-dim-bar"><div class="ext-dim-bar__fill" style="width:62%; background:var(--primary)"></div></div><div class="ext-dim-desc">MACD金叉，KDJ超买区</div></div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">技术面评分62，中性偏多。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">TrendDimCard · 情绪面</div>
+          <div class="ext-dim-card"><div class="ext-dim-header"><span class="ext-dim-title">情绪面</span><span class="ext-dim-score" style="color:var(--warning)">38</span></div><div class="ext-dim-bar"><div class="ext-dim-bar__fill" style="width:38%; background:var(--warning)"></div></div><div class="ext-dim-desc">换手率偏低，市场关注度下降</div></div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">情绪面评分38，偏弱。</p>
+        </div>
+      </div>
+      <div class="ds-subsection">股票列表与表格</div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">StockDetailTable · 详情表</div>
+          <table class="ext-stock-table"><thead><tr><th>名称</th><th>行业</th><th>价格</th><th>涨跌</th></tr></thead><tbody><tr><td>北方华创</td><td>半导体</td><td>312.50</td><td style="color:var(--up)">+8.20%</td></tr><tr><td>中微公司</td><td>半导体</td><td>168.30</td><td style="color:var(--up)">+6.50%</td></tr><tr><td>沪硅产业</td><td>材料</td><td>22.15</td><td style="color:var(--up)">+5.80%</td></tr><tr><td>宁德时代</td><td>新能源</td><td>185.60</td><td style="color:var(--down)">-2.30%</td></tr></tbody></table>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">股票详情表格，涨红跌绿。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">StockCardList · 卡片列表</div>
+          <div class="ext-stock-card"><div class="ext-stock-card__info"><div class="ext-stock-card__name">北方华创</div><div class="ext-stock-card__code">002371 · 半导体</div></div><div class="ext-stock-card__price"><div style="font-size:14px; font-weight:700; color:var(--up)">312.50</div><div class="ext-stock-card__pct" style="color:var(--up)">+8.20%</div></div></div>
+          <div class="ext-stock-card"><div class="ext-stock-card__info"><div class="ext-stock-card__name">中微公司</div><div class="ext-stock-card__code">688012 · 半导体</div></div><div class="ext-stock-card__price"><div style="font-size:14px; font-weight:700; color:var(--up)">168.30</div><div class="ext-stock-card__pct" style="color:var(--up)">+6.50%</div></div></div>
+          <div class="ext-stock-card"><div class="ext-stock-card__info"><div class="ext-stock-card__name">宁德时代</div><div class="ext-stock-card__code">300750 · 新能源</div></div><div class="ext-stock-card__price"><div style="font-size:14px; font-weight:700; color:var(--down)">185.60</div><div class="ext-stock-card__pct" style="color:var(--down)">-2.30%</div></div></div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">卡片式股票列表，含名称、代码、行业、价格、涨跌。</p>
+        </div>
+      </div>
+      <div class="ds-subsection">情报列表与风口龙头</div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">StockIntelList · 情报</div>
+          <div class="ext-intel-item"><div class="ext-intel-item__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div><div class="ext-intel-item__body"><div class="ext-intel-item__title">订单饱满 · 北方华创</div><div class="ext-intel-item__desc">Q3 订单同比增长 45%，刻蚀设备交付加速</div></div></div>
+          <div class="ext-intel-item"><div class="ext-intel-item__icon" style="background:var(--up-soft)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--up)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="ext-intel-item__body"><div class="ext-intel-item__title">扩产公告 · 沪硅产业</div><div class="ext-intel-item__desc">宣布投资 30 亿扩建 300mm 硅片产线</div></div></div>
+          <div class="ext-intel-item"><div class="ext-intel-item__icon" style="background:var(--warn-bg)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg></div><div class="ext-intel-item__body"><div class="ext-intel-item__title">风险预警 · 宁德时代</div><div class="ext-intel-item__desc">储能业务毛利率下滑，竞争加剧</div></div></div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">情报列表：图标 + 标题 + 描述，不同类型不同色。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">WindLeaderPanel · 风口龙头</div>
+          <div class="ext-wind-panel">
+            <div class="ext-wind-tabs"><span class="ext-wind-tab is-active">长线风口</span><span class="ext-wind-tab">短线风口</span></div>
+            <!-- 长线风口 -->
+            <div class="ext-wind-header"><span class="ext-wind-title">长线风口龙头</span><span style="font-size:11px; color:var(--ink-mute);">更新 14:30</span></div>
+            <div class="ext-wind-bubbles">
+              <svg class="ext-bubble-chart" viewBox="0 0 280 260">
+                <g transform="translate(90,85)"><circle r="50" fill="#1e3a8a" fill-opacity="0.88"></circle><text y="-4">半导体</text><text y="10" style="font-size:9px;opacity:0.8;">+3.2%</text></g>
+                <g transform="translate(195,80)"><circle r="46" fill="#1d4ed8" fill-opacity="0.88"></circle><text y="-3">AI算力</text><text y="10" style="font-size:9px;opacity:0.8;">+2.1%</text></g>
+                <g transform="translate(55,165)"><circle r="38" fill="#2563eb" fill-opacity="0.88"></circle><text y="-2">国产</text><text y="11" style="font-size:9px;opacity:0.8;">替代</text></g>
+                <g transform="translate(210,165)"><circle r="35" fill="#3b82f6" fill-opacity="0.88"></circle><text>新能源</text><text y="13" style="font-size:9px;opacity:0.8;">+1.8%</text></g>
+                <g transform="translate(140,145)"><circle r="28" fill="#60a5fa" fill-opacity="0.88"></circle><text style="font-size:9px;">军工</text></g>
+                <g transform="translate(140,215)"><circle r="24" fill="#93c5fd" fill-opacity="0.88"></circle><text style="font-size:9px;fill:#1e3a5f;">消费</text></g>
+                <g transform="translate(240,220)"><circle r="22" fill="#bfdbfe" fill-opacity="0.88"></circle><text style="font-size:9px;fill:#1e3a5f;">医药</text></g>
+                <g transform="translate(85,225)"><circle r="20" fill="#dbeafe" fill-opacity="0.88"></circle><text style="font-size:9px;fill:#1e3a5f;">地产</text></g>
+              </svg>
+              <div style="display:flex; align-items:center; gap:8px; margin-top:4px;"><span style="font-size:10px; color:var(--ink-mute);">半径 = 持续时间</span><div style="display:flex; align-items:center; gap:4px;"><span style="width:10px; height:10px; border-radius:50%; background:#dbeafe;"></span><span style="font-size:10px; color:var(--ink-mute);">低分</span><span style="width:14px; height:14px; border-radius:50%; background:#60a5fa;"></span><span style="width:18px; height:18px; border-radius:50%; background:#2563eb;"></span><span style="width:22px; height:22px; border-radius:50%; background:#1e3a8a;"></span><span style="font-size:10px; color:var(--ink-mute);">高分</span></div></div>
+            </div>
+            <!-- 短线风口（Tab 切换后展示） -->
+            <div style="margin-top:16px; padding-top:14px; border-top:1px dashed var(--line);">
+              <div class="ext-wind-header"><span class="ext-wind-title">短线风口龙头</span><span style="font-size:11px; color:var(--ink-mute);">更新 14:30</span></div>
+              <div class="ext-wind-bubbles">
+                <svg class="ext-bubble-chart" viewBox="0 0 280 260">
+                  <g transform="translate(90,85)"><circle r="50" fill="#8a6411" fill-opacity="0.88"></circle><text y="-4">连板</text><text y="10" style="font-size:9px;opacity:0.8;">高潮期</text></g>
+                  <g transform="translate(195,80)"><circle r="46" fill="#a8761a" fill-opacity="0.88"></circle><text y="-3">低空经济</text><text y="10" style="font-size:9px;opacity:0.8;">发酵期</text></g>
+                  <g transform="translate(55,165)"><circle r="38" fill="#c89020" fill-opacity="0.88"></circle><text y="-2">卫星</text><text y="11" style="font-size:9px;opacity:0.8;">启动期</text></g>
+                  <g transform="translate(210,165)"><circle r="35" fill="#dba838" fill-opacity="0.88"></circle><text>核聚变</text><text y="13" style="font-size:9px;opacity:0.8;">启动期</text></g>
+                  <g transform="translate(140,145)"><circle r="28" fill="#e8c060" fill-opacity="0.88"></circle><text style="font-size:9px;">AEC</text></g>
+                  <g transform="translate(140,215)"><circle r="24" fill="#f0c75a" fill-opacity="0.88"></circle><text style="font-size:9px;fill:#4a3a0a;">机器人</text></g>
+                  <g transform="translate(240,220)"><circle r="22" fill="#f5d97a" fill-opacity="0.88"></circle><text style="font-size:9px;fill:#4a3a0a;">固态电池</text></g>
+                  <g transform="translate(85,225)"><circle r="20" fill="#fbe6b3" fill-opacity="0.88"></circle><text style="font-size:9px;fill:#4a3a0a;">数据</text></g>
+                </svg>
+                <div style="display:flex; align-items:center; gap:8px; margin-top:4px;"><span style="font-size:10px; color:var(--ink-mute);">半径 = 热度</span><div style="display:flex; align-items:center; gap:4px;"><span style="width:10px; height:10px; border-radius:50%; background:#fbe6b3;"></span><span style="font-size:10px; color:var(--ink-mute);">低热度</span><span style="width:14px; height:14px; border-radius:50%; background:#f0c75a;"></span><span style="width:18px; height:18px; border-radius:50%; background:#c89020;"></span><span style="width:22px; height:22px; border-radius:50%; background:#8a6411;"></span><span style="font-size:10px; color:var(--ink-mute);">高热度</span></div></div>
+              </div>
+            </div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">D3 力导向泡泡图：长线圆圈大小 = 持续天数，颜色深浅 = 机构置信度；短线圆圈大小与颜色同源 = 短线热度。长线风口用蓝色梯度（深蓝高分），短线风口用深黄梯度（深黄高热度）+ 热度阶段标签（启动期/发酵期/高潮期/衰退期）。Tab 选中态使用蓝色渐变，与长线泡泡色系呼应。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Layout Cells ============ -->
+    <section class="ds-section" id="layout-cell">
+      <div class="ds-section-title">布局单元格 Layout Cells</div>
+      <p class="ds-section-desc">
+        布局单元格覆盖 App 端基础布局原语：ListCell iOS 风格列表行（前缀 + 标题 + 描述 + 值 + 箭头）、PageCard 页面级卡片容器、SubPageCard 子页面卡片（带返回头）、SvgIcon SVG 图标组件。
+      </p>
+      <div class="ds-subsection">列表单元格 ListCell</div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">ListCell · 基本用法</div>
+          <div style="border-radius:8px; overflow:hidden; border:1px solid var(--line-soft);">
+            <div class="ext-list-cell"><div class="ext-list-cell__content"><div class="ext-list-cell__title">账户总资产</div></div><div class="ext-list-cell__right"><span class="ext-list-cell__value">¥128,560.00</span><div class="ext-list-cell__arrow"></div></div></div>
+            <div class="ext-list-cell"><div class="ext-list-cell__content"><div class="ext-list-cell__title">持仓盈亏</div><div class="ext-list-cell__desc">今日盈亏</div></div><div class="ext-list-cell__right"><span class="ext-list-cell__value" style="color:var(--up)">+2,340.50</span><div class="ext-list-cell__arrow"></div></div></div>
+            <div class="ext-list-cell"><div class="ext-list-cell__content"><div class="ext-list-cell__title">消息通知</div><div class="ext-list-cell__desc">3条未读</div></div><div class="ext-list-cell__right"><div class="ext-list-cell__arrow"></div></div></div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">iOS 风格列表行：标题 + 描述 + 值 + 右箭头。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">ListCell · 带前缀</div>
+          <div style="border-radius:8px; overflow:hidden; border:1px solid var(--line-soft);">
+            <div class="ext-list-cell"><div class="ext-list-cell__prefix"><div style="width:28px; height:28px; border-radius:6px; background:var(--primary-50); display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div></div><div class="ext-list-cell__content"><div class="ext-list-cell__title">交易设置</div></div><div class="ext-list-cell__right"><div class="ext-list-cell__arrow"></div></div></div>
+            <div class="ext-list-cell"><div class="ext-list-cell__prefix"><div style="width:28px; height:28px; border-radius:6px; background:var(--up-soft); display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--up)" stroke-width="2"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/></svg></div></div><div class="ext-list-cell__content"><div class="ext-list-cell__title">账户安全</div><div class="ext-list-cell__desc">已绑定手机</div></div><div class="ext-list-cell__right"><div class="ext-list-cell__arrow"></div></div></div>
+            <div class="ext-list-cell"><div class="ext-list-cell__prefix"><div style="width:28px; height:28px; border-radius:6px; background:var(--warn-bg); display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div></div><div class="ext-list-cell__content"><div class="ext-list-cell__title">关于我们</div></div><div class="ext-list-cell__right"><div class="ext-list-cell__arrow"></div></div></div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">带前缀图标的列表行，支持 prefix 插槽。</p>
+        </div>
+      </div>
+      <div class="ds-subsection">页面卡片 PageCard / SubPageCard</div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">PageCard · 页面容器</div>
+          <div class="ext-page-card"><div class="ext-page-card__header"><span class="ext-page-card__title">持仓概览</span><button style="font-size:12px; color:var(--primary); background:none; border:none; cursor:pointer;">更多 ›</button></div><div class="ext-page-card__body"><div style="display:flex; justify-content:space-between; margin-bottom:8px;"><div><div style="font-size:11px; color:var(--ink-mute);">总市值</div><div style="font-size:18px; font-weight:700; color:var(--ink);">¥128,560</div></div><div style="text-align:right;"><div style="font-size:11px; color:var(--ink-mute);">今日盈亏</div><div style="font-size:18px; font-weight:700; color:var(--up)">+2,340</div></div></div><div style="height:4px; border-radius:2px; background:var(--bg-deep); overflow:hidden;"><div style="width:65%; height:100%; background:var(--primary); border-radius:2px;"></div></div></div></div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">页面级卡片：头部标题 + 更多按钮 + 内容区。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">SubPageCard · 子页面</div>
+          <div class="ext-subpage-card"><div class="ext-subpage-card__header"><span class="ext-subpage-card__back">‹</span><span class="ext-subpage-card__title">交易记录</span></div><div class="ext-subpage-card__body"><div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--line-soft);"><div><div style="font-size:13px; color:var(--ink); font-weight:500;">买入 · 北方华创</div><div style="font-size:11px; color:var(--ink-mute);">2026-08-09 10:32</div></div><div style="text-align:right;"><div style="font-size:13px; font-weight:600; color:var(--up)">+100股</div><div style="font-size:11px; color:var(--ink-mute);">¥305.20</div></div></div><div style="display:flex; justify-content:space-between; padding:6px 0;"><div><div style="font-size:13px; color:var(--ink); font-weight:500;">卖出 · 宁德时代</div><div style="font-size:11px; color:var(--ink-mute);">2026-08-09 09:15</div></div><div style="text-align:right;"><div style="font-size:13px; font-weight:600; color:var(--down)">-200股</div><div style="font-size:11px; color:var(--ink-mute);">¥189.50</div></div></div></div></div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">子页面卡片：返回头 + 标题 + 内容区。</p>
+        </div>
+      </div>
+      <div class="ds-subsection">SVG 图标 SvgIcon</div>
+      <div class="panel p-5">
+        <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">SvgIcon · 图标集</div>
+        <div class="ext-icon-grid">
+          <div class="ext-icon-item"><div class="ext-icon-item__svg"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><polyline points="7 14 12 9 16 13 21 7"/></svg></div><span class="ext-icon-item__name">趋势</span></div>
+          <div class="ext-icon-item"><div class="ext-icon-item__svg"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><span class="ext-icon-item__name">时钟</span></div>
+          <div class="ext-icon-item"><div class="ext-icon-item__svg"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div><span class="ext-icon-item__name">钱包</span></div>
+          <div class="ext-icon-item"><div class="ext-icon-item__svg"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><span class="ext-icon-item__name">音频</span></div>
+          <div class="ext-icon-item"><div class="ext-icon-item__svg"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><span class="ext-icon-item__name">消息</span></div>
+          <div class="ext-icon-item"><div class="ext-icon-item__svg"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div><span class="ext-icon-item__name">搜索</span></div>
+          <div class="ext-icon-item"><div class="ext-icon-item__svg"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><span class="ext-icon-item__name">闪电</span></div>
+          <div class="ext-icon-item"><div class="ext-icon-item__svg"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><span class="ext-icon-item__name">阅读</span></div>
+          <div class="ext-icon-item"><div class="ext-icon-item__svg"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/></svg></div><span class="ext-icon-item__name">播报</span></div>
+          <div class="ext-icon-item"><div class="ext-icon-item__svg"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/></svg></div><span class="ext-icon-item__name">账户</span></div>
+          <div class="ext-icon-item"><div class="ext-icon-item__svg"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><span class="ext-icon-item__name">警告</span></div>
+          <div class="ext-icon-item"><div class="ext-icon-item__svg"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span class="ext-icon-item__name">行情</span></div>
+        </div>
+        <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">SvgIcon 统一图标组件，支持自定义尺寸与颜色，主色 --primary。</p>
+      </div>
+    </section>
+
+    <!-- ============ Utility Components ============ -->
+    <section class="ds-section" id="util-comp">
+      <div class="ds-section-title">辅助组件 Utility</div>
+      <p class="ds-section-desc">
+        辅助组件覆盖认证、分析、选择、资讯等场景：LoginQrCode 二维码登录、Analytics 分析组件、CycleSelect 周期选择器、NewsSlider 新闻轮播、HotBurstPanel 热点爆发面板、MarketOverview 大盘概览。
+      </p>
+      <div class="ds-subsection">登录与分析</div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">LoginQrCode · 扫码登录</div>
+          <div class="ext-login-qr">
+            <div class="ext-login-qr__box"><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell ext-login-qr__cell--off"></div><div class="ext-login-qr__cell"></div><div class="ext-login-qr__cell"></div></div>
+            <div class="ext-login-qr__title">扫码登录</div>
+            <div class="ext-login-qr__desc">使用 App 扫描二维码登录</div>
+            <div class="ext-login-qr__refresh">刷新二维码</div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">二维码登录卡片，支持刷新与过期状态。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">Analytics · 分析组件</div>
+          <div class="ext-analytics">
+            <div class="ext-analytics__header"><span class="ext-analytics__title">使用分析</span><span style="font-size:11px; color:var(--ink-mute);">近7天</span></div>
+            <div class="ext-analytics__grid">
+              <div class="ext-analytics__item"><div class="ext-analytics__label">查看次数</div><div class="ext-analytics__value">1,238</div><div class="ext-analytics__trend" style="color:var(--up)">↑ 12.5%</div></div>
+              <div class="ext-analytics__item"><div class="ext-analytics__label">异动提醒</div><div class="ext-analytics__value">36</div><div class="ext-analytics__trend" style="color:var(--up)">↑ 8.2%</div></div>
+              <div class="ext-analytics__item"><div class="ext-analytics__label">AI 分析</div><div class="ext-analytics__value">89</div><div class="ext-analytics__trend" style="color:var(--up)">↑ 23.1%</div></div>
+              <div class="ext-analytics__item"><div class="ext-analytics__label">播客收听</div><div class="ext-analytics__value">52</div><div class="ext-analytics__trend" style="color:var(--down)">↓ 3.4%</div></div>
+            </div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">使用分析组件：统计指标 + 趋势对比。</p>
+        </div>
+      </div>
+      <div class="ds-subsection">选择器与轮播</div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">CycleSelect · 周期选择</div>
+          <div class="ext-cycle-select mb-3"><div class="ext-cycle-item">1日</div><div class="ext-cycle-item active">5日</div><div class="ext-cycle-item">20日</div><div class="ext-cycle-item">60日</div><div class="ext-cycle-item">250日</div></div>
+          <p class="text-xs leading-relaxed" style="color: var(--ink-soft);">周期选择器：分段控件样式，选中态白底主色字。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">NewsSlider · 新闻轮播</div>
+          <div class="ext-news-slider"><div class="ext-news-slide"><span class="ext-news-slide__tag">快讯</span><div class="ext-news-slide__title">央行宣布降准0.5个百分点，释放长期资金约1万亿元</div><div class="ext-news-slide__source">新华社 · 2小时前</div></div><div class="ext-news-dots"><div class="ext-news-dot active"></div><div class="ext-news-dot"></div><div class="ext-news-dot"></div></div></div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">新闻轮播：渐变背景 + 标签 + 标题 + 指示点。</p>
+        </div>
+      </div>
+      <div class="ds-subsection">热点与概览</div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">HotBurstPanel · 热点爆发</div>
+          <div class="ext-hot-burst">
+            <div class="ext-hot-burst__header"><span class="ext-hot-burst__title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--up)" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> 热点爆发</span><span class="ext-hot-burst__time">14:25</span></div>
+            <div class="ext-hot-burst__list"><div class="ext-hot-burst__item"><span class="ext-hot-burst__name">半导体</span><span class="ext-hot-burst__pct">+3.2%</span></div><div class="ext-hot-burst__item"><span class="ext-hot-burst__name">AI算力</span><span class="ext-hot-burst__pct">+2.1%</span></div><div class="ext-hot-burst__item"><span class="ext-hot-burst__name">国产替代</span><span class="ext-hot-burst__pct">+1.8%</span></div></div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">热点爆发面板：红色基调，标注涨幅。</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-xs font-semibold mb-3" style="color: var(--ink-mute);">MarketOverview · 大盘概览</div>
+          <div class="ext-market-ov">
+            <div class="ext-market-ov__header"><span class="ext-market-ov__title">大盘概览</span><span class="ext-market-ov__status"><span class="ext-market-ov__dot"></span>实时 · 60s 刷新</span></div>
+            <div class="ext-market-ov__grid">
+              <div class="ext-index-card ext-index-card--up">
+                <div class="ext-index-card__top"><span class="ext-index-card__name">上证指数</span><span class="ext-index-card__code">000001</span></div>
+                <div class="ext-index-card__price" style="color:var(--up)">3,245.78</div>
+                <div class="ext-index-card__change-row"><span class="ext-index-card__change-amt" style="color:var(--up)">+27.65</span><span class="ext-index-card__pct ext-index-card__pct--up">+0.86%</span></div>
+                <svg class="ext-index-card__sparkline" viewBox="0 0 100 28" preserveAspectRatio="none"><defs><linearGradient id="mkt1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--up)" stop-opacity=".25"/><stop offset="100%" stop-color="var(--up)" stop-opacity="0"/></linearGradient></defs><polyline points="0,20 10,18 20,22 30,15 40,17 50,12 60,14 70,8 80,10 90,6 100,4" fill="none" stroke="var(--up)" stroke-width="1.2"/><polygon points="0,20 10,18 20,22 30,15 40,17 50,12 60,14 70,8 80,10 90,6 100,4 100,28 0,28" fill="url(#mkt1)"/></svg>
+                <div class="ext-index-card__vol">成交额 <span style="font-family:var(--font-mono); color:var(--ink-soft);">3,856亿</span></div>
+              </div>
+              <div class="ext-index-card ext-index-card--up">
+                <div class="ext-index-card__top"><span class="ext-index-card__name">深证成指</span><span class="ext-index-card__code">399001</span></div>
+                <div class="ext-index-card__price" style="color:var(--up)">10,256.30</div>
+                <div class="ext-index-card__change-row"><span class="ext-index-card__change-amt" style="color:var(--up)">+124.88</span><span class="ext-index-card__pct ext-index-card__pct--up">+1.23%</span></div>
+                <svg class="ext-index-card__sparkline" viewBox="0 0 100 28" preserveAspectRatio="none"><defs><linearGradient id="mkt2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--up)" stop-opacity=".25"/><stop offset="100%" stop-color="var(--up)" stop-opacity="0"/></linearGradient></defs><polyline points="0,22 10,20 20,24 30,16 40,18 50,14 60,10 70,12 80,8 90,6 100,3" fill="none" stroke="var(--up)" stroke-width="1.2"/><polygon points="0,22 10,20 20,24 30,16 40,18 50,14 60,10 70,12 80,8 90,6 100,3 100,28 0,28" fill="url(#mkt2)"/></svg>
+                <div class="ext-index-card__vol">成交额 <span style="font-family:var(--font-mono); color:var(--ink-soft);">4,252亿</span></div>
+              </div>
+              <div class="ext-index-card ext-index-card--down">
+                <div class="ext-index-card__top"><span class="ext-index-card__name">创业板指</span><span class="ext-index-card__code">399006</span></div>
+                <div class="ext-index-card__price" style="color:var(--down)">2,015.42</div>
+                <div class="ext-index-card__change-row"><span class="ext-index-card__change-amt" style="color:var(--down)">-7.08</span><span class="ext-index-card__pct ext-index-card__pct--down">-0.35%</span></div>
+                <svg class="ext-index-card__sparkline" viewBox="0 0 100 28" preserveAspectRatio="none"><defs><linearGradient id="mkt3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--down)" stop-opacity=".25"/><stop offset="100%" stop-color="var(--down)" stop-opacity="0"/></linearGradient></defs><polyline points="0,8 10,10 20,6 30,12 40,14 50,16 60,18 70,20 80,22 90,24 100,26" fill="none" stroke="var(--down)" stroke-width="1.2"/><polygon points="0,8 10,10 20,6 30,12 40,14 50,16 60,18 70,20 80,22 90,24 100,26 100,28 0,28" fill="url(#mkt3)"/></svg>
+                <div class="ext-index-card__vol">成交额 <span style="font-family:var(--font-mono); color:var(--ink-soft);">1,523亿</span></div>
+              </div>
+              <div class="ext-index-card ext-index-card--up">
+                <div class="ext-index-card__top"><span class="ext-index-card__name">恒生指数</span><span class="ext-index-card__code">HSI</span></div>
+                <div class="ext-index-card__price" style="color:var(--up)">17,892.45</div>
+                <div class="ext-index-card__change-row"><span class="ext-index-card__change-amt" style="color:var(--up)">+156.32</span><span class="ext-index-card__pct ext-index-card__pct--up">+0.88%</span></div>
+                <svg class="ext-index-card__sparkline" viewBox="0 0 100 28" preserveAspectRatio="none"><defs><linearGradient id="mkt4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--up)" stop-opacity=".25"/><stop offset="100%" stop-color="var(--up)" stop-opacity="0"/></linearGradient></defs><polyline points="0,18 10,20 20,16 30,14 40,18 50,10 60,12 70,8 80,10 90,4 100,6" fill="none" stroke="var(--up)" stroke-width="1.2"/><polygon points="0,18 10,20 20,16 30,14 40,18 50,10 60,12 70,8 80,10 90,4 100,6 100,28 0,28" fill="url(#mkt4)"/></svg>
+                <div class="ext-index-card__vol">成交额 <span style="font-family:var(--font-mono); color:var(--ink-soft);">986亿HKD</span></div>
+              </div>
+              <div class="ext-index-card ext-index-card--down">
+                <div class="ext-index-card__top"><span class="ext-index-card__name">恒生科技</span><span class="ext-index-card__code">HSTECH</span></div>
+                <div class="ext-index-card__price" style="color:var(--down)">3,621.08</div>
+                <div class="ext-index-card__change-row"><span class="ext-index-card__change-amt" style="color:var(--down)">-18.45</span><span class="ext-index-card__pct ext-index-card__pct--down">-0.51%</span></div>
+                <svg class="ext-index-card__sparkline" viewBox="0 0 100 28" preserveAspectRatio="none"><defs><linearGradient id="mkt5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--down)" stop-opacity=".25"/><stop offset="100%" stop-color="var(--down)" stop-opacity="0"/></linearGradient></defs><polyline points="0,6 10,8 20,5 30,10 40,12 50,8 60,14 70,16 80,20 90,22 100,24" fill="none" stroke="var(--down)" stroke-width="1.2"/><polygon points="0,6 10,8 20,5 30,10 40,12 50,8 60,14 70,16 80,20 90,22 100,24 100,28 0,28" fill="url(#mkt5)"/></svg>
+                <div class="ext-index-card__vol">成交额 <span style="font-family:var(--font-mono); color:var(--ink-soft);">421亿HKD</span></div>
+              </div>
+              <div class="ext-index-card ext-index-card--up">
+                <div class="ext-index-card__top"><span class="ext-index-card__name">标普500</span><span class="ext-index-card__code">SPX</span></div>
+                <div class="ext-index-card__price" style="color:var(--up)">5,431.60</div>
+                <div class="ext-index-card__change-row"><span class="ext-index-card__change-amt" style="color:var(--up)">+24.85</span><span class="ext-index-card__pct ext-index-card__pct--up">+0.46%</span></div>
+                <svg class="ext-index-card__sparkline" viewBox="0 0 100 28" preserveAspectRatio="none"><defs><linearGradient id="mkt6" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--up)" stop-opacity=".25"/><stop offset="100%" stop-color="var(--up)" stop-opacity="0"/></linearGradient></defs><polyline points="0,16 10,14 20,18 30,12 40,10 50,14 60,8 70,10 80,6 90,8 100,4" fill="none" stroke="var(--up)" stroke-width="1.2"/><polygon points="0,16 10,14 20,18 30,12 40,10 50,14 60,8 70,10 80,6 90,8 100,4 100,28 0,28" fill="url(#mkt6)"/></svg>
+                <div class="ext-index-card__vol">成交额 <span style="font-family:var(--font-mono); color:var(--ink-soft);">3,124亿USD</span></div>
+              </div>
+            </div>
+          </div>
+          <p class="text-xs leading-relaxed mt-2" style="color: var(--ink-soft);">大盘概览：6 指数网格（A股 + 港股 + 美股），每卡含涨跌点数 + 涨跌幅色标 + 迷你走势 + 成交额，左侧涨跌色条，头部实时脉冲点。</p>
+        </div>
+      </div>
+    </section>
+
 
     <div style="height: 60px;"></div>
 
