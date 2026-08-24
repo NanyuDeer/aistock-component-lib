@@ -78,6 +78,10 @@ export { default as Watchlist } from './components/Watchlist.vue'
 export { default as RadarChart } from './components/RadarChart.vue'
 export { default as RelationGraph } from './components/RelationGraph.vue'
 
+// ===== 洞见标志组件（洞察之眼系统） =====
+export { default as InsightTag } from './components/InsightTag.vue'
+export { default as InsightCard } from './components/InsightCard.vue'
+
 // ===== 补充导出：#2 重构遗漏的组件（文件存在但未导出，保持库完整性）=====
 // 基础 UI 扩展
 export { default as Segmented } from './components/Segmented.vue'

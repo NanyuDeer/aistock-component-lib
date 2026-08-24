@@ -645,6 +645,59 @@
       </view>
     </view>
 
+    <!-- InsightTag 洞察之眼标签 & InsightCard 洞见卡片 -->
+    <view class="dev-section">
+      <text class="dev-section-title">InsightTag 洞见标签 & InsightCard 洞见卡片</text>
+      <view class="dev-section-body">
+        <view class="dev-row">
+          <InsightTag type="emotion">情绪洞见</InsightTag>
+          <InsightTag type="fund">资金洞见</InsightTag>
+          <InsightTag type="event">事件洞见</InsightTag>
+          <InsightTag type="market">市场洞见</InsightTag>
+        </view>
+        <view class="dev-gap" />
+        <!-- 洞察之眼特写（放大展示） -->
+        <view class="dev-eye-hero">
+          <view class="dev-eye">
+            <view class="dev-eye__iris" />
+            <view class="dev-eye__pupil" />
+            <view class="dev-eye__glint" />
+            <view class="dev-eye__spark" />
+          </view>
+          <view class="dev-eye-info">
+            <text class="dev-eye-title">洞察之眼</text>
+            <text class="dev-eye-desc">虚线外环=数据流 · 虹膜=数据汇聚 · 瞳孔=看穿本质</text>
+            <view class="dev-row">
+              <InsightTag type="market" size="lg">市场洞见</InsightTag>
+            </view>
+          </view>
+        </view>
+        <view class="dev-gap" />
+        <view class="dev-insight-stack">
+          <InsightCard
+            type="emotion"
+            title="市场情绪降至冰点，恐慌抛压集中释放"
+            trace="跌停家数显著增加，抛压集中释放"
+            forecast="情绪回暖概率大，短线或迎反弹窗口"
+            time="08-21 · 09:10"
+            show-meta
+            confidence="0.82"
+            @click="onInsightClick"
+          />
+          <InsightCard
+            type="market"
+            title="放量上攻，主线板块轮动加速"
+            trace="北向资金持续净流入，权重板块领涨"
+            forecast="短期维持强势，注意高位股分化风险"
+            theme="dark"
+            time="AI · 08-21 15:05"
+            show-meta
+            confidence="0.85"
+          />
+        </view>
+      </view>
+    </view>
+
     <!-- Footer 组件作为页面结尾 -->
     <Footer text="AiStock 组件库 · 蓝白金融设计系统" />
   </view>
@@ -693,6 +746,8 @@ import Modal from '@/components/Modal.vue'
 import Toast from '@/components/Toast.vue'
 import Collapse from '@/components/Collapse.vue'
 import Steps from '@/components/Steps.vue'
+import InsightTag from '@/components/InsightTag.vue'
+import InsightCard from '@/components/InsightCard.vue'
 
 const stockCode = ref('600740.SH')
 const searchText = ref('')
@@ -834,6 +889,11 @@ const stepList = [
   { title: '生成报告', description: '输出分析结果' },
   { title: '完成', description: '查看报告详情' }
 ]
+
+// ===== Insight 洞见卡片 =====
+function onInsightClick() {
+  // 预览环境仅演示点击事件
+}
 </script>
 
 <style lang="scss" scoped>
@@ -1049,6 +1109,92 @@ const stepList = [
   background: $bg-soft;
   border-radius: $r-md;
   min-height: 80rpx;
+}
+
+/* ===== 洞察之眼特写（放大展示，结构与 InsightTag 瞳孔一致） ===== */
+.dev-eye-hero {
+  display: flex;
+  align-items: center;
+  gap: $s-5;
+  padding: $s-4;
+  background: $bg-soft;
+  border-radius: $r-lg;
+}
+
+.dev-eye {
+  position: relative;
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: $r-full;
+  border: 3rpx dashed $insight-market;
+  flex-shrink: 0;
+}
+
+.dev-eye__iris {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  right: 10%;
+  bottom: 10%;
+  border-radius: $r-full;
+  background: radial-gradient(circle at 38% 32%, $insight-market-light 0%, $insight-market-deep 100%);
+}
+
+.dev-eye__pupil {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 31%;
+  height: 31%;
+  transform: translate(-50%, -50%);
+  border-radius: $r-full;
+  background: $insight-market-deep;
+}
+
+.dev-eye__glint {
+  position: absolute;
+  left: 33%;
+  top: 31%;
+  width: 15%;
+  height: 15%;
+  border-radius: $r-full;
+  background: #fff;
+  opacity: 0.92;
+}
+
+.dev-eye__spark {
+  position: absolute;
+  right: 34%;
+  bottom: 34%;
+  width: 8%;
+  height: 8%;
+  border-radius: $r-full;
+  background: $gold-light;
+  opacity: 0.85;
+}
+
+.dev-eye-info {
+  display: flex;
+  flex-direction: column;
+  gap: $s-2;
+}
+
+.dev-eye-title {
+  font-size: $font-size-lg;
+  font-weight: 600;
+  color: $ink;
+}
+
+.dev-eye-desc {
+  font-size: $font-size-xs;
+  color: $ink-soft;
+}
+
+/* ===== 洞见卡片纵向排列 ===== */
+.dev-insight-stack {
+  display: flex;
+  flex-direction: column;
+  gap: $s-4;
 }
 
 /* Modal 底部按钮 */

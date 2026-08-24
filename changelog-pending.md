@@ -1,3 +1,15 @@
+## 2026-08-23 新增洞察之眼标志组件（InsightTag / InsightCard）
+
+依据 8-21 会议决议①「全站洞见标签统一设计」，新增洞察之眼标志系统：
+- `src/styles/variables.scss` — 新增 4 组洞察类型色 Token（emotion 红 / fund 金 / event 青 / market 蓝，各含 light/deep/soft）+ `$insight-card-dark-gradient`
+- `src/components/InsightTag.vue` — 洞察之眼标签：纯 CSS 瞳孔（虚线外环=数据流、虹膜渐变=数据汇聚、瞳孔+高光=看穿本质；虹膜与外环留间隙、左上主高光+右下次高光），3 种尺寸
+- `src/components/InsightCard.vue` — 洞见卡片：瞳孔标签置前 → 结论 → 溯源 → 预判（两句话上限），亮色列表卡 / 深蓝研报卡两主题
+- `src/index.ts` — 导出 InsightTag、InsightCard
+- `dev/App.vue` — 预览区（4 类型标签 + 亮/暗卡片示例）
+- 文档：README.md / docs/组件使用指南.md（总览 58 个 + 11.5 章节 + Token 速查）/ AGENTS.md
+
+设计规范：洞见组件为全系统标志性存在，瞳孔色即洞见类型，不随组件库通用风格，无 emoji、无 SVG id 冲突（纯 CSS 实现）。
+
 ## 2026-08-04 PR 合并后修复
 
 ### src/index.ts — 补回 #2 重构遗漏的 8 个组件导出
