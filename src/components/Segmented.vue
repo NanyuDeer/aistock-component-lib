@@ -1,99 +1,80 @@
 <template>
-  <view
-    class="as-segmented"
-    :class="{ 'as-segmented--full': fullWidth }"
-  >
+  <view class="as-segmented">
     <view
-      v-for="item in items"
-      :key="item.value"
+      v-for="option in options"
+      :key="option.value"
       class="as-segmented__item"
-      :class="{
-        'is-active': modelValue === item.value,
-        'is-disabled': item.disabled
-      }"
-      @click="handleSelect(item)"
+      :class="{ 'as-segmented__item--active': modelValue === option.value }"
+      @click="handleSelect(option.value)"
     >
-      <text class="as-segmented__label">{{ item.label }}</text>
+      <text class="as-segmented__label">{{ option.label }}</text>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
-interface SegmentedItem {
+export interface SegmentedOption {
   label: string
   value: string | number
-  disabled?: boolean
 }
 
-const props = withDefaults(defineProps<{
-  items: SegmentedItem[]
-  modelValue?: string | number
-  fullWidth?: boolean
-}>(), {
-  modelValue: '',
-  fullWidth: false
-})
+const props = defineProps<{
+  options: SegmentedOption[]
+  modelValue: string | number
+}>()
 
 const emit = defineEmits<{
   'update:modelValue': [value: string | number]
-  change: [value: string | number]
 }>()
 
-const handleSelect = (item: SegmentedItem) => {
-  if (item.disabled) return
-  if (props.modelValue === item.value) return
-  emit('update:modelValue', item.value)
-  emit('change', item.value)
+function handleSelect(value: string | number) {
+  if (props.modelValue !== value) {
+    emit('update:modelValue', value)
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .as-segmented {
   display: inline-flex;
-  background: $bg-deep;
-  border-radius: $r-md;
-  padding: 6rpx;
-}
-
-.as-segmented--full {
-  display: flex;
-  width: 100%;
+  align-items: center;
+  background: $bg-soft;
+  border-radius: $r-xl;
+  padding: 4rpx;
+  gap: 4rpx;
 }
 
 .as-segmented__item {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10rpx 28rpx;
-  font-size: $font-size-sm;
-  font-weight: 500;
-  color: $ink-soft;
-  border-radius: $r-sm;
-  transition: all $t-fast;
+  padding: 8rpx 24rpx;
+  border-radius: $r-lg;
   cursor: pointer;
-  white-space: nowrap;
+  transition: all $t-base;
+  user-select: none;
 }
 
-.as-segmented--full .as-segmented__item {
-  flex: 1;
+.as-segmented__item--active {
+  background: $white;
+  box-shadow: $shadow-xs;
 }
 
 .as-segmented__label {
-  font-size: inherit;
-  line-height: 1.2;
+  font-size: $font-size-xs;
+  font-weight: 500;
+  color: $ink-soft;
+  line-height: $lh-tight;
+  transition: color $t-base;
+  white-space: nowrap;
 }
 
-/* ===== Active ===== */
-.as-segmented__item.is-active {
-  background: $bg-card;
+.as-segmented__item--active .as-segmented__label {
   color: $primary;
-  box-shadow: $shadow-xs;
   font-weight: 600;
 }
 
-/* ===== Disabled ===== */
-.as-segmented__item.is-disabled {
-  opacity: $op-disabled;
-  cursor: not-allowed;
+.as-segmented__item:not(.as-segmented__item--active):active {
+  opacity: $op-active;
 }
 </style>
