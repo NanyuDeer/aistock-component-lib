@@ -90,6 +90,7 @@ export { default as StreamingText } from './components/StreamingText.vue'
 export { default as ChatBubble } from './components/ChatBubble.vue'
 export { default as AiEventReport } from './components/AiEventReport.vue'
 export { default as AiGraph } from './components/AiGraph.vue'
+export { default as FollowupSuggestChips } from './components/FollowupSuggestChips.vue'
 
 // ===== 第 9 层：事件与洞察组件 =====
 export { default as ImportanceStars } from './components/ImportanceStars.vue'
