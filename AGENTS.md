@@ -36,6 +36,7 @@
 - 金融数据展示：Rate、DataTable、IndexCard
 - 交互反馈：Modal、Toast、Collapse
 - AI 对话与媒体：ChatBubble、StreamingText、AudioPlayer
+- 洞见标志组件（洞察之眼系统）：InsightTag、InsightCard
 
 > **注意**：SubPageCard 已弃用（@deprecated），新功能请使用 SubPageCard2。组件选用指南见 `README.md`。
 

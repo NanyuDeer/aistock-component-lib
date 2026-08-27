@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## [main] 2026-08-24 — 洞见标签组件（洞察之眼系统）
+
+**开发者**: NanyuDeer
+
+### 新增
+- 新增 `InsightTag.vue`（洞察之眼标签）与 `InsightCard.vue`（洞见卡片）：瞳孔色即洞见类型（情绪红/资金金/事件青/市场蓝），虚线外环 + 虹膜渐变 + 瞳孔 + 高光 + 金色光点，纯 CSS 实现。
+- `src/index.ts` 导出 `InsightTag` / `InsightCard`；`src/styles/variables.scss` 新增洞见色系变量（`$insight-*`）。
+
+### 改进
+- `dev/App.vue` 预览页新增洞见之眼展示；docs/组件使用指南、README 补充用法。
+
+---
+
 ## [feat/all-components] 2026-08-13 — 补齐 31 个组件，组件库升级至 87 个
 **开发者**: AiStock Team
 

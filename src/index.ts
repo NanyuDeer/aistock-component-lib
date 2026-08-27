@@ -85,6 +85,10 @@ export { default as Watchlist } from './components/Watchlist.vue'
 export { default as RadarChart } from './components/RadarChart.vue'
 export { default as RelationGraph } from './components/RelationGraph.vue'
 
+// ===== 洞见标志组件（洞察之眼系统） =====
+export { default as InsightTag } from './components/InsightTag.vue'
+export { default as InsightCard } from './components/InsightCard.vue'
+
 // ===== AI 交互组件 =====
 export { default as StreamingText } from './components/StreamingText.vue'
 export { default as ChatBubble } from './components/ChatBubble.vue'
