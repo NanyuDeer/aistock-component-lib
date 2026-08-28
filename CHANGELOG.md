@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## [main] 2026-08-28 — 洞见标签/卡片体系完善：trend 类型 + 横幅卡配色
+
+**开发者**: Aria
+
+### 新增
+- `InsightTag` / `InsightCard` 支持 `trend`（趋势洞见）类型与独立紫色 token（`$insight-trend` 系列）
+- `variables.scss` 新增 `insight-banner` mixin（key+text 卡片化，底色由 `--banner-bg` 指定）与浅金柔底 token（`$gold-soft-bg` / `$gold-soft-border`）
+
+### 改进
+- `InsightCard` 溯源/预判 升级为彩色横幅卡：溯源=实底蓝、预判=浅金柔底（浅底 + 深金字 + 细描边）；dark 主题移除对 key/text 的旧覆盖
+- 至此 5 类洞见标签齐全且配色互不相同：情绪红 / 资金金 / 事件青 / 市场蓝 / 趋势紫
+
+---
+
 ## [main] 2026-08-24 — 洞见标签组件（洞察之眼系统）
 
 **开发者**: NanyuDeer
