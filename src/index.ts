@@ -88,6 +88,7 @@ export { default as RelationGraph } from './components/RelationGraph.vue'
 // ===== 洞见标志组件（洞察之眼系统） =====
 export { default as InsightTag } from './components/InsightTag.vue'
 export { default as InsightCard } from './components/InsightCard.vue'
+export { default as ConditionalForecastBlock } from './components/ConditionalForecastBlock.vue'
 
 // ===== AI 交互组件 =====
 export { default as StreamingText } from './components/StreamingText.vue'
