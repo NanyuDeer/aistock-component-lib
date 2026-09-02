@@ -1,3 +1,6 @@
+## 2026-09-02 预判条件卡改版：条件句 → 关键词 chip
+- `src/components/ConditionalForecastBlock.vue`：条件行由整句金色文字改为关键词 chip 流（condChips 切词）；期段/基准/方向/幅度/点亮原样保留，与 app 端共享块同步。
+
 ## 2026-09-02 ConditionalForecastBlock 抽取（条件化预判块通用化，全粒度共用）
 - 新增 `src/components/ConditionalForecastBlock.vue`：从 InsightCard structured 内块抽取为**独立纯 UI 通用块**——期段 Tab（短/中/长）+ 每期基准方向/置信/剩余 + 互斥分支（若 条件 → 方向 pill → scenario 幅度置灰）+ met 触发点亮/置灰 + 验证 pill + **anchor threshold/metric chip**（大盘等粒度透传）。大盘/板块/个股凡有条件化预判共用同款 UI。
 - `src/components/InsightCard.vue`：structured 分支改为内部复用 ConditionalForecastBlock；迁出期段状态/文案净化（condMain/splitScenario）/样式。公共 props/API 不变（文本形态零破坏）。
