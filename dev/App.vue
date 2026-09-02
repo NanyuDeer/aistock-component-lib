@@ -694,6 +694,15 @@
             show-meta
             confidence="0.85"
           />
+          <!-- 条件化预判形态（structured 传入，兼容扩展） -->
+          <InsightCard
+            type="market"
+            tag-text="板块洞见"
+            title="存储板块领跌 -4.2%，算力链调整"
+            trace="资本开支预期下修，存储价格预期转弱 · 证据 2 条"
+            time="9/2 · 20:30"
+            :structured="sectorStructured"
+          />
         </view>
       </view>
     </view>
@@ -893,6 +902,23 @@ const stepList = [
 // ===== Insight 洞见卡片 =====
 function onInsightClick() {
   // 预览环境仅演示点击事件
+}
+
+// 条件化预判结构化示例（对齐后端 PredictionResult.horizons + conditions；
+// met 由验证回填：true=已触发点亮 / false=未触发置灰 / 缺省=待观察）
+const sectorStructured = {
+  horizons: [
+    { horizon: 'short' as const, remaining: '1-5 交易日', direction: 'bearish' as const, confidence: 'high' as const },
+    { horizon: 'mid' as const, remaining: '1-4 周', direction: 'neutral' as const, confidence: 'medium' as const },
+    { horizon: 'long' as const, remaining: '1-6 月', direction: 'neutral' as const, confidence: 'low' as const }
+  ],
+  conditions: [
+    { horizon: 'short' as const, direction: 'bullish' as const, condition: '放量站稳 5 日线', scenario: '超跌反弹，约 +3%', met: false },
+    { horizon: 'short' as const, direction: 'bearish' as const, condition: '跌破 30 日均线', scenario: '调整延续，-3% ~ -5%', met: true },
+    { horizon: 'mid' as const, direction: 'bullish' as const, condition: '补贴细则落地，需求回暖', scenario: '板块轮动回归，+5% 上下' },
+    { horizon: 'long' as const, direction: 'neutral' as const, condition: '产能扩张超预期', scenario: '上行空间受限，箱体震荡' }
+  ],
+  verification: 'hit' as const
 }
 </script>
 
