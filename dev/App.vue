@@ -924,8 +924,8 @@ const sectorStructuredPending = {
     { horizon: 'long' as const, label: '趋势抬升', remaining: '1-6 月', direction: 'neutral' as const, confidence: 'low' as const }
   ],
   conditions: [
-    { horizon: 'short' as const, direction: 'bullish' as const, label: '资金回流 · 平台修复', keywords: ['主力资金连续净流入'], condition: '主力资金连续净流入、融资盘同步回补', scenario: '若条件触发 → 站稳平台上方，目标 +3%', anchor: { metric: '区间涨幅', threshold: '+3%' } },
-    { horizon: 'short' as const, direction: 'bearish' as const, label: '高位分歧 · 缺口回补', keywords: ['放量冲高回落'], condition: '放量冲高回落且收长上影', scenario: '若条件触发 → 利好兑现回补缺口，-2% 内' },
+    { horizon: 'short' as const, direction: 'bullish' as const, label: '资金回流 · 平台修复', keywords: ['主力资金连续净流入'], scenario_keywords: ['站稳平台 +3%'], condition: '主力资金连续净流入、融资盘同步回补', scenario: '若条件触发 → 站稳平台上方，目标 +3%', anchor: { metric: '区间涨幅', threshold: '+3%' } },
+    { horizon: 'short' as const, direction: 'bearish' as const, label: '高位分歧 · 缺口回补', keywords: ['放量冲高回落'], scenario_keywords: ['回补缺口 -2%内'], condition: '放量冲高回落且收长上影', scenario: '若条件触发 → 利好兑现回补缺口，-2% 内' },
     { horizon: 'mid' as const, direction: 'bullish' as const, label: '补贴落地 · 轮动回归', keywords: ['补贴细则落地'], condition: '补贴细则落地、需求回暖', scenario: '若条件触发 → 板块轮动回归，+5% 上下' },
     { horizon: 'long' as const, direction: 'neutral' as const, label: '产能扩张 · 箱体震荡', keywords: ['产能扩张超预期'], condition: '产能扩张超预期', scenario: '若条件触发 → 上行空间受限，箱体震荡' }
   ],
