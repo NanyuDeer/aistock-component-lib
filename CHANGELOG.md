@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## [main] 2026-09-03 — 洞见卡去金重构：溯源/预判同构双子卡 + 互斥路径条件成立徽 + label 字段
+
+**开发者**: Aria
+
+### 改进
+- `InsightCard` 溯源/预判区重构为**同构双子卡**（仅底色区分）：溯源=冷雾蓝、预判=浅中性，移除旧横幅金配色与标题图标；子卡标题统一 24rpx/700/letter-spacing 2rpx
+- `ConditionalForecastBlock` 预判内容改写为**互斥路径“或”分隔**：方向徽 + 加粗 label 主句 → 关键词 chips → 情景行（幅度弱化）；命中路径染方向色 + 右上实心徽“条件成立”，未触发支降透明度
+- 接口补充 `label`（路径/基准走势短语，两段式“状态 · 走势”）、`keywords`、`anchor`、`met` 字段；label 缺失时回退长句
+- 基准行“基准 · xxxx”不再加粗；verifyText 区分 待验证/已验证/验证未中
+
+### 修复
+- dev 预览 rpx→vw 导致页面随宽度等比放大 → 改为 **rpx→px(×0.5)** 并限制容器 max-width 500px + PingFang 字体族
+- `dev/App.vue` 新增 pending/hit 双卡对照示例（含 label/keywords/met/dueLabel/verification）
+
+---
+
 ## [main] 2026-08-28 — 洞见标签/卡片体系完善：trend 类型 + 横幅卡配色
 
 **开发者**: Aria

@@ -694,14 +694,22 @@
             show-meta
             confidence="0.85"
           />
-          <!-- 条件化预判形态（structured 传入，兼容扩展） -->
+          <!-- 条件化预判形态（structured 传入）：待验证 / 已验证 双卡对照 -->
+          <InsightCard
+            type="market"
+            tag-text="板块洞见"
+            title="创新药政策催化，中期修复与兑现回调两情景"
+            trace="医保谈判政策落地，情绪与基本面共振向上"
+            time="09-02 · 盘后"
+            :structured="sectorStructuredPending"
+          />
           <InsightCard
             type="market"
             tag-text="板块洞见"
             title="存储板块领跌 -4.2%，算力链调整"
             trace="资本开支预期下修，存储价格预期转弱 · 证据 2 条"
-            time="9/2 · 20:30"
-            :structured="sectorStructured"
+            time="09-02 · 盘后"
+            :structured="sectorStructuredHit"
           />
         </view>
       </view>
@@ -905,19 +913,39 @@ function onInsightClick() {
 }
 
 // 条件化预判结构化示例（对齐后端 PredictionResult.horizons + conditions；
-// met 由验证回填：true=已触发点亮 / false=未触发置灰 / 缺省=待观察）
-const sectorStructured = {
+// keywords=LLM 提取关键词 chips（≤10 字）；met 由验证回填：true=触发点亮(条件成立) /
+// false=未触发置灰 / 缺省=待观察。两卡对照：pending 待验证 / hit 已验证触发）
+
+// ① 待验证常态（pending）：创新药政策催化
+const sectorStructuredPending = {
   horizons: [
-    { horizon: 'short' as const, remaining: '1-5 交易日', direction: 'bearish' as const, confidence: 'high' as const },
-    { horizon: 'mid' as const, remaining: '1-4 周', direction: 'neutral' as const, confidence: 'medium' as const },
-    { horizon: 'long' as const, remaining: '1-6 月', direction: 'neutral' as const, confidence: 'low' as const }
+    { horizon: 'short' as const, label: '政策共振走强', remaining: '1-5 交易日', direction: 'bullish' as const, confidence: 'high' as const },
+    { horizon: 'mid' as const, label: '区间震荡', remaining: '1-4 周', direction: 'neutral' as const, confidence: 'medium' as const },
+    { horizon: 'long' as const, label: '趋势抬升', remaining: '1-6 月', direction: 'neutral' as const, confidence: 'low' as const }
   ],
   conditions: [
-    { horizon: 'short' as const, direction: 'bullish' as const, condition: '放量站稳 5 日线', scenario: '超跌反弹，约 +3%', met: false },
-    { horizon: 'short' as const, direction: 'bearish' as const, condition: '跌破 30 日均线', scenario: '调整延续，-3% ~ -5%', met: true },
-    { horizon: 'mid' as const, direction: 'bullish' as const, condition: '补贴细则落地，需求回暖', scenario: '板块轮动回归，+5% 上下' },
-    { horizon: 'long' as const, direction: 'neutral' as const, condition: '产能扩张超预期', scenario: '上行空间受限，箱体震荡' }
+    { horizon: 'short' as const, direction: 'bullish' as const, label: '资金回流 · 平台修复', keywords: ['主力资金连续净流入'], condition: '主力资金连续净流入、融资盘同步回补', scenario: '若条件触发 → 站稳平台上方，目标 +3%', anchor: { metric: '区间涨幅', threshold: '+3%' } },
+    { horizon: 'short' as const, direction: 'bearish' as const, label: '高位分歧 · 缺口回补', keywords: ['放量冲高回落'], condition: '放量冲高回落且收长上影', scenario: '若条件触发 → 利好兑现回补缺口，-2% 内' },
+    { horizon: 'mid' as const, direction: 'bullish' as const, label: '补贴落地 · 轮动回归', keywords: ['补贴细则落地'], condition: '补贴细则落地、需求回暖', scenario: '若条件触发 → 板块轮动回归，+5% 上下' },
+    { horizon: 'long' as const, direction: 'neutral' as const, label: '产能扩张 · 箱体震荡', keywords: ['产能扩张超预期'], condition: '产能扩张超预期', scenario: '若条件触发 → 上行空间受限，箱体震荡' }
   ],
+  dueLabel: '09-09',
+  verification: 'pending' as const
+}
+
+// ② 已验证触发（hit）：存储芯片看空路径命中（met=true → 条件成立；met=false 置灰）
+const sectorStructuredHit = {
+  horizons: [
+    { horizon: 'short' as const, label: '恐慌出清为主', remaining: '1-5 交易日', direction: 'bearish' as const, confidence: 'high' as const },
+    { horizon: 'mid' as const, label: '弱势磨底', remaining: '1-4 周', direction: 'neutral' as const, confidence: 'medium' as const },
+    { horizon: 'long' as const, label: '低位整理', remaining: '1-6 月', direction: 'neutral' as const, confidence: 'low' as const }
+  ],
+  conditions: [
+    { horizon: 'short' as const, direction: 'bearish' as const, label: '恐慌出清 · 下跌中继', keywords: ['成交额放量 900 亿', '较当前 +22%'], condition: '成交额放大至 900 亿以上、收盘较当前再跌超 2%', scenario: '恐慌出清、惯性下探 -3%~-5%', anchor: { metric: '区间跌幅', threshold: '-3% ~ -5%' }, met: true },
+    { horizon: 'short' as const, direction: 'bullish' as const, label: '缩量企稳 · 平台修复', keywords: ['缩量不破前低'], condition: '缩量企稳、不破前低', scenario: '空头衰竭、修复至平台 +5% 以上', met: false },
+    { horizon: 'mid' as const, direction: 'neutral' as const, label: '企稳回流 · 震荡修复', keywords: ['融资盘企稳'], condition: '融资盘企稳回流', scenario: '弱势震荡修复' }
+  ],
+  dueLabel: '09-03',
   verification: 'hit' as const
 }
 </script>
@@ -925,6 +953,12 @@ const sectorStructured = {
 <style lang="scss" scoped>
 .dev-container {
   padding: $s-6;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: $shadow-xs;
+  background: $bg-page;
+  min-height: 100vh;
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
 }
 
 .dev-header {
