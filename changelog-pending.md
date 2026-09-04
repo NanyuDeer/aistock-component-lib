@@ -1,3 +1,10 @@
+## 2026-09-03 InsightCard 洞见字标标签 + lines 多要点行支持（双端同步）
+- `src/components/InsightCard.vue`：
+  - 头部标签由瞳孔 InsightTag 换为「洞见字标 PNG + 灰点 + 彩色类型词」：浅色卡 `insight-wordmark.png`（深色）/ 深蓝研报卡 `insight-wordmark-light.png`（反白），组件内 `import` 走内联背景图 + `filter: drop-shadow`（预览环境 image 标签不可用故不走 image）；类型词沿用 5 类型色（event 取中调 #00a8d8），`tag-text` 自动剥"洞见"后缀；dark 词提亮。
+  - 新增 `lines` prop（优势/风险/建议多要点行：key 固定宽 + text，tone positive=up-soft 红 / risk=warning-soft 金 / 缺省中性 bg-soft；dark 统一半透明底）。
+- 图片随组件同目录 `src/components/insight-wordmark.png`、`insight-wordmark-light.png`；`shims-vue.d.ts` 补 `*.png` 声明。
+- 同步 aistock-app-frontend `shared/components/`（InsightCard 覆盖 + 两张 png）。InsightTag 其余调用点不变。
+
 ## 2026-09-02 预判条件卡改版：条件句 → 关键词 chip
 - `src/components/ConditionalForecastBlock.vue`：条件行由整句金色文字改为关键词 chip 流（condChips 切词）；期段/基准/方向/幅度/点亮原样保留，与 app 端共享块同步。
 
