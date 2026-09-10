@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [main] 2026-09-10 — 组件库版本号对齐 0.1.3
+
+**开发者**: Aria
+
+### 改进
+- `package.json`：version `0.1.0` → `0.1.3`（跨 0.1.1/0.1.2/0.1.3 迭代），与 app-frontend「关于洞见」versionName 对齐。
+
+---
+
 ## [main] 2026-09-03 — 预判句关键词化（scenario_keywords + 若·则 + 详情展开）
 
 **开发者**: Aria
