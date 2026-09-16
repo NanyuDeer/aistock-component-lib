@@ -1,6 +1,11 @@
-## 2026-09-16 CFB：无 met 数据时降级为全量渲染（与 app-frontend 同步）
-- `src/components/ConditionalForecastBlock.vue`：内联块由单一 `selectVisibleConditions` 扩为 `selectVisibleConditions` + `hasMetData` + `resolveDisplayMode`（组件库跨仓不可引用，故与 app-frontend utils 同实现内联）；新增 `resolvedDisplayMode` computed，驱动分支过滤与结论空态门控——整块无布尔 `met` 数据（后端未回填 `condition_met`）时 `conclusion` 降级 `full`，避免全空态；有 met 数据时严格只显已成立分支。
-- 两副本差异仍**仅**该 helper 定义块（App 走 `@/shared/utils/conditionalForecast` import）；InsightCard 两副本无差异。
+## 2026-09-16 洞见卡结论模式（只显示已验证结论）落地（与 app-frontend 同步）
+
+- `src/components/ConditionalForecastBlock.vue`：新增 `displayMode: 'full' | 'conclusion'`（默认 `full`）——结论模式只渲染 `met === true` 分支、未满足分支彻底隐藏，该期无已成立分支时显示「条件未成立 · 暂无已验证结论」；新增 `resolvedDisplayMode` computed 驱动 ①分支过滤 ②结论空态门控（`resolvedDisplayMode === 'conclusion' && !activeConditions.length`）——整块无布尔 `met` 数据（后端未回填 `condition_met`）时 `conclusion` 降级 `full`，避免全空态（用户裁决，Task 5b）。
+- 组件库跨仓不可引用，故在 CFB 内联 `selectVisibleConditions` + `hasMetData` + `resolveDisplayMode`（与 `app-frontend/src/shared/utils/conditionalForecast.ts` 同实现）；App 副本走 `@/shared/utils/conditionalForecast` import → 两副本差异**仅**该 helper 定义块（23 行），InsightCard 两副本无差异。
+- `src/components/InsightCard.vue`：新增溯源「依据详情」展开入口（`traceDetail` + `traceStructured.more`，本地展开不新增接口）+ `traceStructured.stages` 预留链式溯源 P3'（无数据不渲染）+ `displayMode` 透传 CFB；入口触控高度修正。
+- 基线回灌：CFB 由 app 副本回灌 `positionAction` 仓位动作徽标 + 补单档守卫（`horizonSegments.length > 1`）+ `activeHorizon` `watchEffect` 校正（既有红测转绿）。
+- `dev/App.vue`：补结论模式样例（有已成立分支 / 空态）+ 依据详情样例，供肉眼验收。
+- 类型检查：`npm run type-check` 仅存量 `dev/App.vue`（Segmented 4 条）+ `src/components/AudioPlayer.vue`（1 条），本次零新增（已与 T6 前版本 A/B 对齐一致）。
 
 ## 2026-09-03 InsightCard 洞见字标标签 + lines 多要点行支持（双端同步）
 - `src/components/InsightCard.vue`：
