@@ -6,6 +6,7 @@
 - 基线回灌：CFB 由 app 副本回灌 `positionAction` 仓位动作徽标 + 补单档守卫（`horizonSegments.length > 1`）+ `activeHorizon` `watchEffect` 校正（既有红测转绿）。
 - `dev/App.vue`：补结论模式样例（有已成立分支 / 空态）+ 依据详情样例，供肉眼验收。
 - 类型检查：`npm run type-check` 仅存量 `dev/App.vue`（Segmented 4 条）+ `src/components/AudioPlayer.vue`（1 条），本次零新增（已与 T6 前版本 A/B 对齐一致）。
+- 终审收口（2026-09-16，与 app-frontend 同步）：`resolvedDisplayMode` 改为按**当前期段**判定降级（新增 `inHorizonConditions` computed，`activeConditions` 改由它过滤）——某档含布尔 `met` 而另一档全为 `null/undefined` 时，切到后者不再误显假空态「条件未成立 · 暂无已验证结论」并隐藏该档全部分支；helper（`selectVisibleConditions` / `hasMetData` / `resolveDisplayMode`）仍内联，两副本差异仍仅 helper 块 + App 侧 import 行（`Compare-Object` 23 行）。类型检查仍仅存量 `dev/App.vue`（Segmented 4 条）+ `src/components/AudioPlayer.vue`（1 条）。
 
 ## 2026-09-03 InsightCard 洞见字标标签 + lines 多要点行支持（双端同步）
 - `src/components/InsightCard.vue`：
