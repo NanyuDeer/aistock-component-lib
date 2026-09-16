@@ -711,6 +711,45 @@
             time="09-02 · 盘后"
             :structured="sectorStructuredHit"
           />
+          <!-- 结论模式（spec §7）：空态 / 命中 双卡对照（只渲染 met===true 分支） -->
+          <InsightCard
+            type="market"
+            tag-text="板块洞见·结论空态"
+            title="条件未成立示例"
+            :structured="sectorStructuredConclusionEmpty"
+            display-mode="conclusion"
+          />
+          <InsightCard
+            type="market"
+            tag-text="板块洞见·结论命中"
+            title="只显示已成立分支"
+            trace="事件确认落地，产业链避险离场 · 证据 3 条"
+            :structured="sectorStructuredConclusionHit"
+            display-mode="conclusion"
+          />
+          <!-- 仓位动作徽标（positionAction 透传：full 模式并列展示 加仓/减仓/观望 三种徽标与配色） -->
+          <InsightCard
+            type="market"
+            tag-text="板块洞见·仓位动作"
+            title="条件分支仓位动作徽标（加仓/减仓/观望）"
+            :structured="sectorStructuredPosition"
+          />
+          <!-- 依据详情（traceDetail 有正文）：溯源区出现「依据详情 ▾」，点击就地展开 -->
+          <InsightCard
+            type="market"
+            tag-text="板块洞见·依据详情"
+            title="溯源依据详情展开（文本溯源形态）"
+            trace="行业库存周期见底，龙头排产环比回升 · 证据 3 条"
+            :trace-detail="'依据详情正文示例：① 库存周期：渠道库存 5 月见顶后连续三周去化；② 排产：龙头下月排产环比 +12%；③ 资金：北向近 5 日净买入 3.2 亿。'"
+          />
+          <!-- 依据详情（结构化溯源形态 + 板块链 stages 预留：无 stages 数据时不渲染阶段区） -->
+          <InsightCard
+            type="market"
+            tag-text="板块洞见·链式溯源"
+            title="结构化溯源 + 板块链阶段"
+            time="09-02 · 盘后"
+            :trace-structured="traceStructuredStages"
+          />
         </view>
       </view>
     </view>
@@ -947,6 +986,64 @@ const sectorStructuredHit = {
   ],
   dueLabel: '09-03',
   verification: 'hit' as const
+}
+
+// ③ 结论模式·空态（display-mode="conclusion"）：全部分支 met=false / null → 无可见分支，
+// 显示空态「条件未成立 · 暂无已验证结论」（该空态不依赖基准行，即 horizons 有当期基准也照显）
+const sectorStructuredConclusionEmpty = {
+  horizons: [
+    { horizon: 'short' as const, label: '事件驱动走弱', remaining: '事件后 1-5 个交易日', direction: 'bearish' as const, confidence: 'medium' as const }
+  ],
+  conditions: [
+    { horizon: 'short' as const, direction: 'bearish' as const, label: '事件确认 · 承压', condition: '核心事件确认落地', keywords: ['事件确认'], scenario: '板块承压（长句）', scenario_keywords: ['承压'], met: false }
+  ],
+  dueLabel: '无固定验证日',
+  verification: 'pending' as const
+}
+
+// ④ 结论模式·命中（display-mode="conclusion"）：两个同档分支，只有 met=true 的那条渲染
+// （met=false 分支彻底隐藏，不置灰、不提示；对照卡② full 模式下同数据会两条都显示）
+const sectorStructuredConclusionHit = {
+  horizons: [
+    { horizon: 'short' as const, label: '事件驱动走弱', remaining: '事件后 1-5 个交易日', direction: 'bearish' as const, confidence: 'medium' as const }
+  ],
+  conditions: [
+    { horizon: 'short' as const, direction: 'bearish' as const, label: '事件确认 · 承压', condition: '核心事件确认落地', keywords: ['事件确认'], scenario: '板块承压（长句）', scenario_keywords: ['承压'], met: true },
+    { horizon: 'short' as const, direction: 'bearish' as const, label: '事件扩散 · 加码', condition: '事件沿产业链扩散', keywords: ['事件扩散'], scenario: '跌幅扩大（长句）', scenario_keywords: ['跌幅扩大'], met: false }
+  ],
+  dueLabel: '无固定验证日',
+  verification: 'hit' as const
+}
+
+// ⑤ 仓位动作徽标（conditions[].positionAction 透传：加仓=红 / 减仓=绿 / 观望=灰 + 成数）：
+// full 模式（默认）三条并列，徽标三种 direction 与配色一次看全
+const sectorStructuredPosition = {
+  horizons: [
+    { horizon: 'short' as const, label: '顺势加码', remaining: '1-5 交易日', direction: 'bullish' as const, confidence: 'high' as const }
+  ],
+  conditions: [
+    { horizon: 'short' as const, direction: 'bullish' as const, label: '放量突破 · 顺势加仓', condition: '放量突破前高且不回补', keywords: ['放量突破前高'], scenario: '顺势加仓，上看 +5%', positionAction: { direction: 'add' as const, change: '+2 成' }, met: true },
+    { horizon: 'short' as const, direction: 'bearish' as const, label: '冲高回落 · 减仓避险', condition: '冲高回落收长上影', keywords: ['冲高回落收长影'], scenario: '减仓避险，回撤 -3% 内', positionAction: { direction: 'reduce' as const, change: '-3 成' }, met: false },
+    { horizon: 'short' as const, direction: 'neutral' as const, label: '量能不足 · 保持观望', condition: '缩量窄幅震荡', keywords: ['缩量窄幅震荡'], scenario: '方向不明，维持仓位', positionAction: { direction: 'hold' as const, change: '0 成' } }
+  ],
+  dueLabel: '09-18',
+  verification: 'pending' as const
+}
+
+// ⑥ 结构化溯源 + 板块链 stages 预留：stages 有数据 → 「依据详情」展开后按 名/值 逐行渲染；
+// more 优先于 InsightCard 的 traceDetail prop（本卡未传 traceDetail，正文取自 more）
+const traceStructuredStages = {
+  summary: '沪指 -0.8%，成长风格承压',
+  index_pct: -0.8,
+  badge: '自驱动',
+  detail: '存储价格预期下修带动算力链调整',
+  stages: [
+    { name: '现象', text: '存储现货价连续两周下调' },
+    { name: '触发', text: '龙头下修资本开支指引' },
+    { name: '传导', text: '算力链设备与材料跟随回调' },
+    { name: '定价', text: '板块估值回落至近三年 30% 分位' }
+  ],
+  more: '依据详情正文示例：现象 → 触发 → 传导 → 定价四段链，数据取现货报价与公司公告。'
 }
 </script>
 
