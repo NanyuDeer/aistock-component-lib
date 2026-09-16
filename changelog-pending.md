@@ -1,3 +1,7 @@
+## 2026-09-16 CFB：无 met 数据时降级为全量渲染（与 app-frontend 同步）
+- `src/components/ConditionalForecastBlock.vue`：内联块由单一 `selectVisibleConditions` 扩为 `selectVisibleConditions` + `hasMetData` + `resolveDisplayMode`（组件库跨仓不可引用，故与 app-frontend utils 同实现内联）；新增 `resolvedDisplayMode` computed，驱动分支过滤与结论空态门控——整块无布尔 `met` 数据（后端未回填 `condition_met`）时 `conclusion` 降级 `full`，避免全空态；有 met 数据时严格只显已成立分支。
+- 两副本差异仍**仅**该 helper 定义块（App 走 `@/shared/utils/conditionalForecast` import）；InsightCard 两副本无差异。
+
 ## 2026-09-03 InsightCard 洞见字标标签 + lines 多要点行支持（双端同步）
 - `src/components/InsightCard.vue`：
   - 头部标签由瞳孔 InsightTag 换为「洞见字标 PNG + 灰点 + 彩色类型词」：浅色卡 `insight-wordmark.png`（深色）/ 深蓝研报卡 `insight-wordmark-light.png`（反白），组件内 `import` 走内联背景图 + `filter: drop-shadow`（预览环境 image 标签不可用故不走 image）；类型词沿用 5 类型色（event 取中调 #00a8d8），`tag-text` 自动剥"洞见"后缀；dark 词提亮。

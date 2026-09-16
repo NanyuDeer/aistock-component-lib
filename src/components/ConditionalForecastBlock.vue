@@ -132,8 +132,8 @@
         </template>
       </view>
 
-      <!-- 结论模式：无已成立分支（不看有无基准行）→ 固定空态文案 -->
-      <view v-if="displayMode === 'conclusion' && !activeConditions.length" class="as-insight-card__sc-empty">
+      <!-- 结论模式（实际生效：整块含布尔 met 数据）：无已成立分支（不看有无基准行）→ 固定空态文案 -->
+      <view v-if="resolvedDisplayMode === 'conclusion' && !activeConditions.length" class="as-insight-card__sc-empty">
         <text>条件未成立 · 暂无已验证结论</text>
       </view>
       <!-- full 模式：沿用既有空态（无基准行且无分支） -->
@@ -227,6 +227,20 @@ function selectVisibleConditions<T extends { met?: boolean | null }>(
   return mode === 'conclusion' ? conditions.filter((c) => c.met === true) : conditions
 }
 
+/** 是否含分支级 met 数据（布尔）；全缺省/null → false（同 app-frontend utils，内联原因同上） */
+function hasMetData(conditions: Array<{ met?: boolean | null }>): boolean {
+  return conditions.some((c) => typeof c.met === 'boolean')
+}
+
+/** 解析实际展示模式：conclusion 仅在整块含布尔 met 数据时生效，否则降级 full（防后端未回填 met 造成全空态） */
+function resolveDisplayMode(
+  conditions: Array<{ met?: boolean | null }>,
+  mode: 'full' | 'conclusion'
+): 'full' | 'conclusion' {
+  if (mode !== 'conclusion') return 'full'
+  return hasMetData(conditions) ? 'conclusion' : 'full'
+}
+
 /** 该条件是否以关键词标签展示（tags 模式且有 keywords） */
 function useKeywords(cond: StructuredCondition): boolean {
   return props.conditionDisplay === 'tags' && Boolean(cond.keywords?.length)
@@ -312,12 +326,17 @@ const activeBase = computed<StructuredHorizon | undefined>(() => {
   return (data.horizons ?? []).find((h) => h.horizon === activeHorizon.value)
 })
 
-/** 当前期内的条件情景（conditions 按 horizon 归组；conclusion 模式只留已成立分支） */
+/** 当前期的实际展示模式：整块无布尔 met 数据（后端未回填 condition_met）时 conclusion 降级 full，避免全空态 */
+const resolvedDisplayMode = computed<'full' | 'conclusion'>(() =>
+  resolveDisplayMode(props.structured?.conditions ?? [], props.displayMode)
+)
+
+/** 当前期内的条件情景（conditions 按 horizon 归组；结论模式只留已成立分支） */
 const activeConditions = computed<StructuredCondition[]>(() => {
   const data = props.structured
   if (!data) return []
   const inHorizon = (data.conditions ?? []).filter((c) => c.horizon === activeHorizon.value)
-  return selectVisibleConditions(inHorizon, props.displayMode)
+  return selectVisibleConditions(inHorizon, resolvedDisplayMode.value)
 })
 
 const verifyText = computed(() => {
