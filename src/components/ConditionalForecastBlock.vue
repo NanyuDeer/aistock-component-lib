@@ -132,9 +132,13 @@
         </template>
       </view>
 
-      <view v-if="!activeBase && !activeConditions.length" class="as-insight-card__sc-empty">
-        <text v-if="displayMode === 'conclusion'">条件未成立 · 暂无已验证结论</text>
-        <text v-else>该期暂无细分情景</text>
+      <!-- 结论模式：无已成立分支（不看有无基准行）→ 固定空态文案 -->
+      <view v-if="displayMode === 'conclusion' && !activeConditions.length" class="as-insight-card__sc-empty">
+        <text>条件未成立 · 暂无已验证结论</text>
+      </view>
+      <!-- full 模式：沿用既有空态（无基准行且无分支） -->
+      <view v-else-if="!activeBase && !activeConditions.length" class="as-insight-card__sc-empty">
+        <text>该期暂无细分情景</text>
       </view>
     </view>
   </view>
@@ -214,7 +218,8 @@ const props = withDefaults(defineProps<{
   displayMode: 'full'
 })
 
-/** 预判分支可见性（与 app-frontend/src/shared/utils/conditionalForecast.ts 同实现；组件库跨仓不可引用故内联） */
+/** 预判分支可见性（与 app-frontend/src/shared/utils/conditionalForecast.ts 同实现；组件库跨仓不可引用故内联）
+ * 注意：full 模式返回入参同一引用（如需避免下游误改请调用方自行复制）。 */
 function selectVisibleConditions<T extends { met?: boolean | null }>(
   conditions: T[],
   mode: 'full' | 'conclusion'
