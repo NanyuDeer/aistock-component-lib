@@ -1,3 +1,14 @@
+## 2026-09-17 CFB 未触发折叠态（查看条件化预判）+ 未命中标签 + 隐藏分支标注（与 app-frontend 同步）
+
+- `src/components/ConditionalForecastBlock.vue`：**未触发折叠态**——当前档无 `met === true` 分支、且 `conclusion` 实际生效、且 tags 形态（`conditionDisplay !== 'sentence'`）→ 分支区不铺开，收为一行入口「查看条件化预判 ▾」/「收起条件化预判 ▴」（`branchesExpanded` 本地展开，`setActiveHorizon` 归零）；展开后 `renderedConditions` 返回该档**全部**条件分支（沿用既有分支渲染与样式）。基准行照常显示；分支区渲染源由 `activeConditions` 改为 `renderedConditions`（非折叠态等价，行为不变）。
+- 取值口径：原空态文案「条件未成立 · 暂无已验证结论」在 **tags 形态折叠态下不再显示**（由折叠入口承接），仅保留给 `sentence` 形态的同类场景（详见 app-frontend changelog 同日条目）。
+- 到期未触发「未命中」标签：折叠态下 `structured.verification === 'miss'` → 入口旁中性灰标签（`__sc-miss`，沿用 miss 灰/中性色）。
+- 隐藏分支纯标注：`conclusion` 生效 + 有已成立分支 + 被过滤分支数 > 0 → 分支区末尾「另有 N 条条件未成立」（`__sc-hidden`，caption 字号 + 既有边框色，不可点）。
+- 已触发（存在 `met === true`）保持现设计（`[条件成立]` 徽 + 验证标识，不折叠）。
+- 新增样式：`__sc-fold` / `__sc-fold-tx` / `__sc-miss` / `__sc-hidden` / `__sc-hidden-tx`（全部用既有 token，无硬编码色）。
+- 类型检查：`npm run type-check` 仅存量 `dev/App.vue`（Segmented 4 条）+ `src/components/AudioPlayer.vue`（1 条），与 HEAD 版本 A/B 比对逐条一致（本次零新增）。
+- 两副本：同步 app-frontend `shared/components/ConditionalForecastBlock.vue`，`Compare-Object` 差异仅 helper 定义块 + App 侧 import 行；InsightCard 两副本无差异。
+
 ## 2026-09-16 洞见卡结论模式（只显示已验证结论）落地（与 app-frontend 同步）
 
 - `src/components/ConditionalForecastBlock.vue`：新增 `displayMode: 'full' | 'conclusion'`（默认 `full`）——结论模式只渲染 `met === true` 分支、未满足分支彻底隐藏，该期无已成立分支时显示「条件未成立 · 暂无已验证结论」；新增 `resolvedDisplayMode` computed 驱动 ①分支过滤 ②结论空态门控（`resolvedDisplayMode === 'conclusion' && !activeConditions.length`）——整块无布尔 `met` 数据（后端未回填 `condition_met`）时 `conclusion` 降级 `full`，避免全空态（用户裁决，Task 5b）。
