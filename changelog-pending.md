@@ -1,3 +1,11 @@
+## 2026-09-17 CFB 折叠/过滤按 displayMode 收口（修复 full 调用方零分支）+ sentence 空态文案还原（与 app-frontend 同步）
+
+- 问题（复审必须项 A）：上一轮「三态判定改按已成立分支」后 `displayMode` prop 完全不再驱动 UI，折叠对所有调用方生效 → 未传 `display-mode`（默认 `full`）且无 `met` 数据的调用方（如 app 侧节奏大师洞见卡）100% 折叠，卡内只剩一行入口、核心分支内容默认不可见。
+- `src/components/ConditionalForecastBlock.vue`：① `isFoldedUnmet` 前置 `props.displayMode === 'conclusion'`；② `renderedConditions` 前置 `if (props.displayMode !== 'conclusion') return inHorizonConditions.value`（非结论模式全量分支直显，与改造前 full 行为一致）；③ `showHiddenBranchLabel` / `showMissTag` 同样以 `displayMode === 'conclusion'` 收口（「另有 N 条条件未成立」与「未命中」标签只在结论模式生效）；④ `litConditions` 口径不变（`selectVisibleConditions(inHorizonConditions, 'conclusion')`），内联 `hasMetData` / `resolveDisplayMode` 保留（仍无消费方，函数与单测保留）；`displayMode` prop JSDoc 同步更新。
+- 空态文案还原（附带项 B）：模板三元改回 `conditionDisplay === 'sentence' ? '该期暂无细分情景' : '条件未成立 · 暂无已验证结论'`。
+- 两副本：`Compare-Object` 差异仍仅内联 helper 定义块（本文件 233-257，25 行）↔ App 侧 `import { selectVisibleConditions } from '@/shared/utils/conditionalForecast'`（1 行 + 空行）；切除后两副本逐行相等（各 973 行）；`InsightCard.vue` 两副本无差异。App 副本 `vitest.config.ts` 白名单新增 `ConditionalForecastBlock.mount.spec.ts`（vitest 挂载 5 条三态护栏）。
+- 类型检查：`npm run type-check` 仅存量 `dev/App.vue`（Segmented 4 条）+ `src/components/AudioPlayer.vue`（1 条），本次零新增。
+
 ## 2026-09-17 CFB 折叠态判定修正（按已成立分支 lit 判，不再依赖降级模式）+ 未命中标签去重（与 app-frontend 同步）
 
 - 问题：折叠态判定挂在 `resolvedDisplayMode === 'conclusion'`（= 当期含布尔 `met`），而后端按决策 D1 只写 `condition_met=true`、不写 false → 未触发档无任何布尔 `met` → `hasMetData` 为假 → `resolveDisplayMode` 降级 `full` → 分支渲染源返回全部分支 → **折叠态在真实数据下不可达**。
