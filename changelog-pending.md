@@ -1,4 +1,11 @@
-## 2026-09-17 CFB 未触发折叠态（查看条件化预判）+ 未命中标签 + 隐藏分支标注（与 app-frontend 同步）
+## 2026-09-17 CFB 折叠态判定修正（按已成立分支 lit 判，不再依赖降级模式）+ 未命中标签去重（与 app-frontend 同步）
+
+- 问题：折叠态判定挂在 `resolvedDisplayMode === 'conclusion'`（= 当期含布尔 `met`），而后端按决策 D1 只写 `condition_met=true`、不写 false → 未触发档无任何布尔 `met` → `hasMetData` 为假 → `resolveDisplayMode` 降级 `full` → 分支渲染源返回全部分支 → **折叠态在真实数据下不可达**。
+- `src/components/ConditionalForecastBlock.vue`：新增 `litConditions`（= `selectVisibleConditions(inHorizonConditions, 'conclusion')`，当期 `met === true` 分支）；`isFoldedUnmet` 改为 `conditionDisplay !== 'sentence' && litConditions.length === 0 && inHorizonConditions.length > 0`（后一守卫避免「该档无条件分支」时渲染出点开后空无一物的入口）；`renderedConditions` 三态 = sentence 不过滤 / 未触发折叠（未点开空、点开铺开全部）/ 已触发只渲染 `litConditions`；`hiddenConditionCount` 与 `showHiddenBranchLabel` 改以 `litConditions` 口径（已触发档 + 确有隐藏分支）。
+- 文案去重：折叠态 `structured.verification === 'miss'` → 头部同义 pill「验证未中」由 `verifyText` 抑制（只保留入口行「未命中」标签）；其余状态 pill 行为不变。原空态文案「条件未成立 · 暂无已验证结论」在 tags 形态下不再出现（由折叠入口承接），模板改为三元：`sentence` 形态保留原文案、tags 形态沿用「该期暂无细分情景」。
+- 无消费方保留：`hasMetData` / `resolveDisplayMode`（内联 helper）与 App 侧 `src/shared/utils/conditionalForecast.ts` 同名导出均保留函数与单测，仅组件内不再据此决定 UI；`displayMode` prop 保留（调用方 API 兼容）但不再驱动 UI。
+- 两副本：`Compare-Object` 差异仅内联 helper 定义块（库 25 行）↔ App 侧 `import { selectVisibleConditions } from '@/shared/utils/conditionalForecast'`（1 行 + 空行）；App 副本已删除被灌入的内联 helper、import 行已恢复；InsightCard 两副本无差异。
+- 类型检查：`npm run type-check` 仅存量 `dev/App.vue`（Segmented 4 条）+ `src/components/AudioPlayer.vue`（1 条），本次零新增。
 
 - `src/components/ConditionalForecastBlock.vue`：**未触发折叠态**——当前档无 `met === true` 分支、且 `conclusion` 实际生效、且 tags 形态（`conditionDisplay !== 'sentence'`）→ 分支区不铺开，收为一行入口「查看条件化预判 ▾」/「收起条件化预判 ▴」（`branchesExpanded` 本地展开，`setActiveHorizon` 归零）；展开后 `renderedConditions` 返回该档**全部**条件分支（沿用既有分支渲染与样式）。基准行照常显示；分支区渲染源由 `activeConditions` 改为 `renderedConditions`（非折叠态等价，行为不变）。
 - 取值口径：原空态文案「条件未成立 · 暂无已验证结论」在 **tags 形态折叠态下不再显示**（由折叠入口承接），仅保留给 `sentence` 形态的同类场景（详见 app-frontend changelog 同日条目）。
