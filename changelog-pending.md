@@ -1,3 +1,11 @@
+## 2026-09-17 新增 EventRefChip 链上事件胶囊 + InsightCard 溯源 events 加性扩展（同步 app-frontend，P3' Task 4.2）
+
+- `src/components/EventRefChip.vue`（新建，组件库第 42 个组件）：纯 UI 链上事件胶囊——props `{ headline: string; source: 'warehouse' | 'search'; eventRef?: string }`；来源标记「中台 / 检索」+ 事件摘要单行省略 + URL 时的可点提示符；`eventRef` 为 http(s) URL 时点击 emit `select(url)`，非 URL（`event:<id>` / `search:<query>|<title>`）不可点（纯文本展示，不伪造跳转）。**组件不引 uni/业务、不做导航**（跳转由 App wrapper 按平台惯例执行，保证组件库可移植 + 两副本逐字一致）。样式全用既有 token（`$r-md`/`$r-xs`/`$font-size-xs`/`$line`/`$bg-soft`/`$primary`/`$primary-50`/`$ink-mute`/`$ink-soft`、rpx），边框/正文色带 InsightCard CSS 变量回退（`--ins-trace-bd` / `--ins-card-tx` / `--ins-trace-key`），溯源蓝卡内自适应、深蓝研报卡可读，无新色系。
+- `src/components/InsightCard.vue`：`InsightTraceStructured` 加性扩展 `events?: InsightTraceEvent[]`（`{ headline: string; ref?: string; source?: 'warehouse' | 'search' }`）；模板在溯源行（大盘行 + 角色徽驱动行）下方渲染 `.as-insight-card__events` 胶囊区（`events` 空数组/缺省 → 整区不渲染）；新增 emit `eventSelect(event)`（`@select` 透传事件节点给调用方跳原文）。
+- `src/index.ts`：新增 `EventRefChip` 导出。`README.md`/`AGENTS.md`：组件清单 41 → 42、新增 EventRefChip 行、InsightCard 行补 events 说明。
+- 类型检查：`npm run type-check` 仅存量 5 条（`dev/App.vue` Segmented ×4 + `src/components/AudioPlayer.vue` ×1），本次零新增。
+- 两副本：`InsightCard.vue` / `EventRefChip.vue` 与 app-frontend 侧 SHA256 相等（`Compare-Object` 无输出）；`ConditionalForecastBlock.vue` 差异仍仅内联 helper 定义块（唯一允许例外，本次未动）。
+
 ## 2026-09-17 CFB 折叠/过滤按 displayMode 收口（修复 full 调用方零分支）+ sentence 空态文案还原（与 app-frontend 同步）
 
 - 问题（复审必须项 A）：上一轮「三态判定改按已成立分支」后 `displayMode` prop 完全不再驱动 UI，折叠对所有调用方生效 → 未传 `display-mode`（默认 `full`）且无 `met` 数据的调用方（如 app 侧节奏大师洞见卡）100% 折叠，卡内只剩一行入口、核心分支内容默认不可见。

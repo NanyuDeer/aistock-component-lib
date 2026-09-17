@@ -42,7 +42,7 @@ pnpm type-check # 类型检查
 
 组件使用 uni-app 组件规范（`view`/`text`/`image` 标签、`rpx` 单位），可被 `aistock-app-frontend`（uni-app 项目）直接引用。本地预览环境通过 Vite + 自定义元素配置 + rpx→vw 转换模拟 uni-app 行为，不依赖完整 uni-app 工具链。
 
-## 组件清单（41 个）
+## 组件清单（42 个）
 
 ### 基础组件
 | 组件 | 说明 |
@@ -121,7 +121,8 @@ pnpm type-check # 类型检查
 | 组件 | 说明 |
 |------|------|
 | InsightTag | 洞察之眼标签（瞳孔=洞见类型：情绪红/资金金/事件青/市场蓝，3 种尺寸） |
-| InsightCard | 洞见卡片（瞳孔标签置前 → 结论 → 溯源 → 预判，亮色列表卡 / 深蓝研报卡） |
+| InsightCard | 洞见卡片（瞳孔标签置前 → 结论 → 溯源 → 预判，亮色列表卡 / 深蓝研报卡；溯源子卡支持 `traceStructured.events` 链上事件胶囊） |
+| EventRefChip | 链上事件胶囊（来源标记 中台/检索 + 事件摘要；ref 为 URL 时可点 emit `select`，跳转由调用方执行） |
 
 ## 组件选用指南
 

@@ -89,6 +89,7 @@ export { default as RelationGraph } from './components/RelationGraph.vue'
 export { default as InsightTag } from './components/InsightTag.vue'
 export { default as InsightCard } from './components/InsightCard.vue'
 export { default as ConditionalForecastBlock } from './components/ConditionalForecastBlock.vue'
+export { default as EventRefChip } from './components/EventRefChip.vue'
 
 // ===== AI 交互组件 =====
 export { default as StreamingText } from './components/StreamingText.vue'
