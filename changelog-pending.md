@@ -1,3 +1,11 @@
+## 2026-09-17 InsightCard 溯源弱依据提示（同步 app-frontend，R16 / Task 10.2）
+
+- `src/components/InsightCard.vue`：`InsightTraceStructured` 加性扩展 `weak?: boolean`（链级：`root.evidence_weak=true` → 摘要行旁中性灰小标「归因较弱」）与 `weakText?: string`（板块级：`child.extraction.weak=true` → 角色徽驱动行旁中性灰小标，文案由 App 侧 `sectorInsight.extractionWeakLabel` 单点产出：「依据较弱」/`snapshot` 的「无归因依据」）。
+- 模板：摘要行 `.as-insight-card__tlk` 内新增链级标记；驱动行 `v-if` 改为 `badge || weakText`（原为仅 `badge`）并对角色徽本身加 `v-if="traceStructured.badge"`，保证只有弱依据时该行仍渲染。样式新增 `.as-insight-card__weak`（中性灰描边小标，1rpx 描边 + `$font-size-xs`）与 CSS 变量 `--ins-weak-bd/--ins-weak-tx`（light #dfe3ea/#8a929e、dark `rgba(255,255,255,.18)/.58`）——**不用告警色与涨跌色**，字段缺失（老数据/正常日）时零标记、零变化。
+- 两副本：本次改动块（模板 2 处 + 接口 2 字段 + 样式 1 块 + 2 个 CSS 变量）与 app-frontend 侧 `git diff` 正文各 **30 行、`Compare-Object` 0 行差异**；全文件差异仍仅 app-only 的 `lineStyle`/`plain-lines` 特性（HEAD 已存在，非本次引入）。
+- 类型检查：`npm run type-check` 仅存量 5 条（`dev/App.vue` Segmented ×4 + `src/components/AudioPlayer.vue` ×1），本次零新增。
+- 说明：`AttributionChainView.vue`（板块行弱标记接入点）为 App 专属 wrapper，组件库无对应文件，无需镜像。
+
 ## 2026-09-17 新增 EventRefChip 链上事件胶囊 + InsightCard 溯源 events 加性扩展（同步 app-frontend，P3' Task 4.2）
 
 - `src/components/EventRefChip.vue`（新建，组件库第 42 个组件）：纯 UI 链上事件胶囊——props `{ headline: string; source: 'warehouse' | 'search'; eventRef?: string }`；来源标记「中台 / 检索」+ 事件摘要单行省略 + URL 时的可点提示符；`eventRef` 为 http(s) URL 时点击 emit `select(url)`，非 URL（`event:<id>` / `search:<query>|<title>`）不可点（纯文本展示，不伪造跳转）。**组件不引 uni/业务、不做导航**（跳转由 App wrapper 按平台惯例执行，保证组件库可移植 + 两副本逐字一致）。样式全用既有 token（`$r-md`/`$r-xs`/`$font-size-xs`/`$line`/`$bg-soft`/`$primary`/`$primary-50`/`$ink-mute`/`$ink-soft`、rpx），边框/正文色带 InsightCard CSS 变量回退（`--ins-trace-bd` / `--ins-card-tx` / `--ins-trace-key`），溯源蓝卡内自适应、深蓝研报卡可读，无新色系。
