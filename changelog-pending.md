@@ -1,3 +1,10 @@
+## 2026-09-17 InsightCard 补齐 `lineStyle`（收敛 app-only 差异，两副本逐字一致）
+
+- 背景：`lineStyle`/`plain-lines` 特性此前仅在 app-frontend 侧（引入于 app 提交 `166c25a5`「财报详情页改版」，由 `src/modules/analytics/pages/report-detail.vue` 以 `line-style="plain"` 消费），组件库自建库以来从未携带（`git log --all -S InsightLineStyle` 空），历次同步均记录为「app-only 允许差异」（HEAD 实测差异 53 行）。
+- 本次按「两份文件逐字一致」要求将该特性**回灌组件库** `src/components/InsightCard.vue`（纯增量、纯 UI，默认 `banner`，既有调用方行为不变）：模板根节点 class 追加 `lineStyle === 'plain' ? 'as-insight-card--plain-lines' : ''`；新增 `type InsightLineStyle = 'banner' | 'plain'`；新增 prop `lineStyle?: InsightLineStyle`（默认 `'banner'`）；新增 `.as-insight-card--plain-lines` 样式块（白底 + 语义色关键词 + 中性灰蓝正文，全部用既有 token：`$bg-card`/`$line`/`$ink-mute`/`$up`/`$down`/`$primary`/`$gold-soft-border`/`$gold-deep`）。
+- 校验：`Compare-Object` 两副本 **0 行差异**（各 800 行）；app-frontend `npx vue-tsc --noEmit` exit 0；`npm run test:node` 248/248/0；组件库 `npx vue-tsc --noEmit` 仍仅存量 5 条（`dev/App.vue` Segmented ×4 + `src/components/AudioPlayer.vue` ×1），本次零新增。
+- 注：上一轮条目中「全文件差异仍仅 app-only 的 lineStyle/plain-lines」表述自本次起失效——该差异已收敛，后续同步不应再把它列为允许差异。
+
 ## 2026-09-17 InsightCard 溯源弱依据提示（同步 app-frontend，R16 / Task 10.2）
 
 - `src/components/InsightCard.vue`：`InsightTraceStructured` 加性扩展 `weak?: boolean`（链级：`root.evidence_weak=true` → 摘要行旁中性灰小标「归因较弱」）与 `weakText?: string`（板块级：`child.extraction.weak=true` → 角色徽驱动行旁中性灰小标，文案由 App 侧 `sectorInsight.extractionWeakLabel` 单点产出：「依据较弱」/`snapshot` 的「无归因依据」）。
